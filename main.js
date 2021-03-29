@@ -14,6 +14,9 @@ function createWindow() {
 
   mainWindow.loadFile("index.html");
   mainWindow.webContents.openDevTools();
+  // NEW Persist window state
+  // https://github.com/electron/electron/issues/526
+  // https://medium.com/@hql287/persisting-windows-state-in-electron-using-javascript-closure-17fc0821d37
   mainWindow.maximize();
 }
 
