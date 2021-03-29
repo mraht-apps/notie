@@ -1,0 +1,79 @@
+<!-- https://github.com/laurent22/joplin/tree/dev/packages -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <!-- CSS Style -->
+    <link rel="stylesheet" href="./css/style.css" type="text/css">
+    <link rel="stylesheet" href="./css/table.css" type="text/css">
+    <title>Hello World!</title>
+  </head>
+  <body>
+    <h1><span id="page-title"/></h1>
+
+    <p>
+      <b></b>Debug Information:</b></br>
+      Node.js: <span id="node-version"></span></br>
+      Chromium: <span id="chrome-version"></span></br>
+      Electron: <span id="electron-version"></span>
+    </p>
+
+    <div class="container">
+      <form action="#" id="formPagename">
+          <span>Page Name:</span>
+          <label for="pagename"></label><span>
+          <input type="text" name="pagename" id="pagename" value="Page Name"></span>
+          <input type="submit" id="submit" value="Submit">
+      </form>
+      <form action="#" id="formPassword">
+        <span>Password:</span>
+        <label for="password"></label><span>
+        <input type="password" name="password" id="password"></span>
+        <input type="submit" id="submit" value="Submit">
+    </form>       
+    </div>
+
+    <p>
+      <input type="button" id="btnSave" value="Save"/>
+      <input type="button" id="btnRestart" value="Restart"/>
+    </p>
+
+    <p>
+      <div>After this line the content block begins:</div>
+      <div id="content">
+        <div class="line"/></br></div>
+        <div class="line"/></br></div>
+        <div class="line"/></br></div>
+        <div class="line"/></br></div>
+        <div class="line"/></br></div>
+      </div>
+      <div>Before this line the content block ends.</div>
+    </p>
+
+    <p>
+      <table>
+        <thead>
+        <tr>
+          <th></th>
+          <th>Column 1</th>
+          <th>Column 2</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td><div contenteditable="true">1</div></td>
+          <td><div contenteditable="true">2</div></td>
+        </tr>
+        </tbody>
+      </table>
+    </p>
+
+    <!-- You can also require other files to run in this process -->
+    <script src="./renderer.js"></script>
+    <script src="./main.js"></script>
+  </body>
+</html>

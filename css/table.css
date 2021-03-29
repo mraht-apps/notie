@@ -1,0 +1,52 @@
+table {
+  border-collapse: collapse;
+}
+table th,
+td {
+  border: 1px solid black;
+  padding: 4px 8px 4px 8px;
+}
+
+table tr th:first-child,
+td:first-child {
+  border-left: 0;
+}
+
+table tr th:last-child,
+td:last-child {
+  border-right: 0;
+}
+
+th,
+td {
+  min-width: 50px;
+}
+
+tr:first-child:hover {
+  background-color: gainsboro;
+  cursor: pointer;
+}
+
+.noCrsr {
+  cursor: pointer;
+}
+
+.borderRight {
+  border-right: 3px solid blue;
+  cursor: col-resize;
+}
+
+.borderLeft {
+  border-left: 3px solid blue;
+  cursor: col-resize;
+}
+
+.div {
+  top: 0;
+  right: -2px;
+  width: 3px;
+  position: absolute;
+  cursor: col-resize;
+  user-select: none;
+  /* background-color: red; */
+}

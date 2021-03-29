@@ -1,0 +1,1 @@
+electron-packager .\electron-quick-start-master\ --platform=win32 --arch=x64 --electron-version=11.2.3 --overwrite
