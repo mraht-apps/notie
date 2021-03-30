@@ -42,6 +42,7 @@ submitFormButton.addEventListener("submit", function (event) {
 // Read password
 const readPasswordButton = document.querySelector("#btnReadPassword");
 readPasswordButton.addEventListener("click", function (event) {
+  const cryptomanager = require("./utils/cryptomanager.js");
   console.log("User set password to " + cryptomanager.PASSWORD + "\n");
   console.log("User set iv to " + cryptomanager.IV + "\n");
 });
