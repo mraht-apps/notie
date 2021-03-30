@@ -29,31 +29,70 @@ submitFormButton.addEventListener("submit", function (event) {
 submitFormButton = document.querySelector("#formPassword");
 submitFormButton.addEventListener("submit", function (event) {
   event.preventDefault(); // stop the form from submitting
-  let password = document.getElementById("password").value;
   const cryptomanager = require("./utils/cryptomanager.js");
-  cryptomanager.password = password;
-  console.log("User set password to " + cryptomanager.password + "\n");
+
+  const password = document.getElementById("password").value;
+  cryptomanager.PASSWORD = password;
+  console.log("User set password to " + cryptomanager.PASSWORD + "\n");
+
+  cryptomanager.IV = cryptomanager.generateIV();
+  console.log("User set iv to " + cryptomanager.IV + "\n");
+});
+
+// Read password
+const readPasswordButton = document.querySelector("#btnReadPassword");
+readPasswordButton.addEventListener("click", function (event) {
+  console.log("User set password to " + cryptomanager.PASSWORD + "\n");
+  console.log("User set iv to " + cryptomanager.IV + "\n");
+});
+
+// Read data saved by user
+const readButton = document.querySelector("#btnRead");
+readButton.addEventListener("click", function (event) {
+  const filemanager = require("./utils/filemanager.js");
+  if (filemanager.exists("data.enc")) {
+    const cryptomanager = require("./utils/cryptomanager.js");
+
+    let data = filemanager.readFile("data.enc");
+    let ivEnd = cryptomanager.IV_LENGTH * 2;
+    cryptomanager.IV = cryptomanager.parseIV(data.slice(0, ivEnd));
+
+    data = data.slice(ivEnd, data.length);
+    let jsonData = cryptomanager.decrypt(
+      data,
+      cryptomanager.PASSWORD,
+      cryptomanager.IV
+    );
+    console.log(jsonData);
+  }
 });
 
 // Save data entered by user
 const saveButton = document.querySelector("#btnSave");
-saveButton.addEventListener("click", function(event) {
+saveButton.addEventListener("click", function (event) {
   let pagename = document.getElementById("page-title").innerText;
 
   let lineContent = [];
   const elements = document.getElementsByClassName("line");
-  Array.prototype.forEach.call(elements, function(element) {
+  Array.prototype.forEach.call(elements, function (element) {
     lineContent.push(element.innerText);
   });
 
   let page = {
     pageName: pagename,
-    lineContent: lineContent
+    lineContent: lineContent,
   };
 
   let jsonData = JSON.stringify(page);
+  const cryptomanager = require("./utils/cryptomanager.js");
+  let data = cryptomanager.IV.toString();
+  data += cryptomanager.encrypt(
+    jsonData,
+    cryptomanager.PASSWORD,
+    cryptomanager.IV
+  );
   const filemanager = require("./utils/filemanager.js");
-  filemanager.writeFile("data.json",jsonData);
+  filemanager.writeFile("data.enc", data);
 });
 
 // Restart application
@@ -63,22 +102,22 @@ restartButton.addEventListener("click", function (event) {
 });
 
 // Make content line editable
-const setContentEditable = function(event, enable) {
-  if(enable) {
+const setContentEditable = function (event, enable) {
+  if (enable) {
     event.target.contentEditable = "true";
     event.target.focus();
-  } else if(!event.target.innerText.trim()) {
+  } else if (!event.target.innerText.trim()) {
     event.target.contentEditable = "false";
   }
 };
 const elements = document.getElementsByClassName("line");
 for (var i = 0; i < elements.length; i++) {
-    elements[i].addEventListener('click', function(event) {
-      setContentEditable(event, true);
-    });
-    elements[i].addEventListener('focusout', function(event) {
-      setContentEditable(event, false);
-    });
+  elements[i].addEventListener("click", function (event) {
+    setContentEditable(event, true);
+  });
+  elements[i].addEventListener("focusout", function (event) {
+    setContentEditable(event, false);
+  });
 }
 
 //var tables = document.getElementsByClassName('flexiCol');

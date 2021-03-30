@@ -1,7 +1,11 @@
 const fs = require("fs");
 
+function exists(filename) {
+  return fs.existsSync(filename);
+}
+
 function readFile(filename) {
-  fs.readFile(filename, function (error) {
+  return fs.readFileSync(filename, "utf8", function (error) {
     if (error) {
       console.log(error);
     }
@@ -9,7 +13,7 @@ function readFile(filename) {
 }
 
 function writeFile(filename, data) {
-  fs.writeFile(filename, data, function (error) {
+  fs.writeFileSync(filename, data, "utf8", function (error) {
     if (error) {
       console.log(error);
     }
@@ -17,6 +21,7 @@ function writeFile(filename, data) {
 }
 
 module.exports = {
+  exists,
   readFile,
-  writeFile,
+  writeFile
 };
