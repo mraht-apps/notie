@@ -1,4 +1,5 @@
 const CryptoJS = require("crypto-js");
+const { v4: uuid } = require('uuid');
 
 const IV_LENGTH = 16;
 var PASSWORD;
@@ -34,6 +35,10 @@ function generateIV() {
   return iv;
 }
 
+function generateUUID() {
+  return uuid();
+}
+
 function parseIV(iv) {
   let parsedIV = CryptoJS.enc.Hex.parse(iv);
   console.log("Parsed iv: " + parsedIV.toString());
@@ -44,6 +49,7 @@ module.exports = {
   decrypt,
   encrypt,
   generateIV,
+  generateUUID,
   parseIV,
   IV,
   IV_LENGTH,
