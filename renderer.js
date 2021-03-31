@@ -18,12 +18,19 @@ $("#newPage").on("click", function (event) {
   return false;
 });
 
+// Handle pressing ENTER in table column header
+$(".th_textArea").on("keydown", function (event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+  }
+});
+
 // Only as example for interaction between main.js and renderer.js
 // 1) Submit event in index.html
 // 2) Submit event in renderer.js
 // 3) Submit event in main.js
 // 4) Reply event in renderer.js
-$("#formPagename").on("submit", function (event) {
+$("#btnSubmitPagename").on("click", function (event) {
   event.preventDefault(); // stop the form from submitting
   let pagename = document.getElementById("pagename").value;
   console.log("Call submitForm with pagename " + pagename + "\n");
@@ -36,7 +43,7 @@ $("#formPagename").on("submit", function (event) {
 });
 
 // Save password entered by user
-$("#formPassword").on("submit", function (event) {
+$("#btnSavePassword").on("click", function (event) {
   event.preventDefault(); // stop the form from submitting
 
   const password = $("#password").val();
@@ -120,8 +127,7 @@ for (var i = 0; i < elements.length; i++) {
   });
 }
 
-//var tables = document.getElementsByClassName('flexiCol');
-var tables = $("table");
+var tables = $(".testTable");
 for (var i = 0; i < tables.length; i++) {
   resizableGrid(tables[i]);
 }
@@ -130,8 +136,6 @@ function resizableGrid(table) {
   var row = table.getElementsByTagName("tr")[0],
     cols = row ? row.children : undefined;
   if (!cols) return;
-
-  table.style.overflow = "hidden";
 
   var rowHeight = row.offsetHeight;
 
@@ -151,26 +155,32 @@ function resizableGrid(table) {
       pageX = e.pageX;
 
       var padding = paddingDiff(curCol);
-
       curColWidth = curCol.offsetWidth - padding;
-      if (nxtCol) nxtColWidth = nxtCol.offsetWidth - padding;
     });
 
     $(div).on("mouseover", function (e) {
-      e.target.style.borderRight = "3px solid blue";
+      e.target.style.backgroundColor = "rgba(46, 170, 220, 1)";
     });
 
     $(div).on("mouseout", function (e) {
-      e.target.style.borderRight = "";
+      e.target.style.backgroundColor = "";
     });
 
     $(document).on("mousemove", function (e) {
       if (curCol) {
         var diffX = e.pageX - pageX;
+        let oldWidthStr = curCol.style.width;
+        let sliceIndex = oldWidthStr.indexOf("px");
+        let oldWidth = parseInt(parseInt(oldWidthStr.slice(0, sliceIndex)) + 1);
 
-        if (nxtCol) nxtCol.style.width = nxtColWidth - diffX + "px";
-
-        curCol.style.width = curColWidth + diffX + "px";
+        // TODO: Width changes though real width doesn't change:
+        // Supress adjusting width in this case too
+        let newWidth = curColWidth + diffX;
+        console.log("Width: " + oldWidth + "/" + newWidth);
+        if (oldWidth !== newWidth) {
+          console.log("Change width");
+          curCol.style.width = newWidth + "px";
+        }
       }
     });
 
@@ -186,7 +196,7 @@ function resizableGrid(table) {
   function createDiv(height) {
     var div = document.createElement("div");
     div.style.height = height + "px";
-    div.className = "div";
+    div.className = "columnResizeSeparator";
     return div;
   }
 

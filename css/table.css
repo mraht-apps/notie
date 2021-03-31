@@ -1,54 +1,37 @@
-table {
-  border-collapse: collapse;
-  position: absolute;
+.contentTable {
   width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
 }
-table th,
-td {
+
+.contentTable th {
+  text-align: left;
+}
+
+.contentTable th,
+.contentTable td {
   border: 1px solid black;
-  padding: 4px 8px 4px 8px;
+  padding: 4px 8px 2px 8px;
 }
 
-table tr th:first-child,
-td:first-child {
-  border-left: 0;
-}
-
-table tr th:last-child,
-td:last-child {
-  border-right: 0;
-}
-
-th,
-td {
-  min-width: 50px;
-}
-
-tr:first-child:hover {
-  background-color: gainsboro;
-  cursor: pointer;
-}
-
-.noCrsr {
-  cursor: pointer;
-}
-
-.borderRight {
-  border-right: 3px solid blue;
-  cursor: col-resize;
-}
-
-.borderLeft {
-  border-left: 3px solid blue;
-  cursor: col-resize;
-}
-
-.div {
+.contentTable .columnResizeSeparator {
   top: 0;
-  right: -2px;
-  width: 3px;
+  right: -3px;
+  width: 5px;
   position: absolute;
+  z-index: 1;
   cursor: col-resize;
   user-select: none;
-  /* background-color: red; */
+
+  -webkit-transition: all 200ms ease-out 0s;
+  -moz-transition: all 200ms ease-out 0s;
+  transition: all 200ms ease-out 0s;  
+}
+
+.contentTable .div_textarea {
+  -ms-text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }

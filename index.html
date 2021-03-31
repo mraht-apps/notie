@@ -30,21 +30,22 @@
       Electron: <span id="electron-version"></span>
     </p>
 
-    <div class="container">
-      <form action="#" id="formPagename">
-        <span>Page Name:</span>
-        <label for="pagename"></label><span>
-          <input type="text" name="pagename" id="pagename" value="Page Name"></span>
-        <input type="submit" id="submit" value="Submit">
-      </form>
-      <form action="#" id="formPassword">
-        <span>Password:</span>
-        <label for="password"></label>
-        <input type="password" name="password" id="password">
-        <input type="submit" id="submit" value="Submit">
-        <input type="button" id="btnReadPassword" value="Read" />
-      </form>
-    </div>
+    <table>
+      <tbody>
+        <tr>
+          <td>Page Name:</td>
+          <td><input type="text" name="pagename" id="pagename" value="Page Name"></td>
+          <td><input type="submit" id="btnSubmitPagename" value="Save"></br></td>
+        </tr>
+        <tr>
+          <td>Password:</td>
+          <td><input type="password" name="password" id="password"></td>
+          <td><input type="submit" id="btnSavePassword" value="Save"> <input type="button" id="btnReadPassword"
+              value="Read">
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
     <p>
       <input type="button" id="btnSave" value="Save" />
@@ -55,23 +56,29 @@
     <p>
     <div>After this line the content block begins:</div>
     <div id="content">
-      <textarea class="line" wrap="hard"></textarea>
+      <textarea class="line" rows="1" wrap="hard"></textarea>
     </div>
     <div>Before this line the content block ends.</div>
     </p>
 
-    <p>
-    <table>
+    <!-- <p>
+    <table class="contentTable">
       <thead>
         <tr>
-          <th></th>
-          <th>Column 1</th>
-          <th>Column 2</th>
+          <th>
+            <div contenteditable="true"></div>
+          </th>
+          <th>
+            <div contenteditable="true">Column 1</div>
+          </th>
+          <th>
+            <div contenteditable="true">Column 2</div>
+          </th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><input type="checkbox" /></td>
+          <td><input type="checkbox"></td>
           <td>
             <div contenteditable="true">1</div>
           </td>
@@ -81,7 +88,37 @@
         </tr>
       </tbody>
     </table>
-    </p>
+    </p> -->
+
+    <table class="contentTable">
+      <thead>
+        <tr>
+          <th>
+            <div class="div_textarea" contenteditable="true"></div>
+            <!-- <div class="div_textarea"><textarea class="th_textArea" rows="1"></textarea></div> -->
+          </th>
+          <th>
+            <div class="div_textarea" contenteditable="true">Column 2</div>
+            <!-- <div class="div_textarea"><textarea class="th_textArea" rows="1"></textarea></div> -->
+          </th>
+          <th>
+            <div class="div_textarea" contenteditable="true">Column 3</div>
+            <!-- <div class="div_textarea"><textarea class="th_textArea" rows="1"></textarea></div> -->
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox"></td>
+          <td>
+            <textarea rows="1">1</textarea>
+          </td>
+          <td>
+            <textarea rows="1">2</textarea>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <script src="./renderer.js"></script>

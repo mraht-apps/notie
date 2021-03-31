@@ -1,7 +1,7 @@
-body {
-  font-family: Arial, Helvetica, sans-serif;
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  -webkit-font-smoothing: auto;
   font-size: 16px;
-  line-height: 1.5;
 }
 
 .navbar {
@@ -18,7 +18,6 @@ body {
 .navbar a {
   padding: 6px 8px 6px 16px;
   text-decoration: none;
-  font-size: 20px;
   color: #000;
   display: block;
   background: #fff;
@@ -49,16 +48,16 @@ body {
   padding-left: 10px;
 }
 
-textarea {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 16px;
-  line-height: 1.5;
+textarea, div[contenteditable="true"] {
   width: 100%;
-  height: 100%;
-  resize: none;
-  border: 0px;
-}
 
-div[contenteditable="true"] {
-  background-color: lightgrey;
+  border: none;
+  overflow: auto;
+  outline: none;
+  resize: none;
+  margin: -2px;
+
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
 }
