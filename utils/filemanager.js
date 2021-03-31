@@ -12,6 +12,14 @@ function readFile(filename) {
   });
 }
 
+function readFolder(folder) {
+  return fs.readdirSync(folder, function (error) {
+    if (error) {
+      console.log(error);
+    }
+  });
+}
+
 function writeFile(filename, data) {
   fs.writeFileSync(filename, data, "utf8", function (error) {
     if (error) {
@@ -23,5 +31,6 @@ function writeFile(filename, data) {
 module.exports = {
   exists,
   readFile,
-  writeFile
+  readFolder,
+  writeFile,
 };

@@ -7,11 +7,14 @@
 const ipcRenderer = require("electron").ipcRenderer;
 const cryptomanager = require("./utils/cryptomanager.js");
 const filemanager = require("./utils/filemanager.js");
+const pagemanager = require("./utils/pagemanager.js");
 window.$ = window.jQuery = require("jquery");
 
-$("#newPage").on("click", function () {
-  let uuid = cryptomanager.generateUUID();
-  $("#navbarContent").append("<a href='#'>" + uuid + "</a>");
+$("#newPage").on("click", function (event) {
+  let pagename = cryptomanager.generateUUID();
+  let templateData = filemanager.readFile("template.html");
+  filemanager.writeFile("./pages/" + pagename + ".html", templateData);
+  pagemanager.addPageToMenu(pagename);
   return false;
 });
 

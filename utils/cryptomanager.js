@@ -1,5 +1,5 @@
 const CryptoJS = require("crypto-js");
-const { v4: uuid } = require('uuid');
+const { v4: uuid } = require("uuid");
 
 const IV_LENGTH = 16;
 var PASSWORD;
