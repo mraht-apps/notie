@@ -20,14 +20,10 @@ function init() {
 function setActiveRow(activeRow) {
   console.log(activeRow);
   $("tr").each(function () {
-    console.log(activeRow);
-    console.log($(this));
-    if (activeRow === this) {
+    if (this.is(activeRow)) {
       $(this).attr("id", "activeRow");
-      console.log("Set to active");
     } else {
       $(this).attr("id", "");
-      console.log("Set to inactive");
     }
   });
 }
