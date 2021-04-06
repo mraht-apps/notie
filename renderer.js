@@ -8,6 +8,7 @@ const ipcRenderer = require("electron").ipcRenderer;
 const cryptomanager = require("./utils/cryptomanager.js");
 const filemanager = require("./utils/filemanager.js");
 const pagemanager = require("./utils/pagemanager.js");
+const savemanager = require("./utils/savemanager.js");
 window.$ = window.jQuery = require("jquery");
 
 $("#newPage").on("click", function (event) {
@@ -60,7 +61,7 @@ $("#btnReadPassword").on("click", function (event) {
   console.log("User set iv to " + cryptomanager.IV + "\n");
 });
 
-// NEW Load data saved by user
+// NEW Load content based on data saved by user
 $("#btnLoad").on("click", function (event) {
   if (filemanager.exists("data.enc")) {
     let data = filemanager.readFile("data.enc");
@@ -79,21 +80,7 @@ $("#btnLoad").on("click", function (event) {
 
 // Save data entered by user
 $("#btnSave").on("click", function (event) {
-  //let pagename = document.getElementById("page-title").innerText;
-  let pagename = $("#page-title").text();
-
-  let lineContent = [];
-  const elements = $(".line");
-  Array.prototype.forEach.call(elements, function (element) {
-    lineContent.push(element.innerText);
-  });
-
-  let page = {
-    pageName: pagename,
-    lineContent: lineContent,
-  };
-
-  let jsonData = JSON.stringify(page);
+  let jsonData = savemanager.save();
   let data = cryptomanager.IV.toString();
   data += cryptomanager.encrypt(
     jsonData,
@@ -127,22 +114,24 @@ for (var i = 0; i < elements.length; i++) {
   });
 }
 
-var tables = $(".testTable");
+var tables = $(".contentTable");
 for (var i = 0; i < tables.length; i++) {
   resizableGrid(tables[i]);
 }
 
+// TODO Build grid based on saved user data
 function resizableGrid(table) {
-  var row = table.getElementsByTagName("tr")[0],
-    cols = row ? row.children : undefined;
+  var row = $(table).find("tr").eq(0);
+  var cols = row ? row.children() : undefined;
   if (!cols) return;
 
-  var rowHeight = row.offsetHeight;
+  var rowHeight = row.outerHeight();
 
   for (var i = 0; i < cols.length - 1; i++) {
     var div = createDiv(rowHeight);
     cols[i].appendChild(div);
     cols[i].style.position = "relative";
+    cols[i].style.width = "100px";
     setListeners(div);
   }
 
@@ -166,6 +155,28 @@ function resizableGrid(table) {
       e.target.style.backgroundColor = "";
     });
 
+    $(div).on("dblclick", function (e) {
+      let column = $(e.target).parent();
+      let text = column.text().trim();
+
+      var tempDiv = document.createElement("div");
+      document.body.appendChild(tempDiv);
+      tempDiv.style.fontSize = "" + 16 + "px";
+      tempDiv.style.position = "absolute";
+      tempDiv.style.left = -1000;
+      tempDiv.style.top = -1000;
+      tempDiv.innerHTML = text;
+
+      var width = tempDiv.clientWidth;
+      document.body.removeChild(tempDiv);
+      tempDiv = null;
+
+      if (width === 0) {
+        width = 20;
+      }
+      column.width(width);
+    });
+
     $(document).on("mousemove", function (e) {
       if (curCol) {
         var diffX = e.pageX - pageX;
@@ -177,7 +188,9 @@ function resizableGrid(table) {
         // Supress adjusting width in this case too
         let newWidth = curColWidth + diffX;
         console.log("Width: " + oldWidth + "/" + newWidth);
-        if (oldWidth !== newWidth) {
+        console.log($(curCol).width());
+
+        if (newWidth >= 19 && oldWidth !== newWidth) {
           console.log("Change width");
           curCol.style.width = newWidth + "px";
         }
@@ -185,6 +198,7 @@ function resizableGrid(table) {
     });
 
     $(document).on("mouseup", function (e) {
+      console.log("up");
       curCol = undefined;
       nxtCol = undefined;
       pageX = undefined;

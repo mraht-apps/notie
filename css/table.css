@@ -4,14 +4,14 @@
   overflow: hidden;
 }
 
-.contentTable th {
-  text-align: left;
-}
-
 .contentTable th,
 .contentTable td {
   border: 1px solid black;
   padding: 4px 8px 2px 8px;
+}
+
+.contentTable th {
+  text-align: left;
 }
 
 .contentTable .columnResizeSeparator {
@@ -28,10 +28,19 @@
   transition: all 200ms ease-out 0s;  
 }
 
-.contentTable .div_textarea {
+.contentTable .column_title {
   -ms-text-overflow: ellipsis;
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}
+
+.contentTable caption {
+	caption-side: top;
+  text-align: left;
+	padding-bottom: 6px; 
+
+  font-size: 20px;
+  font-weight: bold;
 }
