@@ -43,7 +43,7 @@ function saveTables() {
     }
 
     let tableContent = {
-      caption: table.caption.innerText,
+      caption: $(table.caption).children().text(),
       columns: columnsContent,
     };
     tablesContent.push(tableContent);

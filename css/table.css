@@ -7,11 +7,21 @@
 .contentTable th,
 .contentTable td {
   border: 1px solid black;
-  padding: 4px 8px 2px 8px;
+  padding: 4px 8px 6px 8px;
 }
 
 .contentTable th {
   text-align: left;
+}
+
+.contentTable th:hover,
+.contentTable tr:last-child:hover > td {
+  background-color: lightgrey;
+  cursor: pointer;
+}
+
+.contentTable tr:last-of-type td {
+  border: none;
 }
 
 .contentTable .columnResizeSeparator {
@@ -25,7 +35,7 @@
 
   -webkit-transition: all 200ms ease-out 0s;
   -moz-transition: all 200ms ease-out 0s;
-  transition: all 200ms ease-out 0s;  
+  transition: all 200ms ease-out 0s;
 }
 
 .contentTable .column_title {
@@ -36,11 +46,10 @@
   overflow: hidden;
 }
 
-.contentTable caption {
-	caption-side: top;
+.contentTable caption div {
+  caption-side: top;
   text-align: left;
-	padding-bottom: 6px; 
-
+  padding-bottom: 6px;
   font-size: 20px;
   font-weight: bold;
 }
