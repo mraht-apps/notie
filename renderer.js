@@ -165,7 +165,7 @@ function resizableGrid(table) {
       tempDiv.style.position = "absolute";
       tempDiv.style.left = -1000;
       tempDiv.style.top = -1000;
-      tempDiv.innerHTML = text;
+      tempDiv.textContent = text;
 
       var width = tempDiv.clientWidth;
       document.body.removeChild(tempDiv);
