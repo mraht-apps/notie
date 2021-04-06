@@ -5,11 +5,31 @@ function init() {
   }
 
   let rows = $("tr");
-  for(var i = 0; i < rows.length; i++) {
-      $(rows[i]).on("contextmenu", function(event) {
-        console.log(event.target.parentNode);
+  for (var i = 0; i < rows.length; i++) {
+    $(rows[i]).on("contextmenu", function (event) {
+      let parents = $(event.target).parents();
+      parents.each(function () {
+        if ($(this).is("tr")) {
+          setActiveRow($(this));
+        }
       });
+    });
   }
+}
+
+function setActiveRow(activeRow) {
+  console.log(activeRow);
+  $("tr").each(function () {
+    console.log(activeRow);
+    console.log($(this));
+    if (activeRow === this) {
+      $(this).attr("id", "activeRow");
+      console.log("Set to active");
+    } else {
+      $(this).attr("id", "");
+      console.log("Set to inactive");
+    }
+  });
 }
 
 // TODO Build grid based on saved user data
@@ -30,11 +50,11 @@ function buildResizableGrid(table) {
 }
 
 function createDiv(height) {
-    var div = document.createElement("div");
-    div.style.height = height + "px";
-    div.className = "columnResizeSeparator";
-    return div;
-  }
+  var div = document.createElement("div");
+  div.style.height = height + "px";
+  div.className = "columnResizeSeparator";
+  return div;
+}
 
 function setListeners(div) {
   var pageX, curCol, nxtCol, curColWidth, nxtColWidth;
@@ -85,8 +105,6 @@ function setListeners(div) {
       let sliceIndex = oldWidthStr.indexOf("px");
       let oldWidth = parseInt(parseInt(oldWidthStr.slice(0, sliceIndex)) + 1);
 
-      // TODO: Width changes though real width doesn't change:
-      // Supress adjusting width in this case too
       let newWidth = curColWidth + diffX;
       if (newWidth >= 19 && oldWidth !== newWidth) {
         curCol.style.width = newWidth + "px";
