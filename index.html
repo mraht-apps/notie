@@ -61,44 +61,20 @@
     <div>Before this line the content block ends.</div>
     </p>
 
-    <!-- <p>
     <table class="contentTable">
+      <caption>
+        <div contenteditable="true">Example</div>
+      </caption>
       <thead>
         <tr>
           <th>
-            <div contenteditable="true"></div>
+            <div class="column_title" contenteditable="true">Column 1</div>
           </th>
-          <th>
-            <div contenteditable="true">Column 1</div>
-          </th>
-          <th>
-            <div contenteditable="true">Column 2</div>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><input type="checkbox"></td>
-          <td>
-            <div contenteditable="true">1</div>
-          </td>
-          <td>
-            <div contenteditable="true">2</div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    </p> -->
-
-    <table class="contentTable">
-      <caption><div contenteditable="true">Example</div></caption>
-      <thead>
-        <tr>
           <th>
             <div class="column_title" contenteditable="true"></div>
           </th>
           <th>
-            <div class="column_title" contenteditable="true">Column 2</div>
+            <div class="column_title" contenteditable="true">Column 3</div>
           </th>
           <th>
             <div class="column_title">+</div>
@@ -107,15 +83,19 @@
       </thead>
       <tbody>
         <tr>
-          <td><input type="checkbox"></td>
-          <td>
-            <textarea rows="1">1</textarea>
-          </td>
+          <td><textarea rows="1">Wie geht's dir?</textarea></td>
+          <td><input type="checkbox" /></td>
+          <td><textarea rows="1">Hallo Welt</textarea></td>
+          <td></td>
+        </tr>
+        <tr id="activeRow">
+          <td><textarea rows="1">Wie geht's dir?</textarea></td>
+          <td><input type="checkbox" /></td>
+          <td><textarea rows="1">Hallo Welt</textarea></td>
           <td></td>
         </tr>
         <tr>
-          <td colspan="2">+ New</td>
-          <td></td>
+          <td colspan="4">+ New</td>
         </tr>
       </tbody>
     </table>

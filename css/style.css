@@ -57,7 +57,14 @@ textarea, div[contenteditable="true"] {
   resize: none;
   margin: -2px;
 
+  background-color: transparent;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
+}
+
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
 }
