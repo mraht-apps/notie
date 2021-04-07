@@ -1,3 +1,5 @@
+// OPT Encapsulate loading and saving functions into table.js or textline.js
+// OPT Show error if no or wrong password has been supplied
 function load() {
   let jsonData = readData();
   loadPageName(jsonData);
@@ -63,81 +65,12 @@ function loadTextline(element) {
 }
 
 function loadTable(element) {
-  let table = document.createElement("table");
-  table.className = "contentTable";
-
-  let caption = document.createElement("caption");
-  let captionDiv = document.createElement("div");
-  captionDiv.contentEditable = "true";
-  captionDiv.textContent = element.caption;
-  caption.appendChild(captionDiv);
-  table.insertBefore(caption, table.childNodes[0]);
-
-  let thead = document.createElement("thead");
-  let tr = document.createElement("tr");
-  $(element.columns).each(function (index, column) {
-    let th = document.createElement("th");
-    th.style.position = "relative";
-    th.style.width = column.width + "px";
-    let div = document.createElement("div");
-    div.className = "columnTitle";
-    div.contentEditable = "true";
-    div.textContent = column.name;
-    th.append(div);
-    tr.append(th);
-  });
-  // Create "+"-column
-  let th = document.createElement("th");
-  let div = document.createElement("div");
-  div.className = "columnTitle";
-  div.textContent = "+";
-  th.append(div);
-
-  tr.append(th);
-  thead.append(tr);
-  table.append(thead);
-
-  let tbody = document.createElement("tbody");
-  $(element.rows).each(function (index, row) {
-    let tr = document.createElement("tr");
-    console.log(row);
-    for (var i = 0; i < element.columns.length; i++) {
-      let column = element.columns[i];
-      let cell = row[i];
-      let td = document.createElement("td");
-      switch (column.type) {
-        case "checkbox":
-          let checkbox = document.createElement("input");
-          checkbox.type = "checkbox";
-          if (cell.text === "X") {
-            checkbox.checked = true;
-          }
-          td.append(checkbox);
-          break;
-        case "textarea":
-          let textarea = document.createElement("textarea");
-          textarea.rows = "1";
-          textarea.textContent = cell.text;
-          td.append(textarea);
-          break;
-      }
-      tr.append(td);
-    }
-    let td = document.createElement("td");
-    tr.append(td);
-    tbody.append(tr);
-  });
-  // Create "+ New"-row
-  tr = document.createElement("tr");
-  let td = document.createElement("td");
-  td.colSpan = element.columns.length + 1;
-  td.textContent = "+ New";
-  tr.append(td);
-  tbody.append(tr);
-
-  table.append(tbody);
-
-  return table;
+  let table = new tablemanager.Table(
+    element.caption,
+    element.columns,
+    element.rows
+  );
+  return table.build();
 }
 
 function save() {

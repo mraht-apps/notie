@@ -1,3 +1,138 @@
+class Table {
+  table;
+  captionText;
+  columns;
+  rows;
+
+  constructor(captionText, columns, rows) {
+    this.table = document.createElement("table");
+    this.table.className = "contentTable";
+
+    this.captionText = captionText;
+    this.columns = columns;
+    this.rows = rows;
+  }
+
+  build() {
+    this.createCaption();
+    this.createHeader();
+    this.createBody();
+
+    return this.table;
+  }
+
+  createCaption() {
+    let caption = document.createElement("caption");
+    let captionDiv = document.createElement("div");
+    captionDiv.contentEditable = "true";
+    captionDiv.textContent = this.captionText;
+    caption.appendChild(captionDiv);
+    this.table.insertBefore(caption, this.table.childNodes[0]);
+  }
+
+  createHeader() {
+    let thead = document.createElement("thead");
+    this.createColumns(thead);
+    this.table.append(thead);
+  }
+
+  createColumns(thead) {
+    let tr = document.createElement("tr");
+    let self = this;
+    $(this.columns).each(function (index, column) {
+      self.createColumn(thead, tr, column);
+    });
+    this.createColumnAdd(thead, tr);
+  }
+
+  createColumn(thead, tr, column) {
+    let th = document.createElement("th");
+    th.style.position = "relative";
+    th.style.width = column.width + "px";
+    let div = document.createElement("div");
+    div.className = "columnTitle";
+    div.contentEditable = "true";
+    div.textContent = column.name;
+    th.append(div);
+    tr.append(th);
+
+    thead.append(tr);
+  }
+
+  // Create "+"-column
+  createColumnAdd(thead, tr) {
+    let th = document.createElement("th");
+    let div = document.createElement("div");
+    div.className = "columnTitle";
+    div.textContent = "+";
+    th.append(div);
+    tr.append(th);
+
+    thead.append(tr);
+  }
+
+  createBody() {
+    let tbody = document.createElement("tbody");
+    this.createRows(tbody);
+    this.createRowAdd(tbody);
+    this.table.append(tbody);
+  }
+
+  createRows(tbody) {
+    self = this;
+    $(this.rows).each(function (index, row) {
+      self.createRow(tbody, row);
+    });
+  }
+
+  createRow(tbody, row) {
+    let tr = document.createElement("tr");
+    console.log(row);
+    for (var i = 0; i < this.columns.length; i++) {
+      let column = this.columns[i];
+      let cell = row[i];
+      let td = document.createElement("td");
+      switch (column.type) {
+        case "checkbox":
+          let checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          if (cell.text === "X") {
+            checkbox.checked = true;
+          }
+          td.append(checkbox);
+          break;
+        case "textarea":
+          let textarea = document.createElement("textarea");
+          textarea.rows = "1";
+          textarea.textContent = cell.text;
+          td.append(textarea);
+          break;
+      }
+      tr.append(td);
+    }
+
+    // Create empty cell for add column
+    let td = document.createElement("td");
+    tr.append(td);
+
+    tbody.append(tr);
+  }
+
+  createRowAdd(tbody) {
+    // Create "+ New"-row
+    let tr = document.createElement("tr");
+    let td = document.createElement("td");
+    td.colSpan = this.columns.length + 1;
+    td.textContent = "+ New";
+    tr.append(td);
+    tbody.append(tr);
+  }
+
+  getHtmlElement() {
+    return this.table;
+  }
+}
+
 function init() {
   var tables = $(".contentTable");
   for (var i = 0; i < tables.length; i++) {
@@ -132,5 +267,6 @@ function getStyleVal(elm, css) {
 }
 
 module.exports = {
+  Table,
   init,
 };
