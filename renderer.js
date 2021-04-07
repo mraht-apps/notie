@@ -5,11 +5,12 @@
 // selectively enable features needed in the rendering
 // process.
 const ipcRenderer = require("electron").ipcRenderer;
-const cryptomanager = require("./utils/cryptomanager.js");
-const filemanager = require("./utils/filemanager.js");
-const pagemanager = require("./utils/pagemanager.js");
-const savemanager = require("./utils/savemanager.js");
-const tablemanager = require("./utils/tablemanager.js");
+const cryptomanager = require("./utils/cryptography.js");
+const datamanager = require("./utils/data.js");
+const filemanager = require("./utils/file.js");
+const pagemanager = require("./utils/page.js");
+const tablemanager = require("./utils/table.js");
+const textline = require("./utils/textline.js");
 window.$ = window.jQuery = require("jquery");
 
 $("#newPage").on("click", function (event) {
@@ -33,8 +34,7 @@ $(".th_textArea").on("keydown", function (event) {
 // 3) Submit event in main.js
 // 4) Reply event in renderer.js
 $("#btnSubmitPagename").on("click", function (event) {
-  event.preventDefault(); // stop the form from submitting
-  let pagename = document.getElementById("pagename").value;
+  let pagename = $("#pagename").val();
   console.log("Call submitForm with pagename " + pagename + "\n");
 
   ipcRenderer.once("actionReply", function (event, response) {
@@ -46,14 +46,19 @@ $("#btnSubmitPagename").on("click", function (event) {
 
 // Save password entered by user
 $("#btnSavePassword").on("click", function (event) {
-  event.preventDefault(); // stop the form from submitting
-
   const password = $("#password").val();
   cryptomanager.PASSWORD = password;
   console.log("User set password to " + cryptomanager.PASSWORD + "\n");
 
   cryptomanager.IV = cryptomanager.generateIV();
   console.log("User set iv to " + cryptomanager.IV + "\n");
+});
+
+// Set login password
+$("#btnSetPassword").on("click", function (event) {
+  const password = $("#password").val();
+  cryptomanager.PASSWORD = password;
+  console.log("User set password to " + cryptomanager.PASSWORD + "\n");
 });
 
 // Read password
@@ -64,24 +69,12 @@ $("#btnReadPassword").on("click", function (event) {
 
 // NEW Load content based on data saved by user
 $("#btnLoad").on("click", function (event) {
-  if (filemanager.exists("data.enc")) {
-    let data = filemanager.readFile("data.enc");
-    let ivEnd = cryptomanager.IV_LENGTH * 2;
-    cryptomanager.IV = cryptomanager.parseIV(data.slice(0, ivEnd));
-
-    data = data.slice(ivEnd, data.length);
-    let jsonData = cryptomanager.decrypt(
-      data,
-      cryptomanager.PASSWORD,
-      cryptomanager.IV
-    );
-    console.log(jsonData);
-  }
+  datamanager.load();
 });
 
 // Save data entered by user
 $("#btnSave").on("click", function (event) {
-  let jsonData = savemanager.save();
+  let jsonData = datamanager.save();
   let data = cryptomanager.IV.toString();
   data += cryptomanager.encrypt(
     jsonData,
@@ -96,23 +89,20 @@ $("#btnRestart").on("click", function (event) {
   ipcRenderer.send("restart");
 });
 
-// Make content line editable
-const setContentEditable = function (event, enable) {
-  if (enable) {
-    event.target.readonly = "false";
-    event.target.focus();
-  } else if (!event.target.innerText.trim()) {
-    event.target.readonly = "true";
-  }
-};
-const elements = document.getElementsByClassName("line");
-for (var i = 0; i < elements.length; i++) {
-  elements[i].addEventListener("click", function (event) {
-    setContentEditable(event, true);
+$(".line").each(function () {
+  $(this).on("keypress", function (event) {
+    switch (event.key) {
+      case "/":
+        console.log(event.key);
+        break;
+      case "Enter":
+        console.log(event.key);
+        event.preventDefault();
+        break;
+    }
   });
-  elements[i].addEventListener("focusout", function (event) {
-    setContentEditable(event, false);
-  });
-}
+});
+
+textline.init();
 
 tablemanager.init();

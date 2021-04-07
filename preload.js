@@ -19,10 +19,10 @@ function setSystemInfo() {
 }
 
 function addPagesToNavbar() {
-  const filemanager = global.include("/utils/filemanager.js");
+  const filemanager = require("./utils/file.js");
   let files = filemanager.readFolder("./pages/");
 
-  const pagemanager = global.include("/utils/pagemanager.js");
+  const pagemanager = require("./utils/page.js");
   files.forEach(function (page) {
     console.log("Append page to menu: " + page);
 

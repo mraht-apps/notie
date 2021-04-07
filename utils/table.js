@@ -18,12 +18,12 @@ function init() {
 }
 
 function setActiveRow(activeRow) {
-  console.log(activeRow);
   $("tr").each(function () {
-    if (this.is(activeRow)) {
-      $(this).attr("id", "activeRow");
+    let row = $(this);
+    if (row.is(activeRow)) {
+      row.attr("id", "activeRow");
     } else {
-      $(this).attr("id", "");
+      row.attr("id", "");
     }
   });
 }
@@ -40,7 +40,6 @@ function buildResizableGrid(table) {
     var div = createDiv(rowHeight);
     cols[i].appendChild(div);
     cols[i].style.position = "relative";
-    cols[i].style.width = "100px";
     setListeners(div);
   }
 }

@@ -1,5 +1,4 @@
-// Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 
 function createWindow() {
@@ -17,14 +16,10 @@ function createWindow() {
   mainWindow.maximize();
 }
 
-global.include = function(path) {
-  return require(__dirname + path);
-}
-
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', function () {
+app.on("ready", function () {
   createWindow();
 
   app.on("activate", function () {

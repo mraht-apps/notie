@@ -1,5 +1,5 @@
 function addPageToMenu(pagename) {
-  const filemanager = global.include("/utils/filemanager.js");
+  const filemanager = require("./file.js");
 
   var a = document.createElement("a");
   a.id = "page";

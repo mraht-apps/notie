@@ -47,7 +47,10 @@
 }
 
 .contentTable tr:last-of-type td {
-  border: none;
+  border-top: none;
+  border-right: none;
+
+  color: rgba(55, 53, 47, 0.7);
 }
 
 .contentTable .columnResizeSeparator {
@@ -64,7 +67,7 @@
   transition: all 200ms ease-out 0s;
 }
 
-.contentTable .column_title {
+.contentTable .columnTitle {
   -ms-text-overflow: ellipsis;
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;

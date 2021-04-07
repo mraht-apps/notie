@@ -40,8 +40,9 @@
         <tr>
           <td>Password:</td>
           <td><input type="password" name="password" id="password"></td>
-          <td><input type="submit" id="btnSavePassword" value="Save"> <input type="button" id="btnReadPassword"
-              value="Read">
+          <td><input type="submit" id="btnSavePassword" value="Save">
+            <input type="button" id="btnSetPassword" value="Login">
+            <input type="button" id="btnReadPassword" value="Read">
           </td>
         </tr>
       </tbody>
@@ -53,62 +54,60 @@
       <input type="button" id="btnRestart" value="Restart" />
     </p>
 
-    <p>
-    <div>After this line the content block begins:</div>
-    <div id="content">
-      <textarea class="line" rows="1" wrap="hard"></textarea>
-    </div>
-    <div>Before this line the content block ends.</div>
-    </p>
+    <div id="pageContent">
 
-    <table class="contentTable">
-      <caption>
-        <div contenteditable="true">Example</div>
-      </caption>
-      <thead>
-        <tr>
-          <th>
-            <div class="column_title" contenteditable="true">Column 1</div>
-          </th>
-          <th>
-            <div class="column_title" contenteditable="true"></div>
-          </th>
-          <th>
-            <div class="column_title" contenteditable="true">Column 3</div>
-          </th>
-          <th>
-            <div class="column_title">+</div>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><textarea rows="1">Wie geht's dir? 1</textarea></td>
-          <td><input type="checkbox" /></td>
-          <td><textarea rows="1">Hallo Welt 1</textarea></td>
-          <td></td>
-        </tr>
-        <tr id="activeRow">
-          <td><textarea rows="1">Wie geht's dir? 2</textarea></td>
-          <td><input type="checkbox" /></td>
-          <td><textarea rows="1">Hallo Welt 2</textarea></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td><textarea rows="1">Wie geht's dir? 3</textarea></td>
-          <td><input type="checkbox" /></td>
-          <td><textarea rows="1">Hallo Welt 3</textarea></td>
-          <td></td>
-        </tr>        
-        <tr>
-          <td colspan="4">+ New</td>
-        </tr>
-      </tbody>
-    </table>
+      <textarea class="line" rows="1"></textarea>
+
+      <table class="contentTable">
+        <caption>
+          <div contenteditable="true">Example</div>
+        </caption>
+        <thead>
+          <tr>
+            <th data-type="textarea">
+              <div class="columnTitle" contenteditable="true">Column 1</div>
+            </th>
+            <th data-type="checkbox">
+              <div class="columnTitle" contenteditable="true"></div>
+            </th>
+            <th data-type="textarea">
+              <div class="columnTitle" contenteditable="true">Column 3</div>
+            </th>
+            <th data-type="textarea">
+              <div class="columnTitle">+</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><textarea rows="1">Wie geht's dir? 1</textarea></td>
+            <td><input type="checkbox" /></td>
+            <td><textarea rows="1">Hallo Welt 1</textarea></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><textarea rows="1">Wie geht's dir? 2</textarea></td>
+            <td><input type="checkbox" /></td>
+            <td><textarea rows="1">Hallo Welt 2</textarea></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><textarea rows="1">Wie geht's dir? 3</textarea></td>
+            <td><input type="checkbox" /></td>
+            <td><textarea rows="1">Hallo Welt 3</textarea></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td colspan="4">+ New</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
   </div>
 
   <script src="./renderer.js"></script>
-  <script src="./main.js"></script>
 </body>
 
 </html>
