@@ -4,48 +4,16 @@
   font-size: 16px;
 }
 
-.navbar {
-  height: 100%;
-  width: 200px;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  background-color: #fff;
-  border-right: 1px solid #e1e1e1;
-  overflow-x: hidden;
-}
-
-.navbar a {
-  padding: 6px 8px 6px 16px;
-  text-decoration: none;
-  color: #000;
-  display: block;
-  background: #fff;
+html {
   width: 100%;
-  text-align: left;
-  cursor: pointer;
-  outline: none;
-
-  border-top: 1px solid #e1e1e1;
-  border-right: 1px solid #e1e1e1;
-  border-bottom: 1px solid #e1e1e1;
-  border-left: 1px solid #e1e1e1;
+  height: 100%;
 }
 
-#navbarContent a {
-  border-top: 0px;
-  border-right: 1px solid #e1e1e1;
-  border-bottom: 1px solid #e1e1e1;
-  border-left: 1px solid #e1e1e1;
-}
-
-.navbar a:hover {
-  background: #e1e1e1;
-}
-
-.main {
-  margin-left: 200px; /* Same as the width of the sidenav */
-  padding-left: 10px;
+body {
+  box-sizing: border-box;
+  height: 100%;
+  margin: 0;
+  background-color: black;
 }
 
 textarea, div[contenteditable="true"] {
