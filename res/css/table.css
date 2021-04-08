@@ -3,6 +3,11 @@
   border-collapse: separate;
   border-spacing: 0;
   overflow: hidden;
+  padding-bottom: 10px;
+}
+
+.contentTable:hover, .contentTable textarea:hover {
+  cursor: default;
 }
 
 .contentTable th,
@@ -19,9 +24,14 @@
   border-top: none;
 }
 
+.contentTable td:hover {
+  cursor: default;
+}
+
 .contentTable td textarea {
   padding-top: 2px;
   padding-left: 0px;
+  cursor: default;
 }
 
 .contentTable th:last-child,

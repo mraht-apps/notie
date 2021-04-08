@@ -1,7 +1,7 @@
 // OPT Encapsulate loading and saving functions into table.js or textline.js
 // OPT Show error if no or wrong password has been supplied
 const filemanager = require("../utils/file.js");
-const tablemanager = require("../model/table.js");
+const Table = require("../model/table.js");
 
 function load() {
   let jsonData = readData();
@@ -54,15 +54,12 @@ function resetPageContent() {
 }
 
 function loadTextline(parent, element) {
-  let textarea = document.createElement("textarea");
-  textarea.className = "line";
-  textarea.rows = "1";
-  textarea.textContent = element.text;
-  parent.append(textline);
+  let textline = new Textline(parent, element.text);
+  textline.build();
 }
 
 function loadTable(parent, element) {
-  new tablemanager.Table(
+  new Table(
     parent,
     element.caption,
     element.columns,
@@ -94,7 +91,7 @@ function savePageContent() {
     let element = $(this);
     let textline, table;
 
-    if (element.is("textarea")) {
+    if (element.is("textarea") && element.val().trim()) {
       textline = saveTextline(element);
       pageContent.push(textline);
     } else if (element.is("table")) {

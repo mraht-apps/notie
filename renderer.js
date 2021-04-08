@@ -17,7 +17,7 @@ const datamanager = require("./controller/data.js");
 
 // Model
 const pagemanager = require("./model/page.js");
-const textline = require("./model/textline.js");
+const Textline = require("./model/textline.js");
 
 $("#newPage").on("click", function (event) {
   let pagename = cryptomanager.generateUUID();
@@ -27,6 +27,7 @@ $("#newPage").on("click", function (event) {
   return false;
 });
 
+// TODO Move
 // Handle pressing ENTER in table column header
 $(".th_textArea").on("keydown", function (event) {
   if (event.key === "Enter") {
@@ -76,6 +77,8 @@ $("#btnReadPassword").on("click", function (event) {
 // NEW Load content based on data saved by user
 $("#btnLoad").on("click", function (event) {
   datamanager.load();
+  let textline = new Textline($("#pageContent"));
+  textline.build();
 });
 
 // Save data entered by user
@@ -95,18 +98,5 @@ $("#btnRestart").on("click", function (event) {
   ipcRenderer.send("restart");
 });
 
-$(".line").each(function () {
-  $(this).on("keypress", function (event) {
-    switch (event.key) {
-      case "/":
-        console.log(event.key);
-        break;
-      case "Enter":
-        console.log(event.key);
-        event.preventDefault();
-        break;
-    }
-  });
-});
-
-textline.init();
+let textline = new Textline($("#pageContent"));
+textline.build();
