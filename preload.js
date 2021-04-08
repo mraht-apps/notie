@@ -1,5 +1,3 @@
-window.addEventListener("DOMContentLoaded", () => {});
-
 window.onload = function () {
   setSystemInfo();
   addPagesToNavbar();
@@ -22,7 +20,7 @@ function addPagesToNavbar() {
   const filemanager = require("./utils/file.js");
   let files = filemanager.readFolder("./pages/");
 
-  const pagemanager = require("./utils/page.js");
+  const pagemanager = require("./model/page.js");
   files.forEach(function (page) {
     console.log("Append page to menu: " + page);
 

@@ -1,0 +1,88 @@
+.contentTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+}
+
+.contentTable th,
+.contentTable td {
+  border-right: 1px solid rgba(55, 53, 47, 0.2);
+  border-bottom: 1px solid rgba(55, 53, 47, 0.2);
+  padding: 6px 10px 6px 10px;
+  text-align: left;
+}
+
+.contentTable th {
+  color: rgba(55, 53, 47, 0.7);
+  font-weight: normal;
+  border-top: none;
+}
+
+.contentTable td textarea {
+  padding-top: 2px;
+  padding-left: 0px;
+}
+
+.contentTable th:last-child,
+.contentTable td:last-child {
+  border-right: none;
+}
+
+.contentTable th:first-child,
+.contentTable td:first-child {
+  border-left: none;
+}
+
+.contentTable th:hover,
+.contentTable tr:last-child:hover > td {
+  background-color: lightgrey;
+  cursor: pointer;
+}
+
+.contentTable th:last-child div {
+  font-size: 16px;
+  font-weight: normal;
+  margin-top: -2px;
+}
+
+.contentTable tr:last-of-type td {
+  border-top: none;
+  border-right: none;
+
+  color: rgba(55, 53, 47, 0.7);
+}
+
+.contentTable .columnResizeSeparator {
+  top: 0;
+  right: -3px;
+  width: 5px;
+  position: absolute;
+  z-index: 1;
+  cursor: col-resize;
+  user-select: none;
+
+  -webkit-transition: all 200ms ease-out 0s;
+  -moz-transition: all 200ms ease-out 0s;
+  transition: all 200ms ease-out 0s;
+}
+
+.contentTable .columnTitle {
+  -ms-text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.contentTable caption div {
+  caption-side: top;
+  text-align: left;
+  padding-bottom: 6px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.contentTable #activeRow {
+  background-color: rgba(45, 170, 219, 0.2);
+}

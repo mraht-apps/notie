@@ -4,14 +4,20 @@
 // `nodeIntegration` is turned off. Use `preload.js` to
 // selectively enable features needed in the rendering
 // process.
-const ipcRenderer = require("electron").ipcRenderer;
-const cryptomanager = require("./utils/cryptography.js");
-const datamanager = require("./utils/data.js");
-const filemanager = require("./utils/file.js");
-const pagemanager = require("./utils/page.js");
-const tablemanager = require("./utils/table.js");
-const textline = require("./utils/textline.js");
 window.$ = window.jQuery = require("jquery");
+
+const ipcRenderer = require("electron").ipcRenderer;
+
+// Utilities
+const cryptomanager = require("./utils/cryptography.js");
+const filemanager = require("./utils/file.js");
+
+// Controller
+const datamanager = require("./controller/data.js");
+
+// Model
+const pagemanager = require("./model/page.js");
+const textline = require("./model/textline.js");
 
 $("#newPage").on("click", function (event) {
   let pagename = cryptomanager.generateUUID();
@@ -104,5 +110,3 @@ $(".line").each(function () {
 });
 
 textline.init();
-
-tablemanager.init();

@@ -1,12 +1,16 @@
 {
-  "name": "electron-quick-start",
-  "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "name": "notie",
+  "version": "08.04.2021-001",
+  "description": "Table-based note-taking app",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "package-mac": "electron-packager . notie --overwrite --platform=darwin --arch=x64 --icon=res/icon/icon.ico --prune=true --out=release-builds",
+    "package-win": "electron-packager . notie --overwrite --asar --platform=win32 --arch=ia32 --icon=res/icon/icon.ico --prune=true --out=release-builds --version-string.ProductName=\"Notie\"",    
+    "package-linux": "electron-packager . notie --overwrite --asar --platform=linux --arch=x64 --icon=res/icon/icon.ico --prune=true --out=release-builds"
+     
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/mariusraht1/notie.git",
   "keywords": [
     "Electron",
     "quick",
@@ -14,8 +18,8 @@
     "tutorial",
     "demo"
   ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "author": "Marius Raht",
+  "license": "MIT",
   "devDependencies": {
     "electron": "^12.0.2",
     "electron-builder": "^22.9.1"
@@ -23,6 +27,7 @@
   "dependencies": {
     "crypto-js": "^4.0.0",
     "jquery": "^3.6.0",
+    "sqlite3": "^5.0.2",
     "uuid": "^8.3.2"
   }
 }

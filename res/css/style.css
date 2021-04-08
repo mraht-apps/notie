@@ -1,0 +1,70 @@
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  -webkit-font-smoothing: auto;
+  font-size: 16px;
+}
+
+.navbar {
+  height: 100%;
+  width: 200px;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  background-color: #fff;
+  border-right: 1px solid #e1e1e1;
+  overflow-x: hidden;
+}
+
+.navbar a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  color: #000;
+  display: block;
+  background: #fff;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+
+  border-top: 1px solid #e1e1e1;
+  border-right: 1px solid #e1e1e1;
+  border-bottom: 1px solid #e1e1e1;
+  border-left: 1px solid #e1e1e1;
+}
+
+#navbarContent a {
+  border-top: 0px;
+  border-right: 1px solid #e1e1e1;
+  border-bottom: 1px solid #e1e1e1;
+  border-left: 1px solid #e1e1e1;
+}
+
+.navbar a:hover {
+  background: #e1e1e1;
+}
+
+.main {
+  margin-left: 200px; /* Same as the width of the sidenav */
+  padding-left: 10px;
+}
+
+textarea, div[contenteditable="true"] {
+  width: 100%;
+
+  border: none;
+  overflow: auto;
+  outline: none;
+  resize: none;
+  margin: -2px;
+
+  background-color: transparent;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
