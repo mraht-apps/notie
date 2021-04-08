@@ -1,0 +1,65 @@
+a.selected {
+  background-color: #1f75cc;
+  color: white;
+  z-index: 100;
+}
+
+.messagepop {
+  background-color: #ffffff;
+  border: 1px solid #999999;
+  cursor: default;
+  display: none;
+  position: absolute;
+  text-align: left;
+  z-index: 50;
+  padding: 8px 4px 4px 4px;
+}
+
+.messagepop p,
+.messagepop.div {
+  border-bottom: 1px solid #efefef;
+}
+
+.messagepop table {
+  cursor: pointer;
+  border-collapse: collapse;
+  border-spacing: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.messagepop tr td:first-child div {
+  border: 1px solid rgba(55, 53, 47, 0.2);
+  padding: 6px;
+
+  color: rgba(55, 53, 47, 0.6);
+  font-size: 26px;
+  text-align: center;
+}
+
+.messagepop th,
+.messagepop td {
+  padding: 6px;
+  text-align: left;
+}
+
+.messagepop tr:hover {
+  background-color: rgba(55, 53, 47, 0.1);
+}
+
+.sectionTitle {
+  padding-left: 6px;
+  font-weight: bold;
+  font-size: 14px;
+  color: rgba(55, 53, 47, 0.6);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.description {
+  color: rgba(55, 53, 47, 0.6);
+}
