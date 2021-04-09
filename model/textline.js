@@ -1,5 +1,5 @@
 const placeholderText = "Type '/' for commands";
-
+const blockmenu = require("../controller/blockmenu.js");
 class Textline {
   textarea;
 
@@ -35,8 +35,6 @@ class Textline {
     $(this.textarea).on("keypress", function (event) {
       let textarea = $(event.target);
       switch (event.key) {
-        case "/":
-          break;
         case "Enter":
           let newTextline = new Textline(textarea.parent(), "");
           newTextline.addEventListeners();
@@ -44,11 +42,15 @@ class Textline {
           Textline.focusNext($(newTextline.textarea));
           event.preventDefault();
           break;
-        default:
-          // textline.height("28px");
-          // textline.height(textline.prop("scrollHeight") + "px");
-          console.log(textarea.prop("scrollHeight"));
-          break;
+      }
+
+      // NEW Character: Jump to entry which matches character behind '/'
+      let regex = /^[\w\s]+$/;
+      if (event.key.match(regex) || event.key == "Escape") {
+        blockmenu.close();
+        // textline.height("28px");
+        // textline.height(textline.prop("scrollHeight") + "px");
+        console.log(textarea.prop("scrollHeight"));
       }
     });
 
@@ -66,6 +68,9 @@ class Textline {
     });
 
     $(this.textarea).on("keyup", function (event) {
+      // Ignore certain character
+      if (event.key == "Shift") return;
+
       let textarea = $(event.target);
       switch (event.key) {
         case "ArrowUp":
@@ -89,6 +94,9 @@ class Textline {
             textarea.remove();
             Textline.focusPrev(prevElement);
           }
+          break;
+        case "/":
+          blockmenu.openFirstTime();
           break;
       }
     });

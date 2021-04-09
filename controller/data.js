@@ -59,12 +59,7 @@ function loadTextline(parent, element) {
 }
 
 function loadTable(parent, element) {
-  new Table(
-    parent,
-    element.caption,
-    element.columns,
-    element.rows
-  );
+  Table.build(parent, element.caption, element.columns, element.rows);
 }
 
 function save() {

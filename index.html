@@ -8,9 +8,9 @@
   <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
   <!-- CSS Style -->
   <link rel="stylesheet" href="./res/css/style.css" type="text/css">
-  <link rel="stylesheet" href="./res/css/menu.css" type="text/css">
+  <link rel="stylesheet" href="./res/css/pagemenu.css" type="text/css">
   <link rel="stylesheet" href="./res/css/table.css" type="text/css">
-  <link rel="stylesheet" href="./res/css/blockMenu.css" type="text/css">
+  <link rel="stylesheet" href="./res/css/blockmenu.css" type="text/css">
 </head>
 
 <body class="container">
@@ -55,30 +55,34 @@
       <input type="button" id="btnRestart" value="Restart" />
     </p>
 
-    <div class="messagepop pop">
+    <div class="blockMenu">
       <table>
         <tbody>
-            <tr><div class="sectionTitle">BASIC BLOCKS</div></tr>
-            <tr>
-                <td><div class="icon">Aa</div></td>
-                <td>
-                    <div>Text</div>
-                    <div class="description">Just start writing with plain text.</div>
-                </td>
-            </tr>
-            <tr>
-                <td><div class="icon">Tbl</div></td>
-                <td>
-                    <div>Table</div>
-                    <div class="description">Create a table in this page.</div>
-                </td>
-            </tr>
+          <tr>
+            <div class="sectionTitle">BASIC BLOCKS</div>
+          </tr>
+          <tr class="clickable">
+            <td>
+              <div class="icon">Aa</div>
+            </td>
+            <td>
+              <div>Text</div>
+              <div class="description">Just start writing with plain text.</div>
+            </td>
+          </tr>
+          <tr class="clickable">
+            <td>
+              <div class="icon">Tbl</div>
+            </td>
+            <td>
+              <div>Table</div>
+              <div class="description">Create a table in this page.</div>
+            </td>
+          </tr>
         </tbody>
-    </table>
+      </table>
     </div>
-
-    <a href="/contact" id="contact">Contact Us</a>
-
+    
     <div id="pageContent">
 
       <!-- <textarea class="line" rows="1"></textarea> -->
@@ -133,7 +137,8 @@
   </main>
 
   <script src="./renderer.js"></script>
-  <script src="./controller/menu.js"></script>
+  <script src="./controller/pagemenu.js"></script>
+  <script src="./controller/blockmenu.js"></script>
 </body>
 
 </html>

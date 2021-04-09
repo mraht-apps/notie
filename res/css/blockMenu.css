@@ -1,26 +1,29 @@
-a.selected {
+a.visible {
   background-color: #1f75cc;
   color: white;
   z-index: 100;
 }
 
-.messagepop {
+.blockMenu {
   background-color: #ffffff;
   border: 1px solid #999999;
   cursor: default;
   display: none;
   position: absolute;
   text-align: left;
-  z-index: 50;
+  z-index: 99999;
   padding: 8px 4px 4px 4px;
+  margin-top: -160px; /* 20px */
+  margin-left: 80px;
 }
 
-.messagepop p,
-.messagepop.div {
+.blockMenu p,
+.blockMenu.div {
+  padding-right: 4px;
   border-bottom: 1px solid #efefef;
 }
 
-.messagepop table {
+.blockMenu table {
   cursor: pointer;
   border-collapse: collapse;
   border-spacing: 0;
@@ -30,7 +33,7 @@ a.selected {
   user-select: none;
 }
 
-.messagepop tr td:first-child div {
+.blockMenu tr td:first-child div {
   border: 1px solid rgba(55, 53, 47, 0.2);
   padding: 6px;
 
@@ -39,20 +42,22 @@ a.selected {
   text-align: center;
 }
 
-.messagepop th,
-.messagepop td {
+.blockMenu th,
+.blockMenu td {
   padding: 6px;
   text-align: left;
 }
 
-.messagepop tr:hover {
+.blockMenu .active {
   background-color: rgba(55, 53, 47, 0.1);
 }
 
 .sectionTitle {
   padding-left: 6px;
+  padding-bottom: 4px;
+
   font-weight: bold;
-  font-size: 14px;
+  font-size: 12px;
   color: rgba(55, 53, 47, 0.6);
   -webkit-user-select: none;
   -moz-user-select: none;
