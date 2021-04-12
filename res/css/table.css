@@ -7,7 +7,7 @@
 }
 
 .contentTable:hover,
-.contentTable textarea:hover {
+.contentTable input:hover {
   cursor: default;
 }
 
@@ -28,16 +28,11 @@
 }
 
 .contentTable th:hover {
-  background-color:  rgb(228, 228, 228);
+  background-color: rgb(228, 228, 228);
 }
 
 .contentTable th:last-child:hover {
   cursor: pointer;
-}
-
-.contentTable th textarea {
-  color: rgba(55, 53, 47, 0.6);
-  cursor: default;
 }
 
 .columnTitle {
@@ -67,7 +62,12 @@
   cursor: pointer;
 }
 
-.contentTable td textarea {
+.contentTable th input {
+  color: rgba(55, 53, 47, 0.6);
+  cursor: default;
+}
+
+.contentTable td input {
   padding-top: 2px;
   padding-left: 0px;
   cursor: default;
@@ -130,4 +130,20 @@
 
 .contentTable #activeRow {
   background-color: rgba(45, 170, 219, 0.2);
+}
+
+.contentTable input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  overflow: hidden;
+  min-height: 100%;
+  outline: none;
+  border: none;
+  resize: none;
+
+  background-color: transparent;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
 }
