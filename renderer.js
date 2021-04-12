@@ -101,7 +101,7 @@ $("#btnRestart").on("click", function (event) {
 let textline = new Textline($("#pageContent"));
 textline.build();
 
-// const Table = require("./model/table.js");
+const Table = require("./model/table.js");
 // Table.build($("#pageContent"), "Untitled", {
 //   columns: [
 //     { name: "Name", type: "text", width: "100px" },
@@ -114,6 +114,6 @@ textline.build();
 //     { Name: "+ New", Tags: false, "+ New": "" },
 //   ],
 // });
-// let table = $(".contentTable").eq(0);
+let table = $(".contentTable").eq(0);
 // Table.createColumnSeparators(table);
-// Table.addEventListenersColumnsSeparators(table);
+Table.addEventListenersColumnsSeparators(table);
