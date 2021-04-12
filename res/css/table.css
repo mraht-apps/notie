@@ -12,12 +12,12 @@
 }
 
 .contentTable th,
-.contentTable td {
+td {
   border-right: 1px solid rgba(55, 53, 47, 0.2);
   border-bottom: 1px solid rgba(55, 53, 47, 0.2);
-  padding: 6px 10px 6px 10px;
   text-align: left;
   height: 22px;
+  padding: 6px 0px 6px 8px;
 }
 
 .contentTable th {
@@ -33,44 +33,6 @@
 
 .contentTable th:last-child:hover {
   cursor: pointer;
-}
-
-.columnTitle {
-  -ms-text-overflow: ellipsis;
-  -o-text-overflow: ellipsis;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.columnTitle:not(:last-child) {
-  position: relative;
-  padding-left: 1.3em;
-}
-
-.columnIcon {
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  top: 5px;
-  left: 0px;
-}
-
-.columnIcon:hover {
-  background-color: rgb(236, 236, 236);
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.contentTable th input {
-  color: rgba(55, 53, 47, 0.6);
-  cursor: default;
-}
-
-.contentTable td input {
-  padding-top: 2px;
-  padding-left: 0px;
-  cursor: default;
 }
 
 .contentTable th:last-child,
@@ -94,11 +56,29 @@
   margin-top: -2px;
 }
 
+.contentTable th input {
+  color: rgba(55, 53, 47, 0.6);
+  cursor: default;
+}
+
+.contentTable td input {
+  padding-top: 2px;
+  cursor: default;
+}
+
 .contentTable tr:last-of-type td {
   border-top: none;
   border-right: none;
 
   color: rgba(55, 53, 47, 0.7);
+}
+
+.contentTable caption div {
+  caption-side: top;
+  text-align: left;
+  padding-bottom: 6px;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .columnResizeSeparator {
@@ -120,30 +100,63 @@
   background-color: rgba(46, 170, 220, 1);
 }
 
-.contentTable caption div {
-  caption-side: top;
-  text-align: left;
-  padding-bottom: 6px;
-  font-size: 20px;
-  font-weight: bold;
-}
-
 .contentTable #activeRow {
   background-color: rgba(45, 170, 219, 0.2);
 }
 
-.contentTable input[type="text"] {
-  width: 100%;
-  box-sizing: border-box;
-  display: flex;
+.columnTitle {
+  -ms-text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   overflow: hidden;
-  min-height: 100%;
+}
+
+/* .columnTitle:not(:last-child) {
+  position: relative;
+} */
+
+.columnIcon {
+  /* position: absolute;
+  top: 0px;
+  left: 0px; */
+
+  float: left;
+  width: 18px;
+  height: 18px;
+  text-align: center;
+  vertical-align: middle;
+
+  /* padding-right: 8px; */
+}
+
+.columnIcon:hover {
+  background-color: rgb(236, 236, 236);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.contentTable input[type="text"] {
   outline: none;
   border: none;
-  resize: none;
+  width: 100%;
 
   background-color: transparent;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
+}
+
+.contentTable input {
+  padding: 0px;
+  margin: 0px;
+}
+
+.test-div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+  width: 100%;
+  border: 1px solid black;
 }

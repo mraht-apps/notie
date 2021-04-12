@@ -67,14 +67,44 @@ class Table {
   static generateTableHead(table, data) {
     let thead = table.createTHead();
     let row = thead.insertRow();
-    for (let column of data.columns) {
+    $(data.columns).each(function () {
+      let column = $(this);
+      let columnType = column.attr("type");
+      let columnName = column.attr("name");
+
       let th = document.createElement("th");
-      let text = document.createTextNode(column.name);
-      th.appendChild(text);
-      if (column.width) th.style.width = column.width;
-      th.dataset.type = column.type;
+
+      let columnWidth = column.attr("width");
+      if (columnWidth) th.style.width = columnWidth;
+      th.dataset.type = column.attr("type");
+
+      let div = document.createElement("div");
+      div.className = "columnTitle";
+
+      if (columnType !== "add") {
+        let span = document.createElement("span");
+        let img = document.createElement("img");
+        switch (columnType) {
+          case "checkbox":
+            img.src = "./res/img/checkbox.png";
+            break;
+          case "text":
+            img.src = "./res/img/text.png";
+            break;
+        }
+        span.className = "columnIcon";
+        span.appendChild(img);
+        div.append(span);
+      }
+
+      let input = document.createElement("input");
+      input.type = "text";
+      input.value = columnName;
+      div.append(input);
+
+      th.appendChild(div);
       row.appendChild(th);
-    }
+    });
   }
 
   // // OPT Try to optimize logic of addColumn/addRow and createColumns/createColumn/createRow
@@ -308,21 +338,7 @@ class Eventhandler {
   static onMousedownColumnSeparator(event) {
     this.currentColumn = event.target.parentElement;
     this.pageX = event.pageX;
-
-    let padding = 0;
-    let boxSizing = window
-      .getComputedStyle(this.currentColumn, null)
-      .getPropertyValue("box-sizing");
-    if (boxSizing !== "border-box") {
-      let paddingLeft = window
-        .getComputedStyle(this.currentColumn, null)
-        .getPropertyValue("padding-left");
-      let paddingRight = window
-        .getComputedStyle(this.currentColumn, null)
-        .getPropertyValue("padding-right");
-      padding = parseInt(paddingLeft) + parseInt(paddingRight);
-    }
-    this.width = this.currentColumn.offsetWidth - padding;
+    this.width = this.currentColumn.offsetWidth;
   }
 
   static onDblclickColumnSeparator(event) {

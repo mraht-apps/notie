@@ -101,19 +101,19 @@ $("#btnRestart").on("click", function (event) {
 let textline = new Textline($("#pageContent"));
 textline.build();
 
-const Table = require("./model/table.js");
-Table.build($("#pageContent"), "Untitled", {
-  columns: [
-    { name: "Name", type: "text", width: "100px" },
-    { name: "Tags", type: "checkbox", width:"20px" },
-    { name: "+ New", type: "add" },
-  ],
-  rows: [
-    { Name: "Hallo Welt 1", Tags: true, "+ New": "" },
-    { Name: "Hallo Welt 2", Tags: false, "+ New": "" },
-    { Name: "+ New", Tags: false, "+ New": "" },
-  ],
-});
-let table = $(".contentTable").eq(0);
-Table.createColumnSeparators(table);
-Table.addEventListenersColumnsSeparators(table);
+// const Table = require("./model/table.js");
+// Table.build($("#pageContent"), "Untitled", {
+//   columns: [
+//     { name: "Name", type: "text", width: "100px" },
+//     { name: "Tags", type: "checkbox", width:"20px" },
+//     { name: "+ New", type: "add" },
+//   ],
+//   rows: [
+//     { Name: "Hallo Welt 1", Tags: true, "+ New": "" },
+//     { Name: "Hallo Welt 2", Tags: false, "+ New": "" },
+//     { Name: "+ New", Tags: false, "+ New": "" },
+//   ],
+// });
+// let table = $(".contentTable").eq(0);
+// Table.createColumnSeparators(table);
+// Table.addEventListenersColumnsSeparators(table);
