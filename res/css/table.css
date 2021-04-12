@@ -84,7 +84,7 @@
   background-color: rgba(46, 170, 220, 1);
 }
 
-.contentTable .columnTitle {
+.columnTitle {
   -ms-text-overflow: ellipsis;
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
