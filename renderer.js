@@ -102,5 +102,11 @@ let textline = new Textline($("#pageContent"));
 textline.build();
 
 const Table = require("./model/table.js");
+Table.build($("#pageContent"), "Untitled", [
+  { Name: "", Tags: "", "+ New": "" },
+  { Name: "", Tags: "", "+ New": "" },
+  { Name: "+ New", Tags: "", "+ New": "" },
+]);
 let table = $(".contentTable").eq(0);
+Table.createColumnSeparators(table);
 Table.addEventListenersColumnsSeparators(table);

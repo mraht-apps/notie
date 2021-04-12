@@ -4,33 +4,51 @@ class Table {
   static columns;
   static rows;
 
-  static build(parent, captionText, columns, rows) {
-    table = document.createElement("table");
+  static build(parent, captionText, data) {
+    let table = document.createElement("table");
     table.className = "contentTable";
+    this.createCaption(table, captionText);
 
-    this.parent = parent;
-    this.captionText = captionText;
-    this.columns = columns;
-    this.rows = rows;
+    let keys = Object.keys(data[0]);
+    this.generateTable(table, data);
+    this.generateTableHead(table, keys);
 
-    this.createCaption(table);
-    let thead = this.createHeader(table);
-    let tbody = this.createBody(table);
-    this.createColumns(thead, tbody);
-    this.createRowAdd(tbody);
-    this.parent.append(table);
+    parent.append(table);
 
-    this.createColumnSeparators(table);
-    this.addEventListenersRows(table);
+    //this.createColumnSeparators(table);
+    // this.createColumnSeparators(table);
+    // this.addEventListenersRows();
   }
 
-  static createCaption(table) {
+  static createCaption(table, captionText) {
     let caption = document.createElement("caption");
     let captionDiv = document.createElement("div");
     captionDiv.contentEditable = "true";
-    captionDiv.textContent = this.captionText;
+    captionDiv.textContent = captionText;
     caption.appendChild(captionDiv);
     table.insertBefore(caption, table.childNodes[0]);
+  }
+
+  static generateTable(table, data) {
+    for (let element of data) {
+      let row = table.insertRow();
+      for (let key in element) {
+        let cell = row.insertCell();
+        let text = document.createTextNode(element[key]);
+        cell.appendChild(text);
+      }
+    }
+  }
+
+  static generateTableHead(table, data) {
+    let thead = table.createTHead();
+    let row = thead.insertRow();
+    for (let key of data) {
+      let th = document.createElement("th");
+      let text = document.createTextNode(key);
+      th.appendChild(text);
+      row.appendChild(th);
+    }
   }
 
   static createHeader(table) {
