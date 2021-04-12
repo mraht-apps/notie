@@ -1,48 +1,47 @@
 class Table {
-  static table;
   static parent;
   static captionText;
   static columns;
   static rows;
 
   static build(parent, captionText, columns, rows) {
-    this.table = document.createElement("table");
-    this.table.className = "contentTable";
+    table = document.createElement("table");
+    table.className = "contentTable";
 
     this.parent = parent;
     this.captionText = captionText;
     this.columns = columns;
     this.rows = rows;
 
-    this.createCaption();
-    let thead = this.createHeader();
-    let tbody = this.createBody();
+    this.createCaption(table);
+    let thead = this.createHeader(table);
+    let tbody = this.createBody(table);
     this.createColumns(thead, tbody);
     this.createRowAdd(tbody);
-    this.parent.append(this.table);
+    this.parent.append(table);
 
-    this.createColumnSeparators();
-    this.addEventListenersRows();
+    this.createColumnSeparators(table);
+    this.addEventListenersRows(table);
   }
 
-  static createCaption() {
+  static createCaption(table) {
     let caption = document.createElement("caption");
     let captionDiv = document.createElement("div");
     captionDiv.contentEditable = "true";
     captionDiv.textContent = this.captionText;
     caption.appendChild(captionDiv);
-    this.table.insertBefore(caption, this.table.childNodes[0]);
+    table.insertBefore(caption, table.childNodes[0]);
   }
 
-  static createHeader() {
+  static createHeader(table) {
     let thead = document.createElement("thead");
-    this.table.append(thead);
+    table.append(thead);
     return thead;
   }
 
-  static createBody() {
+  static createBody(table) {
     let tbody = document.createElement("tbody");
-    this.table.append(tbody);
+    table.append(tbody);
     return tbody;
   }
 
@@ -182,8 +181,8 @@ class Table {
     Table.createColumnSeparator(column, rowHeight);
   }
 
-  static createColumnSeparators() {
-    let headerRow = $(this.table).find("tr").eq(0);
+  static createColumnSeparators(table) {
+    let headerRow = $(table).find("tr").eq(0);
     let columns = headerRow.children();
     let rowHeight = headerRow.outerHeight();
 
@@ -206,13 +205,16 @@ class Table {
     return div;
   }
 
+  static addEventListenersColumnsSeparators(table) {
+    let divs = $(table).find(".columnResizeSeparator");
+    for(let div in divs) {
+      this.addEventListenersColumnSeparator(div);
+    }
+  }
+
   static addEventListenersColumnSeparator(div) {
     $(div).on("mousedown", function (event) {
       Eventhandler.onMousedownColumnSeparator(event);
-    });
-
-    $(div).on("mouseover", function (event) {
-      Eventhandler.onMouseoverColumnSeparator(event);
     });
 
     $(div).on("mouseout", function (event) {
@@ -232,8 +234,8 @@ class Table {
     });
   }
 
-  static addEventListenersRows() {
-    let rows = $(this.table).find("tr");
+  static addEventListenersRows(table) {
+    let rows = $(table).find("tr");
     for (let i = 0; i < rows.length; i++) {
       $(rows[i]).on("contextmenu", function (event) {
         Eventhandler.onContextmenuRow(event);
@@ -293,10 +295,6 @@ class Eventhandler {
       padding = parseInt(paddingLeft) + parseInt(paddingRight);
     }
     this.width = this.currentColumn.offsetWidth - padding;
-  }
-
-  static onMouseoverColumnSeparator(event) {
-    event.target.style.backgroundColor = "rgba(46, 170, 220, 1)";
   }
 
   static onMouseoutColumnSeparator(event) {

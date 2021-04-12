@@ -6,7 +6,8 @@
   padding-bottom: 10px;
 }
 
-.contentTable:hover, .contentTable textarea:hover {
+.contentTable:hover,
+.contentTable textarea:hover {
   cursor: default;
 }
 
@@ -22,6 +23,7 @@
   color: rgba(55, 53, 47, 0.7);
   font-weight: normal;
   border-top: none;
+  position: relative;
 }
 
 .contentTable td:hover {
@@ -63,10 +65,11 @@
   color: rgba(55, 53, 47, 0.7);
 }
 
-.contentTable .columnResizeSeparator {
+.columnResizeSeparator {
   top: 0;
   right: -3px;
   width: 5px;
+  height: 32px;
   position: absolute;
   z-index: 1;
   cursor: col-resize;
@@ -75,6 +78,10 @@
   -webkit-transition: all 200ms ease-out 0s;
   -moz-transition: all 200ms ease-out 0s;
   transition: all 200ms ease-out 0s;
+}
+
+.columnResizeSeparator:hover {
+  background-color: rgba(46, 170, 220, 1);
 }
 
 .contentTable .columnTitle {

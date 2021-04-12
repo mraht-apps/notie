@@ -100,3 +100,7 @@ $("#btnRestart").on("click", function (event) {
 
 let textline = new Textline($("#pageContent"));
 textline.build();
+
+const Table = require("./model/table.js");
+let table = $(".contentTable").eq(0);
+Table.addEventListenersColumnsSeparators(table);
