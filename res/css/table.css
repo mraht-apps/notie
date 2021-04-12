@@ -17,17 +17,54 @@
   border-bottom: 1px solid rgba(55, 53, 47, 0.2);
   padding: 6px 10px 6px 10px;
   text-align: left;
+  height: 22px;
 }
 
 .contentTable th {
-  color: rgba(55, 53, 47, 0.7);
+  color: rgba(55, 53, 47, 0.6);
   font-weight: normal;
   border-top: none;
   position: relative;
 }
 
-.contentTable td:hover {
+.contentTable th:hover {
+  background-color:  rgb(228, 228, 228);
+}
+
+.contentTable th:last-child:hover {
+  cursor: pointer;
+}
+
+.contentTable th textarea {
+  color: rgba(55, 53, 47, 0.6);
   cursor: default;
+}
+
+.columnTitle {
+  -ms-text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.columnTitle:not(:last-child) {
+  position: relative;
+  padding-left: 1.3em;
+}
+
+.columnIcon {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  top: 5px;
+  left: 0px;
+}
+
+.columnIcon:hover {
+  background-color: rgb(236, 236, 236);
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .contentTable td textarea {
@@ -46,9 +83,8 @@
   border-left: none;
 }
 
-.contentTable th:hover,
 .contentTable tr:last-child:hover > td {
-  background-color: lightgrey;
+  background-color: rgb(228, 228, 228);
   cursor: pointer;
 }
 
@@ -69,7 +105,7 @@
   top: 0;
   right: -3px;
   width: 5px;
-  height: 32px;
+  height: 38px;
   position: absolute;
   z-index: 1;
   cursor: col-resize;
@@ -82,14 +118,6 @@
 
 .columnResizeSeparator:hover {
   background-color: rgba(46, 170, 220, 1);
-}
-
-.columnTitle {
-  -ms-text-overflow: ellipsis;
-  -o-text-overflow: ellipsis;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
 }
 
 .contentTable caption div {

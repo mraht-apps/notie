@@ -61,7 +61,7 @@
           <tr>
             <div class="sectionTitle">BASIC BLOCKS</div>
           </tr>
-          <tr class="clickable">
+          <tr class="clickable" data-type="textline">
             <td>
               <div class="icon">Aa</div>
             </td>
@@ -70,7 +70,7 @@
               <div class="description">Just start writing with plain text.</div>
             </td>
           </tr>
-          <tr class="clickable">
+          <tr class="clickable" data-type="table">
             <td>
               <div class="icon">Tbl</div>
             </td>
@@ -82,7 +82,7 @@
         </tbody>
       </table>
     </div>
-    
+
     <div id="pageContent">
 
       <!-- <textarea class="line" rows="1"></textarea> -->
@@ -94,19 +94,22 @@
         <thead>
           <tr>
             <th data-type="textarea">
-              <div class="columnTitle" contenteditable="true">Column 1</div>
+              <div class="columnTitle"><span class="columnIcon"><img src="./res/img/text.png"></span><textarea
+                  rows="1">Column 1</textarea></div>
               <div class="columnResizeSeparator"></div>
             </th>
             <th data-type="checkbox">
-              <div class="columnTitle" contenteditable="true"></div>
+              <div class="columnTitle"><span class="columnIcon"><img src="./res/img/checkbox.png"></span><textarea
+                  rows="1"></textarea></div>
               <div class="columnResizeSeparator"></div>
             </th>
             <th data-type="textarea">
-              <div class="columnTitle" contenteditable="true">Column 3</div>
+              <div class="columnTitle"><span class="columnIcon"><img src="./res/img/text.png"></span><textarea
+                  rows="1">Column 3</textarea></div>
               <div class="columnResizeSeparator"></div>
             </th>
             <th data-type="textarea">
-              <div class="columnTitle">+</div>
+              <div class="columnTitle">+ New</div>
             </th>
           </tr>
         </thead>
