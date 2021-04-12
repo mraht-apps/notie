@@ -207,18 +207,14 @@ class Table {
 
   static addEventListenersColumnsSeparators(table) {
     let divs = $(table).find(".columnResizeSeparator");
-    for(let div in divs) {
-      this.addEventListenersColumnSeparator(div);
-    }
+    divs.each(function() {
+      Table.addEventListenersColumnSeparator($(this));
+    });
   }
 
   static addEventListenersColumnSeparator(div) {
     $(div).on("mousedown", function (event) {
       Eventhandler.onMousedownColumnSeparator(event);
-    });
-
-    $(div).on("mouseout", function (event) {
-      Eventhandler.onMouseoutColumnSeparator(event);
     });
 
     $(div).on("dblclick", function (event) {
@@ -295,10 +291,6 @@ class Eventhandler {
       padding = parseInt(paddingLeft) + parseInt(paddingRight);
     }
     this.width = this.currentColumn.offsetWidth - padding;
-  }
-
-  static onMouseoutColumnSeparator(event) {
-    event.target.style.backgroundColor = "";
   }
 
   static onDblclickColumnSeparator(event) {
