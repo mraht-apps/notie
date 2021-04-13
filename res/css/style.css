@@ -31,23 +31,20 @@ textarea {
   box-shadow: none;
 }
 
-div[contenteditable="true"] {
-  width: 100%;
-
-  border: none;
-  overflow: auto;
-  outline: none;
-  resize: none;
-  margin: -2px;
-
-  background-color: transparent;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-}
-
 input[type="checkbox"] {
   width: 18px;
   height: 18px;
   cursor: pointer;
+}
+
+input[type="checkbox"]:hover {
+  cursor: pointer;
+}
+
+input[type="text"] {
+  cursor: default;
+}
+
+::selection {
+  background: rgba(45, 170, 219, 0.3);
 }

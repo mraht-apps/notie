@@ -9,7 +9,7 @@ class Table {
     table.className = "contentTable";
     this.createCaption(table, captionText);
 
-    this.generateTable(table, data);
+    this.generateTableBody(table, data);
     this.generateTableHead(table, data);
 
     parent.append(table);
@@ -17,260 +17,183 @@ class Table {
     //this.createColumnSeparators(table);
     // this.createColumnSeparators(table);
     // this.addEventListenersRows();
+
+    return table;
   }
 
   static createCaption(table, captionText) {
     let caption = document.createElement("caption");
-    let captionDiv = document.createElement("div");
-    captionDiv.contentEditable = "true";
-    captionDiv.textContent = captionText;
-    caption.appendChild(captionDiv);
+    let input = document.createElement("input");
+    input.type = "text";
+    input.value = captionText;
+    caption.appendChild(input);
     table.insertBefore(caption, table.childNodes[0]);
   }
 
-  static generateTable(table, data) {
+  static generateTableBody(table, data) {
+    let key = data.columns[0].name;
+
     $(data.rows).each(function () {
       let row = $(this);
-      let tableRow = table.insertRow();
+      let rowName = row.attr(key);
+      let tr = table.insertRow();
+      if (rowName == "+ New") {
+        $(tr).on("click", function (event) {
+          Eventhandler.onClickRowAdd(event);
+        });
+      }
 
-      $(data.columns).each(function () {
-        let column = $(this);
-        let columnValue = row.attr(column.attr("name"));
-        let columnType = column.attr("type");
-        let tableCell = tableRow.insertCell();
-
-        if (row.attr("Name") === "+ New") {
-          if (columnValue === "+ New") {
-            tableCell.textContent = columnValue;
-          } else {
-            // Ignore additional columns
-          }
-        } else if (columnType !== "add") {
-          let input = document.createElement("input");
-          input.type = columnType;
-
-          switch (columnType) {
-            case "checkbox":
-              input.checked = columnValue;
-              break;
-            case "text":
-              input.value = columnValue;
-              break;
-          }
-
-          tableCell.appendChild(input);
-        }
+      $(data.columns).each(function (columnIndex, column) {
+        Table.generateTableCell(tr, columnIndex, column, row, rowName);
       });
     });
   }
 
+  static generateTableCell(tr, columnIndex, column, row, rowName) {
+    let columnValue = row ? row.attr(column.name) : "";
+    let columnType = column.type;
+
+    let td = document.createElement("td");
+    if (rowName == "+ New") {
+      if (columnValue == "+ New") {
+        td.textContent = columnValue;
+      } else {
+        // Ignore additional columns
+      }
+    } else if (columnType != "add") {
+      let input = document.createElement("input");
+      input.type = columnType;
+
+      switch (columnType) {
+        case "checkbox":
+          input.checked = columnValue;
+          break;
+        case "text":
+          input.value = columnValue;
+          break;
+      }
+
+      td.appendChild(input);
+    }
+
+    let nextTd = $(tr).children("td").eq(columnIndex);
+    if (nextTd.length > 0) {
+      nextTd.before(td);
+    } else {
+      tr.append(td);
+    }
+  }
+
   static generateTableHead(table, data) {
     let thead = table.createTHead();
-    let row = thead.insertRow();
-    $(data.columns).each(function () {
-      let column = $(this);
-      let columnType = column.attr("type");
-      let columnName = column.attr("name");
+    let tr = thead.insertRow();
 
-      let th = document.createElement("th");
+    $(data.columns).each(function (index, column) {
+      Table.generateTableColumn(tr, index, $(column));
+    });
+  }
 
-      let columnWidth = column.attr("width");
-      if (columnWidth) th.style.width = columnWidth;
-      th.dataset.type = column.attr("type");
+  static generateTableColumn(tr, index, column) {
+    let columnType = column.attr("type");
+    let columnName = column.attr("name");
 
-      let div = document.createElement("div");
-      div.className = "columnTitle";
+    let th = document.createElement("th");
+    let columnWidth = column.attr("width");
+    if (columnWidth) th.style.width = columnWidth;
+    th.dataset.type = columnType;
 
-      if (columnType !== "add") {
-        let span = document.createElement("span");
-        let img = document.createElement("img");
-        switch (columnType) {
-          case "checkbox":
-            img.src = "./res/img/checkbox.png";
-            break;
-          case "text":
-            img.src = "./res/img/text.png";
-            break;
-        }
-        span.className = "columnIcon";
-        span.appendChild(img);
-        div.append(span);
+    let div = document.createElement("div");
+    div.className = "columnTitle";
+
+    if (columnType === "add") {
+      div.textContent = columnName;
+
+      $(th).on("click", function (event) {
+        Eventhandler.onClickColumnAdd(event);
+      });
+    } else {
+      let span = document.createElement("span");
+      let img = document.createElement("img");
+      switch (columnType) {
+        case "checkbox":
+          img.src = "./res/img/checkbox.png";
+          break;
+        case "text":
+          img.src = "./res/img/text.png";
+          break;
       }
+      span.className = "columnIcon";
+      span.appendChild(img);
+      div.append(span);
 
       let input = document.createElement("input");
       input.type = "text";
       input.value = columnName;
       div.append(input);
-
       th.appendChild(div);
-      row.appendChild(th);
-    });
-  }
 
-  // // OPT Try to optimize logic of addColumn/addRow and createColumns/createColumn/createRow
-  // static addColumn(thead, tbody, column) {
-  //   let columnIndex = $(thead).find("th").length - 1;
-  //   Table.createColumn($(thead, "tr"), columnIndex, column);
-  //   Table.createColumnRowCells(tbody, columnIndex, column.type);
-  //   let headerRow = $(thead).find("tr").eq(0);
-  //   let tableColumn = $(thead).find("th").eq(columnIndex);
-  //   Table.addColumnSeparator(headerRow, tableColumn);
-  // }
+      div = document.createElement("div");
+      div.className = "columnResizeSeparator";
+      Table.addEventListenersColumnSeparator(div);
+    }
 
-  // static createColumns(thead, tbody) {
-  //   let tr = document.createElement("tr");
-  //   this.columns.push({ type: "add", name: "+ New" });
-  //   $(this.columns).each(function (index, column) {
-  //     Table.createColumn(tr, index, column);
-  //     Table.createColumnRowCells(tbody, index, column.type);
-  //   });
-  //   thead.append(tr);
-  // }
+    th.appendChild(div);
 
-  // static createColumn(tr, columnIndex, column) {
-  //   let th = document.createElement("th");
-  //   th.style.position = "relative";
-  //   if (column.width) th.style.width = column.width + "px";
-  //   th.dataset.type = column.type;
-
-  //   let div = document.createElement("div");
-  //   div.className = "columnTitle";
-  //   div.textContent = column.name;
-
-  //   if (column.type == "add") {
-  //     $(th).on("click", function (event) {
-  //       Eventhandler.onClickColumnAdd(event);
-  //     });
-  //   } else {
-  //     div.contentEditable = "true";
-  //   }
-
-  //   th.append(div);
-  //   let prev = $(tr)
-  //     .find("th")
-  //     .eq(columnIndex - 1);
-  //   if (prev.length > 0) {
-  //     prev.after(th);
-  //   } else {
-  //     tr.append(th);
-  //   }
-  // }
-
-  // static createColumnRowCells(tbody, columnIndex, columnType) {
-  //   $(this.rows).each(function (index, row) {
-  //     let tr = $(tbody).find("tr").eq(index);
-  //     if (tr.length == 0) {
-  //       tr = Table.createRow(tbody);
-  //     }
-  //     Table.createColumnRowCell(tr, columnIndex, columnType, row[columnIndex]);
-  //   });
-  // }
-
-  // static addRow(thead, tbody) {
-  //   let rowIndex = $(tbody).find("tr").length - 1;
-  //   let tr = Table.createRow(tbody, rowIndex);
-  //   let tableColumns = $(thead).find("th");
-  //   tableColumns.each(function (index, tableColumn) {
-  //     let columnType = $(tableColumn).data("type");
-  //     Table.createColumnRowCell(tr, index, columnType, null);
-  //   });
-  // }
-
-  // static createRow(tbody, index) {
-  //   let tr = document.createElement("tr");
-  //   let prev = $(tbody)
-  //     .find("tr")
-  //     .eq(index - 1);
-  //   if (prev.length > 0) {
-  //     prev.after(tr);
-  //   } else {
-  //     tbody.append(tr);
-  //   }
-  //   return tr;
-  // }
-
-  // static createColumnRowCell(tr, columnIndex, columnType, cell) {
-  //   let td = document.createElement("td");
-  //   let text = "";
-  //   if (cell) {
-  //     text = cell.text;
-  //   }
-
-  //   switch (columnType) {
-  //     case "checkbox":
-  //       let checkbox = document.createElement("input");
-  //       checkbox.type = "checkbox";
-  //       if (text === "X") {
-  //         checkbox.checked = true;
-  //       }
-  //       td.append(checkbox);
-  //       break;
-  //     case "textarea":
-  //       let textarea = document.createElement("textarea");
-  //       textarea.rows = "1";
-  //       textarea.textContent = text;
-  //       td.append(textarea);
-  //       break;
-  //     case "add":
-  //       break;
-  //   }
-
-  //   let prev = $(tr)
-  //     .find("td")
-  //     .eq(columnIndex - 1);
-  //   if (prev.length > 0) {
-  //     prev.after(td);
-  //   } else {
-  //     tr.append(td);
-  //   }
-  // }
-
-  // static createRowAdd(tbody) {
-  //   // Create "+ New"-row
-  //   let tr = document.createElement("tr");
-  //   let td = document.createElement("td");
-  //   td.colSpan = this.columns.length + 1;
-  //   td.textContent = "+ New";
-  //   tr.append(td);
-  //   $(tr).on("click", function (event) {
-  //     Eventhandler.onClickRowAdd(event);
-  //   });
-  //   tbody.append(tr);
-  // }
-
-  // static addColumnSeparator(headerRow, column) {
-  //   let rowHeight = headerRow.outerHeight();
-  //   Table.createColumnSeparator(column, rowHeight);
-  // }
-
-  static createColumnSeparators(table) {
-    let headerRow = $(table).find("tr").eq(0);
-    let columns = headerRow.children();
-    let rowHeight = headerRow.outerHeight();
-
-    for (let i = 0; i < columns.length - 1; i++) {
-      Table.createColumnSeparator(columns[i], rowHeight);
+    let nextTh = $(tr).children("th").eq(index);
+    if (nextTh.length > 0) {
+      nextTh.before(th);
+    } else {
+      tr.appendChild(th);
     }
   }
 
-  static createColumnSeparator(column, rowHeight) {
-    let separatorDiv = this.createDiv(rowHeight);
-    column.append(separatorDiv);
-    column.position = "relative";
-    this.addEventListenersColumnSeparator(separatorDiv);
+  static addRow(table) {
+    Table.addRowByNewRow(table);
   }
 
-  static createDiv(height) {
-    let div = document.createElement("div");
-    div.style.height = height + "px";
-    div.className = "columnResizeSeparator";
-    return div;
+  static addRowByNewRow(table) {
+    let tableRows = $(table).children("tbody").children("tr");
+    let addNewTableRow = tableRows.eq(tableRows.length - 1);
+
+    let tr = document.createElement("tr");
+    addNewTableRow.before(tr);
+
+    let columns = [];
+    $(table)
+      .children("thead")
+      .children("tr")
+      .children("th")
+      .each(function () {
+        let column = $(this);
+        let columnTitleDiv = column.children(".columnTitle").eq(0);
+        let input = column.children("div").eq(0).children("input").eq(0);
+        let columnName = input.length > 0 ? input.val() : columnTitleDiv.text();
+        let columnType = column.data("type");
+        columns.push({ name: columnName, type: columnType });
+      });
+
+    $(columns).each(function (columnIndex, column) {
+      Table.generateTableCell(tr, columnIndex, column, null, "");
+    });
   }
 
-  static addEventListenersColumnsSeparators(table) {
-    let divs = $(table).find(".columnResizeSeparator");
-    divs.each(function () {
-      Table.addEventListenersColumnSeparator($(this));
+  static addColumn(table, column) {
+    let thead = $(table).children("thead");
+    let headerRow = thead.children("tr").eq(0);
+    let columnIndex = thead.children("th").length - 1;
+    Table.generateTableColumn(headerRow, columnIndex, $(column));
+    Table.addRowByNewColumn(table, column);
+  }
+
+  static addRowByNewColumn(table, column) {
+    let tbody = $(table).children("tbody");
+    let tableRows = tbody.children("tr");
+    tableRows.each(function () {
+      let tr = $(this);
+      let tableColumns = $(tr).children("td");
+      let columnIndex = tableColumns.length - 1;
+      let rowName = tr.is(tableRows.eq(tableRows.length - 1)) ? "+ New" : "";
+      Table.generateTableCell(tr, columnIndex, column, null, rowName);
     });
   }
 
@@ -292,15 +215,6 @@ class Table {
     });
   }
 
-  static addEventListenersRows(table) {
-    let rows = $(table).find("tr");
-    for (let i = 0; i < rows.length; i++) {
-      $(rows[i]).on("contextmenu", function (event) {
-        Eventhandler.onContextmenuRow(event);
-      });
-    }
-  }
-
   static setActiveRow(activeRow) {
     let currentlyActiveRow = $("#activeRow");
     if (activeRow.is(currentlyActiveRow)) return;
@@ -315,20 +229,17 @@ class Table {
 class Eventhandler {
   static onClickColumnAdd(event) {
     let column = {
-      type: "textarea",
-      name: "",
+      name: "Column",
+      type: "text",
+      width: "120px",
     };
     let table = $(event.target).parents("table");
-    let thead = table.children("thead");
-    let tbody = table.children("tbody");
-    Table.addColumn(thead, tbody, column);
+    Table.addColumn(table, column);
   }
 
   static onClickRowAdd(event) {
     let table = $(event.target).parents("table");
-    let thead = table.children("thead");
-    let tbody = table.children("tbody");
-    Table.addRow(thead, tbody);
+    Table.addRow(table);
   }
 
   static pageX;
@@ -381,11 +292,6 @@ class Eventhandler {
     this.currentColumn = undefined;
     this.pageX = undefined;
     this.width = undefined;
-  }
-
-  static onContextmenuRow(event) {
-    let row = $(event.target).parents().filter("tr").eq(0);
-    Table.setActiveRow(row);
   }
 }
 
