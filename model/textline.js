@@ -1,38 +1,31 @@
 const placeholderText = "Type '/' for commands";
 const blockmenu = require("../controller/blockmenu.js");
 class Textline {
-  textarea;
+  static build(parent, text) {
+    let input = document.createElement("input");
+    input.type = "text";
+    input.value = text;
 
-  constructor(parent, text) {
-    this.textarea = document.createElement("textarea");
-
-    this.parent = parent;
-    this.textarea.textContent = text;
-    this.textarea.className = "line";
-    this.textarea.rows = "1";
+    Textline.addEventListeners(input);
+    parent.append(input);
   }
 
-  build() {
-    this.addEventListeners();
-    this.parent.append(this.textarea);
-  }
-
-  addEventListeners() {
-    $(this.textarea).on("focus", function (event) {
+  static addEventListeners(input) {
+    $(input).on("focus", function (event) {
       let textarea = $(event.target);
       if (textarea.val()) return;
 
       textarea.prop("placeholder", placeholderText);
     });
 
-    $(this.textarea).on("focusout", function (event) {
+    $(input).on("focusout", function (event) {
       let textarea = $(event.target);
       if (textarea.val()) return;
 
       textarea.prop("placeholder", "");
     });
 
-    $(this.textarea).on("keypress", function (event) {
+    $(input).on("keypress", function (event) {
       let textarea = $(event.target);
       switch (event.key) {
         case "Enter":
@@ -48,50 +41,48 @@ class Textline {
       let regex = /^[\w\s]+$/;
       if (event.key.match(regex) || event.key == "Escape") {
         blockmenu.close();
-        // textline.height("28px");
-        // textline.height(textline.prop("scrollHeight") + "px");
         console.log(textarea.prop("scrollHeight"));
       }
     });
 
-    $(this.textarea).on("keydown", function (event) {
-      let textarea = $(event.target);
+    $(input).on("keydown", function (event) {
+      let textline = $(event.target);
       switch (event.key) {
         case "ArrowUp":
         case "ArrowDown":
           event.preventDefault();
           break;
         default:
-          textarea.data("previousValue", textarea.val());
+          textline.data("previousValue", textline.val());
           break;
       }
     });
 
-    $(this.textarea).on("keyup", function (event) {
+    $(input).on("keyup", function (event) {
       // Ignore certain character
       if (event.key == "Shift") return;
 
-      let textarea = $(event.target);
+      let textline = $(event.target);
       switch (event.key) {
         case "ArrowUp":
-          var prevElement = textarea.prev();
+          var prevElement = textline.prev();
           Textline.focusPrev(prevElement);
           event.preventDefault();
           break;
         case "ArrowDown":
-          var nextElement = textarea.next();
+          var nextElement = textline.next();
           Textline.focusNext(nextElement);
           event.preventDefault();
           break;
         case "Backspace":
-          var prevElement = textarea.prev();
-          var previousValue = textarea.data("previousValue");
+          var prevElement = textline.prev();
+          var previousValue = textline.data("previousValue");
           if (
             !previousValue &&
-            prevElement.is("textarea") &&
+            prevElement.is("input:text") &&
             prevElement.val().trim()
           ) {
-            textarea.remove();
+            textline.remove();
             Textline.focusPrev(prevElement);
           }
           break;
@@ -103,12 +94,12 @@ class Textline {
   }
 
   static focusNext(nextElement) {
-    if (!nextElement.is("textarea")) return;
+    if (!nextElement.is("input:text")) return;
     nextElement.trigger("focus");
   }
 
   static focusPrev(prevElement) {
-    if (!prevElement.is("textarea")) return;
+    if (!prevElement.is("input:text")) return;
     prevElement.trigger("focus");
   }
 }

@@ -4,10 +4,10 @@ class Table {
   static columns;
   static rows;
 
-  static build(parent, captionText, data) {
+  static build(parent, data) {
     let table = document.createElement("table");
     table.className = "contentTable";
-    this.createCaption(table, captionText);
+    this.createCaption(table, data.caption);
 
     this.generateTableBody(table, data);
     this.generateTableHead(table, data);
@@ -93,6 +93,7 @@ class Table {
     });
   }
 
+  // OPT Set colspan for last row instead of table cells per column
   static generateTableColumn(tr, index, column) {
     let columnType = column.attr("type");
     let columnName = column.attr("name");

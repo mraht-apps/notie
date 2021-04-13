@@ -2,6 +2,7 @@
 // OPT Show error if no or wrong password has been supplied
 const filemanager = require("../utils/file.js");
 const Table = require("../model/table.js");
+const Textline = require("../model/textline.js");
 
 function load() {
   let jsonData = readData();
@@ -54,12 +55,11 @@ function resetPageContent() {
 }
 
 function loadTextline(parent, element) {
-  let textline = new Textline(parent, element.text);
-  textline.build();
+  Textline.build(parent, element.text);
 }
 
-function loadTable(parent, element) {
-  Table.build(parent, element.caption, element.columns, element.rows);
+function loadTable(parent, data) {
+  Table.build(parent, data);
 }
 
 function save() {
@@ -86,7 +86,7 @@ function savePageContent() {
     let element = $(this);
     let textline, table;
 
-    if (element.is("textarea") && element.val().trim()) {
+    if (element.is("input:text") && element.val().trim()) {
       textline = saveTextline(element);
       pageContent.push(textline);
     } else if (element.is("table")) {
@@ -114,10 +114,11 @@ function saveTable(element) {
   for (var i = 0; i < columns.length - 1; i++) {
     let column = columns.eq(i);
     let columnType = column.data("type");
+    let columnName = column.children(".columnTitle").children("input").val()
     let columnContent = {
       type: columnType,
-      name: column.text().trim(),
-      width: column.width(),
+      name: columnName,
+      width: column.css("width"),
     };
     columnsContent.push(columnContent);
   }
@@ -132,7 +133,7 @@ function saveTable(element) {
     let cellsContent = [];
     for (var j = 0; j < columns.length - 1; j++) {
       let element = cells.eq(j).children().eq(0);
-      let text = element.text();
+      let text = element.val();
       if (element.is(":checked")) {
         text = "X";
       }

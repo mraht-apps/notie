@@ -112,6 +112,10 @@
   overflow: hidden;
 }
 
+th:first-of-type .columnTitle {
+  padding-left: 2px;
+}
+
 .columnTitle:last-child {
   justify-content: left;
 }
@@ -131,16 +135,17 @@
   cursor: pointer;
 }
 
-.contentTable input[type="text"] {
-  outline: none;
-  border: none;
-  width: 100%;
+.contentTable th input[type="text"],
+.contentTable td input[type="text"] {
   padding-left: 4px;
+}
 
-  background-color: transparent;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
+.contentTable tr td:first-of-type {
+  padding-left: 2px;
+}
+
+.contentTable tr:last-of-type td:first-of-type {
+  padding-left: 6px;
 }
 
 .contentTable td input[type="checkbox"] {

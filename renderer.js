@@ -98,11 +98,11 @@ $("#btnRestart").on("click", function (event) {
   ipcRenderer.send("restart");
 });
 
-let textline = new Textline($("#pageContent"));
-textline.build();
+Textline.build($("#pageContent"), "");
 
 const Table = require("./model/table.js");
-Table.build($("#pageContent"), "Untitled", {
+Table.build($("#pageContent"), {
+  caption: "Untitled",
   columns: [
     { name: "Name", type: "text", width: "120px" },
     { name: "Tags", type: "checkbox", width: "20px" },
