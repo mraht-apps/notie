@@ -80,12 +80,11 @@ function savePageName() {
 
 function savePageContent() {
   let pageContent = [];
-
   let children = $("#pageContent").children();
+  let textline, table;
+
   children.each(function () {
     let element = $(this);
-    let textline, table;
-
     if (element.is("input:text") && element.val().trim()) {
       textline = saveTextline(element);
       pageContent.push(textline);
@@ -108,16 +107,16 @@ function saveTextline(element) {
 function saveTable(element) {
   console.log(element);
 
+  let caption = $(element).find("caption").children("input").val();
+
   let columns = element.find("th");
   let columnsContent = [];
 
   for (var i = 0; i < columns.length - 1; i++) {
     let column = columns.eq(i);
-    let columnType = column.data("type");
-    let columnName = column.children(".columnTitle").children("input").val()
     let columnContent = {
-      type: columnType,
-      name: columnName,
+      name: column.children(".columnTitle").children("input").val(),
+      type: column.data("type"),
       width: column.css("width"),
     };
     columnsContent.push(columnContent);
@@ -130,25 +129,25 @@ function saveTable(element) {
     let row = rows.eq(i);
     let cells = $(row).find("td");
 
-    let cellsContent = [];
+    let cellsContent = {};
     for (var j = 0; j < columns.length - 1; j++) {
+      let columnName = $(columns[j])
+        .children(".columnTitle")
+        .children("input")
+        .val();
       let element = cells.eq(j).children().eq(0);
       let text = element.val();
       if (element.is(":checked")) {
         text = "X";
       }
-
-      let cellContent = {
-        text: text,
-      };
-      cellsContent.push(cellContent);
+      $(cellsContent).attr(columnName, text);
     }
     rowsContent.push(cellsContent);
   }
 
   let table = {
     type: "table",
-    caption: $(element).find("caption").text().trim(),
+    caption: caption,
     columns: columnsContent,
     rows: rowsContent,
   };

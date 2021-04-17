@@ -9,14 +9,11 @@ class Table {
     table.className = "contentTable";
     this.createCaption(table, data.caption);
 
+    this.prepareGeneration(data);
     this.generateTableBody(table, data);
     this.generateTableHead(table, data);
 
     parent.append(table);
-
-    //this.createColumnSeparators(table);
-    // this.createColumnSeparators(table);
-    // this.addEventListenersRows();
 
     return table;
   }
@@ -30,8 +27,13 @@ class Table {
     table.insertBefore(caption, table.childNodes[0]);
   }
 
+  static prepareGeneration(data) {
+    data.columns.push({ name: "+ New", type: "add" });
+  }
+
   static generateTableBody(table, data) {
     let key = data.columns[0].name;
+    let numberOfColumns = data.columns.length + 1;
 
     $(data.rows).each(function () {
       let row = $(this);
@@ -44,12 +46,28 @@ class Table {
       }
 
       $(data.columns).each(function (columnIndex, column) {
-        Table.generateTableCell(tr, columnIndex, column, row, rowName);
+        let exit = Table.generateTableCell(
+          tr,
+          numberOfColumns,
+          columnIndex,
+          column,
+          row,
+          rowName
+        );
+        if (exit) return false;
       });
     });
   }
 
-  static generateTableCell(tr, columnIndex, column, row, rowName) {
+  static generateTableCell(
+    tr,
+    numberOfColumns,
+    columnIndex,
+    column,
+    row,
+    rowName
+  ) {
+    let exit = false;
     let columnValue = row ? row.attr(column.name) : "";
     let columnType = column.type;
 
@@ -57,8 +75,8 @@ class Table {
     if (rowName == "+ New") {
       if (columnValue == "+ New") {
         td.textContent = columnValue;
-      } else {
-        // Ignore additional columns
+        td.colSpan = "4";
+        exit = true;
       }
     } else if (columnType != "add") {
       let input = document.createElement("input");
@@ -82,6 +100,8 @@ class Table {
     } else {
       tr.append(td);
     }
+
+    return exit;
   }
 
   static generateTableHead(table, data) {
@@ -172,9 +192,17 @@ class Table {
         let columnType = column.data("type");
         columns.push({ name: columnName, type: columnType });
       });
+    let numberOfColumns = columns.length + 1;
 
     $(columns).each(function (columnIndex, column) {
-      Table.generateTableCell(tr, columnIndex, column, null, "");
+      Table.generateTableCell(
+        tr,
+        numberOfColumns,
+        columnIndex,
+        column,
+        null,
+        ""
+      );
     });
   }
 
@@ -189,13 +217,21 @@ class Table {
   static addRowByNewColumn(table, column) {
     let tbody = $(table).children("tbody");
     let tableRows = tbody.children("tr");
-    tableRows.each(function () {
-      let tr = $(this);
-      let tableColumns = $(tr).children("td");
+    let tableColumns = tableRows.eq(0).children("td");
+
+    for (let i = 0; i < tableRows.length - 1; i++) {
+      let tr = $(tableRows[i]);
       let columnIndex = tableColumns.length - 1;
       let rowName = tr.is(tableRows.eq(tableRows.length - 1)) ? "+ New" : "";
-      Table.generateTableCell(tr, columnIndex, column, null, rowName);
-    });
+      Table.generateTableCell(tr, null, columnIndex, column, null, rowName);
+    }
+
+    let numberOfColumns = tableColumns.length + 1;
+    tableRows
+      .eq(tableRows.length - 1)
+      .children("td")
+      .eq(0)
+      .attr("colspan", numberOfColumns);
   }
 
   static addEventListenersColumnSeparator(div) {

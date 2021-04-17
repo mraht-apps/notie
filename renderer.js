@@ -28,7 +28,6 @@ Table.build($("#pageContent"), {
     { name: "Name", type: "text", width: "120px" },
     { name: "Tags", type: "checkbox", width: "20px" },
     { name: "Status", type: "text", width: "120px" },
-    { name: "+ New", type: "add" },
   ],
   rows: [
     {
