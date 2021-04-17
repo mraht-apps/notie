@@ -6,7 +6,7 @@ class Table {
 
   static build(parent, data) {
     let table = document.createElement("table");
-    table.className = "contentTable";
+    table.className = "table";
     this.createCaption(table, data.caption);
 
     this.prepareGeneration(data);
@@ -32,53 +32,40 @@ class Table {
   }
 
   static generateTableBody(table, data) {
-    let key = data.columns[0].name;
-    let numberOfColumns = data.columns.length + 1;
-
     $(data.rows).each(function () {
-      let row = $(this);
-      let rowName = row.attr(key);
-      let tr = table.insertRow();
-      if (rowName == "+ New") {
-        $(tr).on("click", function (event) {
-          Eventhandler.onClickRowAdd(event);
-        });
-      }
+      Table.generateTableRow(table, data, $(this));
+    });
+    Table.generateTableRowNew(table, data);
+  }
 
-      $(data.columns).each(function (columnIndex, column) {
-        let exit = Table.generateTableCell(
-          tr,
-          numberOfColumns,
-          columnIndex,
-          column,
-          row,
-          rowName
-        );
-        if (exit) return false;
-      });
+  static generateTableRowNew(table, data) {
+    let numberOfColumns = data.columns.length + 1;
+    let tr = table.insertRow();
+    $(tr).on("click", function (event) {
+      Eventhandler.onClickRowAdd(event);
+    });
+    let td = document.createElement("td");
+    td.textContent = "+ New";
+    td.colSpan = numberOfColumns;
+    tr.append(td);
+  }
+
+  static generateTableRow(table, data, row) {
+    let tr = table.insertRow();
+
+    $(data.columns).each(function (columnIndex, column) {
+      let exit = Table.generateTableCell(tr, columnIndex, column, row);
+      if (exit) return false;
     });
   }
 
-  static generateTableCell(
-    tr,
-    numberOfColumns,
-    columnIndex,
-    column,
-    row,
-    rowName
-  ) {
+  static generateTableCell(tr, columnIndex, column, row) {
     let exit = false;
     let columnValue = row ? row.attr(column.name) : "";
     let columnType = column.type;
 
     let td = document.createElement("td");
-    if (rowName == "+ New") {
-      if (columnValue == "+ New") {
-        td.textContent = columnValue;
-        td.colSpan = "4";
-        exit = true;
-      }
-    } else if (columnType != "add") {
+    if (columnType != "add") {
       let input = document.createElement("input");
       input.type = columnType;
 
@@ -113,7 +100,6 @@ class Table {
     });
   }
 
-  // OPT Set colspan for last row instead of table cells per column?
   static generateTableColumn(tr, index, column) {
     let columnType = column.attr("type");
     let columnName = column.attr("name");
@@ -192,17 +178,9 @@ class Table {
         let columnType = column.data("type");
         columns.push({ name: columnName, type: columnType });
       });
-    let numberOfColumns = columns.length + 1;
 
     $(columns).each(function (columnIndex, column) {
-      Table.generateTableCell(
-        tr,
-        numberOfColumns,
-        columnIndex,
-        column,
-        null,
-        ""
-      );
+      Table.generateTableCell(tr, columnIndex, column, null);
     });
   }
 
@@ -222,8 +200,7 @@ class Table {
     for (let i = 0; i < tableRows.length - 1; i++) {
       let tr = $(tableRows[i]);
       let columnIndex = tableColumns.length - 1;
-      let rowName = tr.is(tableRows.eq(tableRows.length - 1)) ? "+ New" : "";
-      Table.generateTableCell(tr, null, columnIndex, column, null, rowName);
+      Table.generateTableCell(tr, columnIndex, column, null);
     }
 
     let numberOfColumns = tableColumns.length + 1;

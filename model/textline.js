@@ -5,6 +5,7 @@ class Textline {
     let input = document.createElement("input");
     input.type = "text";
     input.value = text;
+    input.className = "textline";
 
     Textline.addEventListeners(input);
     parent.append(input);

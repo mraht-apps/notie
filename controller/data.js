@@ -137,8 +137,8 @@ function saveTable(element) {
         .val();
       let element = cells.eq(j).children().eq(0);
       let text = element.val();
-      if (element.is(":checked")) {
-        text = "X";
+      if (element.is(":checkbox")) {
+        text = element.is(":checked");
       }
       $(cellsContent).attr(columnName, text);
     }

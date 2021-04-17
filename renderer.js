@@ -21,6 +21,7 @@ const Textline = require("./model/textline.js");
 
 Textline.build($("#pageContent"), "");
 
+// DEBUG Test table build
 const Table = require("./model/table.js");
 Table.build($("#pageContent"), {
   caption: "Untitled",
@@ -34,15 +35,12 @@ Table.build($("#pageContent"), {
       Name: "Hallo Welt 1",
       Tags: true,
       Status: "Offen und in Bearbeitung",
-      "+ New": "",
     },
     {
       Name: "Hallo Welt 2",
       Tags: false,
       Status: "Geschlossen und abgeschlossen",
-      "+ New": "",
     },
-    { Name: "+ New", Tags: false, Status: "", "+ New": "" },
   ],
 });
 
