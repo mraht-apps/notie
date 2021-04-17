@@ -93,7 +93,7 @@ class Table {
     });
   }
 
-  // OPT Set colspan for last row instead of table cells per column
+  // OPT Set colspan for last row instead of table cells per column?
   static generateTableColumn(tr, index, column) {
     let columnType = column.attr("type");
     let columnName = column.attr("name");

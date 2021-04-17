@@ -18,7 +18,7 @@ function setSystemInfo() {
 
 function addPagesToNavbar() {
   const filemanager = require("./utils/file.js");
-  let files = filemanager.readFolder("./pages/");
+  let files = filemanager.readFolder("./user_data/pages/");
 
   const pagemanager = require("./model/page.js");
   files.forEach(function (page) {

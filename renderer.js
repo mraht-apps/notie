@@ -19,15 +19,46 @@ const datamanager = require("./controller/data.js");
 const pagemanager = require("./model/page.js");
 const Textline = require("./model/textline.js");
 
+Textline.build($("#pageContent"), "");
+
+const Table = require("./model/table.js");
+Table.build($("#pageContent"), {
+  caption: "Untitled",
+  columns: [
+    { name: "Name", type: "text", width: "120px" },
+    { name: "Tags", type: "checkbox", width: "20px" },
+    { name: "Status", type: "text", width: "120px" },
+    { name: "+ New", type: "add" },
+  ],
+  rows: [
+    {
+      Name: "Hallo Welt 1",
+      Tags: true,
+      Status: "Offen und in Bearbeitung",
+      "+ New": "",
+    },
+    {
+      Name: "Hallo Welt 2",
+      Tags: false,
+      Status: "Geschlossen und abgeschlossen",
+      "+ New": "",
+    },
+    { Name: "+ New", Tags: false, Status: "", "+ New": "" },
+  ],
+});
+
+const DB = require("./controller/db.js");
+DB.init();
+
 $("#newPage").on("click", function (event) {
   let pagename = cryptomanager.generateUUID();
   let templateData = filemanager.readFile("template.html");
-  filemanager.writeFile("./pages/" + pagename + ".html", templateData);
+  filemanager.writeFile("./user_data/pages/" + pagename + ".html", templateData);
   pagemanager.addPageToMenu(pagename);
   return false;
 });
 
-// TODO Move
+// TODO Encapsulate source code
 // Handle pressing ENTER in table column header
 $(".th_textArea").on("keydown", function (event) {
   if (event.key === "Enter") {
@@ -77,8 +108,7 @@ $("#btnReadPassword").on("click", function (event) {
 // NEW Load content based on data saved by user
 $("#btnLoad").on("click", function (event) {
   datamanager.load();
-  let textline = new Textline($("#pageContent"));
-  textline.build();
+  Textline.build($("#pageContent"), "");
 });
 
 // Save data entered by user
@@ -96,32 +126,4 @@ $("#btnSave").on("click", function (event) {
 // Restart application
 $("#btnRestart").on("click", function (event) {
   ipcRenderer.send("restart");
-});
-
-Textline.build($("#pageContent"), "");
-
-const Table = require("./model/table.js");
-Table.build($("#pageContent"), {
-  caption: "Untitled",
-  columns: [
-    { name: "Name", type: "text", width: "120px" },
-    { name: "Tags", type: "checkbox", width: "20px" },
-    { name: "Status", type: "text", width: "120px" },
-    { name: "+ New", type: "add" },
-  ],
-  rows: [
-    {
-      Name: "Hallo Welt 1",
-      Tags: true,
-      Status: "Offen und in Bearbeitung",
-      "+ New": "",
-    },
-    {
-      Name: "Hallo Welt 2",
-      Tags: false,
-      Status: "Geschlossen und abgeschlossen",
-      "+ New": "",
-    },
-    { Name: "+ New", Tags: false, Status: "", "+ New": "" },
-  ],
 });

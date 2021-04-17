@@ -7,7 +7,7 @@ function addPageToMenu(pagename) {
   a.innerText = pagename;
   a.onclick = function (event) {
     let page = pagename + ".html";
-    const render = filemanager.readFile("./pages/" + page);
+    const render = filemanager.readFile("../user_data/pages/" + page);
     $(".main").html(render);
     return false;
   };
