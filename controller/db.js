@@ -10,7 +10,9 @@ class DB {
     DB.initInstance();
     DB.initPages(exists);
 
-    let result = DB.all("SELECT name FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%';");
+    let result = DB.all(
+      "SELECT name FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%';"
+    );
     console.log(result);
   }
 
@@ -20,6 +22,9 @@ class DB {
 
   static initInstance() {
     this.db = new Database("./user_data/notie.db", { verbose: console.log });
+    this.db.pragma("journal_mode = WAL");
+    // NEW Encryption:
+    this.db.pragma('key = "123"');
   }
 
   static initPages(exists) {
@@ -28,7 +33,7 @@ class DB {
     this.db
       .prepare(
         "CREATE TABLE IF NOT EXISTS tables (" +
-          "id   integer PRIMARY KEY," +
+          "id   integer PRIMARY KEY AUTOINCREMENT," +
           "name text NOT NULL );"
       )
       .run();
