@@ -1,9 +1,3 @@
-a.visible {
-  background-color: #1f75cc;
-  color: white;
-  z-index: 100;
-}
-
 .blockMenu {
   background-color: #ffffff;
   border: 1px solid #999999;
@@ -15,12 +9,6 @@ a.visible {
   padding: 8px 4px 4px 4px;
   margin-top: -160px; /* 20px */
   margin-left: 80px;
-}
-
-.blockMenu p,
-.blockMenu.div {
-  padding-right: 4px;
-  border-bottom: 1px solid #efefef;
 }
 
 .blockMenu table {

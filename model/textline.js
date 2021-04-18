@@ -7,12 +7,12 @@ class Textline {
     input.value = text;
     input.className = "textline";
 
-    Textline.addEventListeners(input);
+    Textline.registerEvents(input);
     parent.append(input);
     return input;
   }
 
-  static addEventListeners(input) {
+  static registerEvents(input) {
     $(input).on("focus", function (event) {
       let textarea = $(event.target);
       if (textarea.val()) return;
@@ -38,7 +38,7 @@ class Textline {
             return;
           }
           let newTextline = Textline.build(textline.parent(), "");
-          Textline.addEventListeners();
+          Textline.registerEvents();
           textline.after(newTextline);
           Textline.focusNext($(newTextline));
           event.preventDefault();

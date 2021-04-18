@@ -143,7 +143,7 @@ class Table {
 
       div = document.createElement("div");
       div.className = "columnResizeSeparator";
-      Table.addEventListenersColumnSeparator(div);
+      Table.registerEventsColumnSeparator(div);
     }
 
     th.appendChild(div);
@@ -213,7 +213,7 @@ class Table {
       .attr("colspan", numberOfColumns);
   }
 
-  static addEventListenersColumnSeparator(div) {
+  static registerEventsColumnSeparator(div) {
     $(div).on("mousedown", function (event) {
       Eventhandler.onMousedownColumnSeparator(event);
     });
@@ -222,6 +222,7 @@ class Table {
       Eventhandler.onDblclickColumnSeparator(event);
     });
 
+    // OPT Move document-specific events to separate eventhandler class
     $(document).on("mousemove", function (event) {
       Eventhandler.onMousemove(event);
     });

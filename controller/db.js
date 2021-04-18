@@ -16,6 +16,12 @@ class DB {
     console.log(result);
   }
 
+static searchTables(tableName) {
+  return DB.all(
+    "SELECT name FROM sqlite_master WHERE type ='table' AND name LIKE '%" + tableName + "%';"
+  );
+}
+
   static all(sql) {
     return this.db.prepare(sql).all();
   }

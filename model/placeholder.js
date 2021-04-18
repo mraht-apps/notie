@@ -2,11 +2,11 @@ class Placeholder {
   static build(parent) {
     let div = document.createElement("div");
     div.className = "placeholder";
-    Placeholder.addEventListeners(div);
+    Placeholder.registerEvents(div);
     parent.append(div);
   }
 
-  static addEventListeners(div) {
+  static registerEvents(div) {
     $(div).on("click", function (event) {
       Eventhandler.onClick(event);
     });

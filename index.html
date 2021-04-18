@@ -3,14 +3,15 @@
 
 <head>
   <meta charset="UTF-8" />
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
   <!-- CSS Style -->
   <link rel="stylesheet" href="./res/css/style.css" type="text/css" />
   <link rel="stylesheet" href="./res/css/pagemenu.css" type="text/css" />
-  <link rel="stylesheet" href="./res/css/table.css" type="text/css" />
   <link rel="stylesheet" href="./res/css/blockmenu.css" type="text/css" />
+  <link rel="stylesheet" href="./res/css/searchmenu.css" type="text/css" />
+  <link rel="stylesheet" href="./res/css/table.css" type="text/css" />
 </head>
 
 <body>
@@ -80,6 +81,20 @@
                 <div class="description">Create a table in this page.</div>
               </td>
             </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="searchMenu">
+        <b>Search:</b><input type="text">
+        <table>
+          <tbody>
+            <!-- <tr>
+              <td>Table 1</td>
+            </tr>
+            <tr>
+              <td>Table 2</td>
+            </tr> -->
           </tbody>
         </table>
       </div>

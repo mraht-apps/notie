@@ -112,7 +112,7 @@
   overflow: hidden;
 }
 
-th:first-of-type .columnTitle {
+.table th:first-of-type .columnTitle {
   padding-left: 2px;
 }
 

@@ -14,6 +14,7 @@ const filemanager = require("./utils/file.js");
 
 // Controller
 const datamanager = require("./controller/data.js");
+const SearchMenu = require("./controller/searchmenu.js");
 
 // Model
 const pagemanager = require("./model/page.js");
@@ -23,33 +24,35 @@ const Placeholder = require("./model/placeholder.js");
 Textline.build($("#pageContent"), "");
 
 // DEBUG Test table build
-const Table = require("./model/table.js");
-Table.build($("#pageContent"), {
-  caption: "Untitled",
-  columns: [
-    { name: "Name", type: "text", width: "120px" },
-    { name: "Tags", type: "checkbox", width: "20px" },
-    { name: "Status", type: "text", width: "120px" },
-  ],
-  rows: [
-    {
-      Name: "Hallo Welt 1",
-      Tags: true,
-      Status: "Offen und in Bearbeitung",
-    },
-    {
-      Name: "Hallo Welt 2",
-      Tags: false,
-      Status: "Geschlossen und abgeschlossen",
-    },
-  ],
-});
+// const Table = require("./model/table.js");
+// Table.build($("#pageContent"), {
+//   caption: "Untitled",
+//   columns: [
+//     { name: "Name", type: "text", width: "120px" },
+//     { name: "Tags", type: "checkbox", width: "20px" },
+//     { name: "Status", type: "text", width: "120px" },
+//   ],
+//   rows: [
+//     {
+//       Name: "Hallo Welt 1",
+//       Tags: true,
+//       Status: "Offen und in Bearbeitung",
+//     },
+//     {
+//       Name: "Hallo Welt 2",
+//       Tags: false,
+//       Status: "Geschlossen und abgeschlossen",
+//     },
+//   ],
+// });
 
 Textline.build($("#pageContent"), "");
 Placeholder.build($(".content"));
 
 const DB = require("./controller/db.js");
 DB.init();
+
+SearchMenu.registerEvents();
 
 $("#newPage").on("click", function (event) {
   let pagename = cryptomanager.generateUUID();
