@@ -7,6 +7,8 @@ class Table {
   static build(parent, data) {
     let table = document.createElement("table");
     table.className = "table";
+    const uuid = require("../utils/cryptography.js");
+    $(table).data("id", uuid.generateUUID());
     this.createCaption(table, data.caption);
 
     this.prepareGeneration(data);
