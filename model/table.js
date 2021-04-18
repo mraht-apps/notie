@@ -13,7 +13,9 @@ class Table {
     this.generateTableBody(table, data);
     this.generateTableHead(table, data);
 
-    parent.append(table);
+    if (parent != null) {
+      parent.append(table);
+    }
 
     return table;
   }
@@ -119,7 +121,6 @@ class Table {
         Eventhandler.onClickColumnAdd(event);
       });
     } else {
-      let span = document.createElement("span");
       let img = document.createElement("img");
       switch (columnType) {
         case "checkbox":
@@ -129,9 +130,8 @@ class Table {
           img.src = "./res/img/text.png";
           break;
       }
-      span.className = "columnIcon";
-      span.appendChild(img);
-      div.append(span);
+      img.className = "columnIcon";
+      div.append(img);
 
       let input = document.createElement("input");
       input.type = "text";

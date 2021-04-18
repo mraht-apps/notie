@@ -9,6 +9,7 @@ class Textline {
 
     Textline.addEventListeners(input);
     parent.append(input);
+    return input;
   }
 
   static addEventListeners(input) {
@@ -26,14 +27,20 @@ class Textline {
       textarea.prop("placeholder", "");
     });
 
+    // FIX Create new textline after current textline
     $(input).on("keypress", function (event) {
-      let textarea = $(event.target);
+      let textline = $(event.target);
       switch (event.key) {
         case "Enter":
-          let newTextline = new Textline(textarea.parent(), "");
-          newTextline.addEventListeners();
-          textarea.after(newTextline.textarea);
-          Textline.focusNext($(newTextline.textarea));
+          if (blockmenu.isOpen()) {
+            blockmenu.addElement(textline);
+            blockmenu.close();
+            return;
+          }
+          let newTextline = Textline.build(textline.parent(), "");
+          Textline.addEventListeners();
+          textline.after(newTextline);
+          Textline.focusNext($(newTextline));
           event.preventDefault();
           break;
       }
@@ -42,7 +49,7 @@ class Textline {
       let regex = /^[\w\s]+$/;
       if (event.key.match(regex) || event.key == "Escape") {
         blockmenu.close();
-        console.log(textarea.prop("scrollHeight"));
+        console.log(textline.prop("scrollHeight"));
       }
     });
 

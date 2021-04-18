@@ -3,6 +3,9 @@
 
 <head>
   <meta charset="UTF-8" />
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
   <!-- CSS Style -->
   <link rel="stylesheet" href="./res/css/style.css" type="text/css" />
   <link rel="stylesheet" href="./res/css/pagemenu.css" type="text/css" />
@@ -59,7 +62,7 @@
             <tr>
               <div class="sectionTitle">BASIC BLOCKS</div>
             </tr>
-            <tr class="clickable" data-type="textline">
+            <!-- <tr class="clickable" data-type="textline">
               <td>
                 <div class="icon">Aa</div>
               </td>
@@ -67,7 +70,7 @@
                 <div>Text</div>
                 <div class="description">Just start writing with plain text.</div>
               </td>
-            </tr>
+            </tr> -->
             <tr class="clickable" data-type="table">
               <td>
                 <div class="icon">Tbl</div>
@@ -97,12 +100,12 @@
               <div class="columnResizeSeparator"></div>
             </th>
             <th data-type="checkbox">
-              <div class="columnTitle"><span class="columnIcon"><img src="./res/img/checkbox.png"></span><input
+              <div class="columnTitle"><img src="./res/img/checkbox.png" class="columnIcon"><input
                   type="text"></div>
               <div class="columnResizeSeparator"></div>
             </th>
             <th data-type="text">
-              <div class="columnTitle"><span class="columnIcon"><img src="./res/img/text.png"></span><input type="text"
+              <div class="columnTitle"><img src="./res/img/text.png" class="columnIcon"><input type="text"
                   value="Column 3"></div>
               <div class="columnResizeSeparator"></div>
             </th>

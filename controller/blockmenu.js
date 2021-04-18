@@ -1,3 +1,6 @@
+// const Table = require("../model/table.js");
+// const Textline = require("../model/textline.js");
+
 function openFirstTime() {
   if (isOpen()) {
     close();
@@ -21,11 +24,46 @@ $(".blockMenu").on("mouseout", function (event) {
 });
 
 $(".clickable").on("click", function (event) {
-  let row = $(event.target);
-//   console.log(row);
-
+  addElement();
   close();
 });
+
+function addElement(textline) {
+  let row = $(".active").eq(0);
+  let elementType = row.data("type");
+
+  switch (elementType) {
+    case "table":
+      let data = {
+        caption: "Untitled",
+        columns: [
+          { name: "Name", type: "text", width: "120px" },
+          { name: "Done", type: "checkbox", width: "20px" },
+        ],
+        rows: [
+          {
+            Name: "",
+            Done: false,
+          },
+          {
+            Name: "",
+            Done: false,
+          },
+          {
+            Name: "",
+            Done: false,
+          },
+        ],
+      };
+      let table = Table.build(null, data);
+      $(textline).before(table);
+      $(textline).val("");
+      break;
+    case "textline":
+      Textline.build($("#pageContent"), "");
+      break;
+  }
+}
 
 $(document).on("click", function (event) {
   if (
@@ -36,6 +74,14 @@ $(document).on("click", function (event) {
     return;
   }
   close();
+});
+
+$(document).on("keypress", function(event) {
+  switch (event.key) {
+    case "Enter":
+      addElement();
+      break;
+  }
 });
 
 $(document).on("keyup", function (event) {
@@ -79,6 +125,8 @@ function open() {
 }
 
 module.exports = {
+  addElement,
+  isOpen,
   openFirstTime,
   close,
 };
