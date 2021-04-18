@@ -85,7 +85,7 @@ function savePageContent() {
 
   children.each(function () {
     let element = $(this);
-    if (element.is("input:text") && element.val().trim()) {
+    if (element.is("input:text")) {
       textline = saveTextline(element);
       pageContent.push(textline);
     } else if (element.is("table")) {

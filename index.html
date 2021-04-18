@@ -2,92 +2,90 @@
 <html>
 
 <head>
-  <meta charset="UTF-8">
-  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <meta charset="UTF-8" />
   <!-- CSS Style -->
-  <link rel="stylesheet" href="./res/css/style.css" type="text/css">
-  <link rel="stylesheet" href="./res/css/pagemenu.css" type="text/css">
-  <link rel="stylesheet" href="./res/css/table.css" type="text/css">
-  <link rel="stylesheet" href="./res/css/blockmenu.css" type="text/css">
+  <link rel="stylesheet" href="./res/css/style.css" type="text/css" />
+  <link rel="stylesheet" href="./res/css/pagemenu.css" type="text/css" />
+  <link rel="stylesheet" href="./res/css/table.css" type="text/css" />
+  <link rel="stylesheet" href="./res/css/blockmenu.css" type="text/css" />
 </head>
 
-<body class="container">
-  <aside class="navbar">
-    <a href="index.html">Index</a>
-    <div id='navbarContent'>
-      <a id='newPage' href='#'>+ New page</a>
+<body>
+  <div class="container">
+    <div class="pagemenu">
+      <a href="index.html">Index</a>
+      <div id='pagemenu-content'>
+        <a id='newPage' href='#'>+ New page</a>
+      </div>
     </div>
-  </aside>
-  <div class="resize-handle--x" data-target="aside"></div>
-  <main>
-    <h1 id="page-title"></h1>
+    <div class="pagemenu-resize"></div>
+    <div class="content">
+      <h1 id="page-title"></h1>
 
-    <p>
-      <b>Debug Information:</b></br>
-      Node.js: <span id="node-version"></span></br>
-      Chromium: <span id="chrome-version"></span></br>
-      Electron: <span id="electron-version"></span>
-    </p>
+      <p>
+        <b>Debug Information:</b></br>
+        Node.js: <span id="node-version"></span></br>
+        Chromium: <span id="chrome-version"></span></br>
+        Electron: <span id="electron-version"></span>
+      </p>
 
-    <table>
-      <tbody>
-        <tr>
-          <td>Page Name:</td>
-          <td><input type="text" name="pagename" id="pagename" value="Page Name"></td>
-          <td><input type="submit" id="btnSubmitPagename" value="Save"></br></td>
-        </tr>
-        <tr>
-          <td>Password:</td>
-          <td><input type="password" name="password" id="password"></td>
-          <td><input type="submit" id="btnSavePassword" value="Save">
-            <input type="button" id="btnSetPassword" value="Login">
-            <input type="button" id="btnReadPassword" value="Read">
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>
-      <input type="button" id="btnSave" value="Save" />
-      <input type="button" id="btnLoad" value="Load" />
-      <input type="button" id="btnRestart" value="Restart" />
-    </p>
-
-    <div class="blockMenu">
       <table>
         <tbody>
           <tr>
-            <div class="sectionTitle">BASIC BLOCKS</div>
+            <td>Page Name:</td>
+            <td><input type="text" name="pagename" id="pagename" value="Page Name"></td>
+            <td><input type="submit" id="btnSubmitPagename" value="Save"></br></td>
           </tr>
-          <tr class="clickable" data-type="textline">
-            <td>
-              <div class="icon">Aa</div>
-            </td>
-            <td>
-              <div>Text</div>
-              <div class="description">Just start writing with plain text.</div>
-            </td>
-          </tr>
-          <tr class="clickable" data-type="table">
-            <td>
-              <div class="icon">Tbl</div>
-            </td>
-            <td>
-              <div>Table</div>
-              <div class="description">Create a table in this page.</div>
+          <tr>
+            <td>Password:</td>
+            <td><input type="password" name="password" id="password"></td>
+            <td><input type="submit" id="btnSavePassword" value="Save">
+              <input type="button" id="btnSetPassword" value="Login">
+              <input type="button" id="btnReadPassword" value="Read">
             </td>
           </tr>
         </tbody>
       </table>
-    </div>
 
-    <div id="pageContent">
+      <p>
+        <input type="button" id="btnSave" value="Save" />
+        <input type="button" id="btnLoad" value="Load" />
+        <input type="button" id="btnRestart" value="Restart" />
+      </p>
 
-      <!-- <input class="textline" type="text"> -->
+      <div class="blockMenu">
+        <table>
+          <tbody>
+            <tr>
+              <div class="sectionTitle">BASIC BLOCKS</div>
+            </tr>
+            <tr class="clickable" data-type="textline">
+              <td>
+                <div class="icon">Aa</div>
+              </td>
+              <td>
+                <div>Text</div>
+                <div class="description">Just start writing with plain text.</div>
+              </td>
+            </tr>
+            <tr class="clickable" data-type="table">
+              <td>
+                <div class="icon">Tbl</div>
+              </td>
+              <td>
+                <div>Table</div>
+                <div class="description">Create a table in this page.</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-      <!-- <table class="table">
+      <div id="pageContent">
+
+        <!-- <input class="textline" type="text"> -->
+
+        <!-- <table class="table">
         <caption>
           <input type="text" value="Example">
         </caption>
@@ -138,13 +136,14 @@
         </tbody>
       </table> -->
 
+      </div>
+      <!-- <div class="placeholder"></div> -->
+
     </div>
 
-  </main>
-
-  <script src="./renderer.js"></script>
-  <script src="./controller/pagemenu.js"></script>
-  <script src="./controller/blockmenu.js"></script>
+    <script src="./renderer.js"></script>
+    <script src="./controller/pagemenu.js"></script>
+    <script src="./controller/blockmenu.js"></script>
 </body>
 
 </html>

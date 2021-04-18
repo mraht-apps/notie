@@ -23,8 +23,7 @@ class DB {
   static initInstance() {
     this.db = new Database("./user_data/notie.db", { verbose: console.log });
     this.db.pragma("journal_mode = WAL");
-    // NEW Encryption:
-    this.db.pragma('key = "123"');
+    // NEW Encryption: this.db.pragma('key = "123"'); OR file-based encryption
   }
 
   static initPages(exists) {

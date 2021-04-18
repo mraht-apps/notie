@@ -18,6 +18,7 @@ const datamanager = require("./controller/data.js");
 // Model
 const pagemanager = require("./model/page.js");
 const Textline = require("./model/textline.js");
+const Placeholder = require("./model/placeholder.js");
 
 Textline.build($("#pageContent"), "");
 
@@ -44,13 +45,19 @@ Table.build($("#pageContent"), {
   ],
 });
 
+Textline.build($("#pageContent"), "");
+Placeholder.build($(".content"));
+
 const DB = require("./controller/db.js");
 DB.init();
 
 $("#newPage").on("click", function (event) {
   let pagename = cryptomanager.generateUUID();
   let templateData = filemanager.readFile("template.html");
-  filemanager.writeFile("./user_data/pages/" + pagename + ".html", templateData);
+  filemanager.writeFile(
+    "./user_data/pages/" + pagename + ".html",
+    templateData
+  );
   pagemanager.addPageToMenu(pagename);
   return false;
 });

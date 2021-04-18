@@ -3,6 +3,8 @@
     "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
   -webkit-font-smoothing: auto;
   font-size: 16px;
+  /* include border and padding in element width and height */
+  box-sizing: border-box;
 }
 
 html {
@@ -11,8 +13,14 @@ html {
 }
 
 body {
-  box-sizing: border-box;
-  height: 100%;
+  margin: 0px;
+  padding: 8px;
+  min-height: 100%;
+  display: flex;
+}
+
+#page-title {
+  margin-top: 0px;
 }
 
 input[type="checkbox"] {
@@ -31,4 +39,9 @@ input[type="text"] {
 
 ::selection {
   background: rgba(45, 170, 219, 0.3);
+}
+
+.placeholder {
+  width: 100%;
+  height: 100%;
 }

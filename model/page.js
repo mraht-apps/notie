@@ -8,10 +8,10 @@ function addPageToMenu(pagename) {
   a.onclick = function (event) {
     let page = pagename + ".html";
     const render = filemanager.readFile("../user_data/pages/" + page);
-    $(".main").html(render);
+    $(".content").html(render);
     return false;
   };
-  $("#navbarContent").append(a);
+  $("#pagemenu-content").append(a);
 }
 
 module.exports = {

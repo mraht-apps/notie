@@ -1,7 +1,8 @@
 .container {
-  height: 100%;
+  width: 100%;
+  min-height: 100%;
+
   overflow: hidden;
-  background-color: white;
 
   display: -ms-flexbox;
   display: -webkit-flex;
@@ -23,12 +24,10 @@
   align-items: stretch;
 }
 
-.container > aside,
-.container > main {
-  overflow: auto;
-}
+.pagemenu {
+  float: left;
+  min-width: 200px;
 
-.container > aside {
   -webkit-order: 0;
   -ms-flex-order: 0;
   order: 0;
@@ -39,33 +38,19 @@
   -ms-flex-item-align: auto;
   align-self: auto;
 }
-
-.container > main {
-  padding-left: 10px;
-
-  -webkit-order: 0;
-  -ms-flex-order: 0;
-  order: 0;
-  -webkit-flex: 1 1 auto;
-  -ms-flex: 1 1 auto;
-  flex: 1 1 auto;
-  -webkit-align-self: auto;
-  -ms-flex-item-align: auto;
-  align-self: auto;
-}
-
-.resize-handle--x {
-  -webkit-flex: 0 0 auto;
-  -ms-flex: 0 0 auto;
-  flex: 0 0 auto;
+.pagemenu-resize {
+  border-left: 1px solid #e1e1e1;
+  width: 3px;
+  margin-left: 8px;
+  margin-right: 8px;
+  cursor: ew-resize;
 
   position: relative;
   box-sizing: border-box;
-  width: 3px;
-  height: 100%;
-  border-left: 1px solid black;
-  cursor: ew-resize;
 
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -73,14 +58,17 @@
   -ms-user-select: none;
   user-select: none;
 }
+.content {
+  float: right;
+  width: 100%;
+}
 
-.navbar a {
+.pagemenu a {
   padding: 6px 8px 6px 8px;
   text-decoration: none;
   color: #000;
   display: block;
   background: #fff;
-  width: 100%;
   text-align: left;
   cursor: pointer;
   outline: none;
@@ -91,11 +79,11 @@
   border-left: 1px solid #e1e1e1;
 }
 
-.navbar a:hover {
+.pagemenu a:hover {
   background: #e1e1e1;
 }
 
-#navbarContent a {
+#pagemenu-content a {
   border-top: 0px;
   border-right: 1px solid #e1e1e1;
   border-bottom: 1px solid #e1e1e1;
