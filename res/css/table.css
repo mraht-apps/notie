@@ -163,3 +163,37 @@
   -moz-box-shadow: none;
   box-shadow: none;
 }
+
+.tableMenuContainer {
+  display: flex;
+}
+
+.tableCaption {
+  width: 80%;
+  float: left;
+  text-align: left;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.tableMenu {
+  width: 20%;
+  float: right;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.menuImg {
+  width: 30px;
+  padding: 4px;
+}
+
+.menuImg:hover {
+  background-color: rgb(236, 236, 236);
+  border-radius: 4px;
+  cursor: pointer;
+}
