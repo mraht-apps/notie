@@ -6,60 +6,60 @@
   padding-bottom: 10px;
 }
 
-.table th,
-.table td {
+.tableHead th,
+.tableBody td {
   border-right: 1px solid rgba(55, 53, 47, 0.2);
   border-bottom: 1px solid rgba(55, 53, 47, 0.2);
   text-align: left;
   height: 22px;
 }
 
-.table th {
+.tableHead th {
   color: rgba(55, 53, 47, 0.6);
   font-weight: normal;
   border-top: none;
   position: relative;
 }
 
-.table th:hover {
+.tableHead th:hover {
   background-color: rgb(228, 228, 228);
 }
 
-.table th:last-child:hover {
+.tableHead th:last-child:hover {
   cursor: pointer;
 }
 
-.table th:last-child,
-.table td:last-child {
+.tableHead th:last-child,
+.tableBody td:last-child {
   border-right: none;
 }
 
-.table th:first-child,
-.table td:first-child {
+.tableHead th:first-child,
+.tableBody td:first-child {
   border-left: none;
 }
 
-.table tr:last-child:hover > td {
+.tableBody tr:last-child:hover > td {
   background-color: rgb(228, 228, 228);
   cursor: pointer;
 }
 
-.table th:last-child div {
+.tableHead th:last-child div {
   font-size: 16px;
   font-weight: normal;
   margin-top: -2px;
 }
 
-.table th input {
+.tableHead th input {
   color: rgba(55, 53, 47, 0.6);
   cursor: default;
 }
 
-.table td {
+.tableBody td {
   padding: 6px 6px 6px 8px;
 }
 
-.table tr:last-of-type td {
+.tableBody tr:last-of-type td {
   border-top: none;
   border-right: none;
 
@@ -112,7 +112,7 @@
   overflow: hidden;
 }
 
-.table th:first-of-type .columnTitle {
+.tableHead th:first-of-type .columnTitle {
   padding-left: 2px;
 }
 
@@ -120,7 +120,7 @@
   justify-content: left;
 }
 
-.columnIcon {
+.columnTitle img {
   float: left;
   width: 22px;
   height: 22px;
@@ -129,31 +129,31 @@
   margin-top: 2px;
 }
 
-.columnIcon:hover {
+.columnTitle img:hover {
   background-color: rgb(236, 236, 236);
   border-radius: 4px;
   cursor: pointer;
 }
 
-.table th input[type="text"],
-.table td input[type="text"] {
+.tableHead th input[type="text"],
+.tableBody td input[type="text"] {
   padding-left: 4px;
 }
 
-.table tr td:first-of-type {
+.tableBody tr td:first-of-type {
   padding-left: 2px;
 }
 
-.table tr:last-of-type td:first-of-type {
+.tableBody tr:last-of-type td:first-of-type {
   padding-left: 6px;
 }
 
-.table td input[type="checkbox"] {
+.tableBody td input[type="checkbox"] {
   margin-left: 1px;
 }
 
 .table input[type="text"],
-.textline {
+.table .textline {
   outline: none;
   border: none;
   width: 100%;
@@ -172,8 +172,6 @@
   width: 80%;
   float: left;
   text-align: left;
-
-  display: flex;
   align-items: center;
   justify-content: flex-start;
 }
@@ -185,6 +183,38 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
+}
+
+.tableContextMenu {
+  border: 1px solid rgb(236, 236, 236);
+  z-index: 99999;
+  position: absolute;
+  right: 8px;
+  width: 150px;
+  background: white;
+  display: none;
+}
+
+.tableContextMenu table {
+  width: 100%;
+}
+
+.tableContextMenu table td {
+  display: flex;
+  border: none;
+  padding: 2px 6px 2px 4px;
+  align-items: center;
+}
+
+.tableContextMenu td:hover {
+  background-color: rgb(236, 236, 236);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.tableContextMenu img {
+  width: 18px;
+  margin-right: 4px;
 }
 
 .menuImg {

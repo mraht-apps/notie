@@ -73,6 +73,12 @@ $(".th_textArea").on("keydown", function (event) {
   }
 });
 
+$(".tableMenu").on("click", function(event){
+  console.log(event.target);
+  const tablemenu = require("./controller/tablemenu.js");
+  tablemenu.open();
+});
+
 // Only as example for interaction between main.js and renderer.js
 // 1) Submit event in index.html
 // 2) Submit event in renderer.js

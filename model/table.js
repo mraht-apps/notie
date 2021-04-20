@@ -132,7 +132,6 @@ class Table {
           img.src = "./res/img/text.png";
           break;
       }
-      img.className = "columnIcon";
       div.append(img);
 
       let input = document.createElement("input");
