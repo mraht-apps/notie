@@ -1,5 +1,5 @@
 function addPageToMenu(pagename) {
-  const filemanager = require("../utils/file.js");
+  const FileJS = require("../utils/file.js");
 
   var a = document.createElement("a");
   a.id = "page";
@@ -7,7 +7,7 @@ function addPageToMenu(pagename) {
   a.innerText = pagename;
   a.onclick = function (event) {
     let page = pagename + ".html";
-    const render = filemanager.readFile("../user_data/pages/" + page);
+    const render = FileJS.readFile("../user_data/pages/" + page);
     $(".content").html(render);
     return false;
   };

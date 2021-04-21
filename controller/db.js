@@ -4,8 +4,8 @@ class DB {
   db;
 
   static init() {
-    let filemanager = require("../utils/file.js");
-    let exists = filemanager.exists("./user_data/notie.db");
+    let FileJS = require("../utils/file.js");
+    let exists = FileJS.exists("./user_data/notie.db");
 
     DB.initInstance();
     DB.initPages(exists);

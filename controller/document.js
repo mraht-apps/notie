@@ -23,27 +23,31 @@ class Document {
 }
 
 class Eventhandler {
+  // OPT Move relevant source code to blockmenu.js
   static onClick(event) {
     if (
-      !isOpen() ||
-      $(event.target).parents().filter(".blockMenu").length > 0 ||
-      $(event.target).hasClass("blockMenu")
+      BlockmenuJS.Blockmenu.isOpen() &&
+      $(event.target).parents().filter(".blockMenu").length == 0 &&
+      !$(event.target).hasClass("blockMenu")
     ) {
-      return;
+      BlockmenuJS.Blockmenu.close();
     }
-    close();
+
+    if (!$(event.target).parent().hasClass("tableMenuContainer")) {
+      TablemenuJS.Tablemenu.close();
+    }
   }
 
   static onKeypress(event) {
     switch (event.key) {
       case "Enter":
-        addElement();
+        BlockmenuJS.Blockmenu.addElement();
         break;
     }
   }
 
   static onKeyup(event) {
-    if (!isOpen()) return;
+    if (!BlockmenuJS.Blockmenu.isOpen()) return;
 
     if ($(".active").length == 0) {
       $(".clickable").eq(0).addClass("active");

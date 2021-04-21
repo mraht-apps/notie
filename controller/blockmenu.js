@@ -1,89 +1,99 @@
-// const Table = require("../model/table.js");
-// const Textline = require("../model/textline.js");
+class Blockmenu {
+  static registerEvents() {
+    $(".blockMenu").on("mouseout", function (event) {
+      Eventhandler.onMouseout(event);
+    });
 
-function openFirstTime() {
-  if (isOpen()) {
-    close();
-  } else {
-    open();
-    $(".clickable").eq(0).addClass("active");
+    $(".clickable").on("click", function (event) {
+      Eventhandler.onClickMenuItem(event);
+    });
+
+    $(".clickable").on("mouseover", function (event) {
+      Eventhandler.onMouseoverMenuItem(event);
+    });
+  }
+
+  static openFirstTime() {
+    if (Blockmenu.isOpen()) {
+      Blockmenu.close();
+    } else {
+      Blockmenu.open();
+      $(".clickable").eq(0).addClass("active");
+    }
+  }
+
+  static addElement(textline) {
+    let row = $(".active").eq(0);
+    let elementType = row.data("type");
+
+    switch (elementType) {
+      case "table":
+        let data = {
+          caption: "Untitled",
+          columns: [
+            { name: "Name", type: "text", width: "120px" },
+            { name: "Done", type: "checkbox", width: "20px" },
+          ],
+          rows: [
+            {
+              Name: "",
+              Done: false,
+            },
+            {
+              Name: "",
+              Done: false,
+            },
+            {
+              Name: "",
+              Done: false,
+            },
+          ],
+        };
+        let table = TableJS.Table.build(null, data);
+        $(textline).before(table);
+        $(textline).val("");
+        break;
+      case "textline":
+        Textline.build($("#pageContent"), "");
+        break;
+    }
+  }
+
+  static isOpen() {
+    return $(".blockMenu").hasClass("visible");
+  }
+
+  static close() {
+    if (!Blockmenu.isOpen()) return;
+    $(".clickable").removeClass("active");
+    $(".blockMenu").removeClass("visible");
+    $(".blockMenu").toggle();
+  }
+
+  static open() {
+    $(".blockMenu").addClass("visible");
+    $(".blockMenu").toggle();
   }
 }
 
-$(".clickable").on("mouseover", function (event) {
-  $(".active").removeClass("active");
-  let row = $(event.target);
-  if (!$(event.target).is("tr")) {
-    row = $(event.target).parents().filter(".clickable").eq(0);
+class Eventhandler {
+  static onClickMenuItem(event) {
+    Blockmenu.addElement();
+    Blockmenu.close();
   }
-  row.addClass("active");
-});
 
-$(".blockMenu").on("mouseout", function (event) {
-  $(".active").removeClass("active");
-});
+  static onMouseout(event) {
+    $(".active").removeClass("active");
+  }
 
-$(".clickable").on("click", function (event) {
-  addElement();
-  close();
-});
-
-function addElement(textline) {
-  let row = $(".active").eq(0);
-  let elementType = row.data("type");
-
-  switch (elementType) {
-    case "table":
-      let data = {
-        caption: "Untitled",
-        columns: [
-          { name: "Name", type: "text", width: "120px" },
-          { name: "Done", type: "checkbox", width: "20px" },
-        ],
-        rows: [
-          {
-            Name: "",
-            Done: false,
-          },
-          {
-            Name: "",
-            Done: false,
-          },
-          {
-            Name: "",
-            Done: false,
-          },
-        ],
-      };
-      let table = Table.build(null, data);
-      $(textline).before(table);
-      $(textline).val("");
-      break;
-    case "textline":
-      Textline.build($("#pageContent"), "");
-      break;
+  static onMouseoverMenuItem(event) {
+    $(".active").removeClass("active");
+    let row = $(event.target);
+    if (!$(event.target).is("tr")) {
+      row = $(event.target).parents().filter(".clickable").eq(0);
+    }
+    row.addClass("active");
   }
 }
 
-function isOpen() {
-  return $(".blockMenu").hasClass("visible");
-}
-
-function close() {
-  if (!isOpen()) return;
-  $(".clickable").removeClass("active");
-  $(".blockMenu").removeClass("visible");
-  $(".blockMenu").toggle();
-}
-
-function open() {
-  $(".blockMenu").addClass("visible");
-  $(".blockMenu").toggle();
-}
-
-module.exports = {
-  addElement,
-  isOpen,
-  openFirstTime,
-  close,
-};
+module.exports = { Blockmenu, Eventhandler }

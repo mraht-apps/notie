@@ -39,9 +39,11 @@ class Table {
     let tableMenuContainer = document.createElement("div");
     tableMenuContainer.className = "tableMenuContainer";
     let menuImg = document.createElement("img");
-    menuImg.className = "menuImg";
     menuImg.src = "res/img/menu.svg";
     tableMenuContainer.appendChild(menuImg);
+    $(tableMenuContainer).on("click", function (event) {
+      Eventhandler.onClickTableMenuContainer(event);
+    });
     captionContainer.appendChild(tableMenuContainer);
     caption.appendChild(captionContainer);
 
@@ -50,6 +52,7 @@ class Table {
     let tableMenuTable = document.createElement("table");
     let tr = tableMenuTable.insertRow();
     tr.id = "deleteTable";
+    TablemenuJS.Tablemenu.registerEvent(tr);
     let td = document.createElement("td");
     let deleteImg = document.createElement("img");
     deleteImg.src = "res/img/trash.svg";
@@ -264,6 +267,10 @@ class Table {
     }
     activeRow.attr("id", "activeRow");
   }
+
+  static remove(table) {
+    table.remove();
+  }
 }
 
 class Eventhandler {
@@ -336,6 +343,10 @@ class Eventhandler {
     this.currentColumn = undefined;
     this.pageX = undefined;
     this.width = undefined;
+  }
+
+  static onClickTableMenuContainer(event) {
+    TablemenuJS.Tablemenu.open();
   }
 }
 

@@ -185,6 +185,17 @@
   justify-content: flex-end;
 }
 
+.tableMenuContainer img {
+  width: 30px;
+  padding: 4px;
+}
+
+.tableMenuContainer img:hover {
+  background-color: rgb(236, 236, 236);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 .tableMenu {
   border: 1px solid rgb(236, 236, 236);
   z-index: 99999;
@@ -215,15 +226,4 @@
 .tableMenu img {
   width: 18px;
   margin-right: 4px;
-}
-
-.menuImg {
-  width: 30px;
-  padding: 4px;
-}
-
-.menuImg:hover {
-  background-color: rgb(236, 236, 236);
-  border-radius: 4px;
-  cursor: pointer;
 }

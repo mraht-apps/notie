@@ -6,23 +6,26 @@
 // process.
 window.$ = window.jQuery = require("jquery");
 
-const ipcRenderer = require("electron").ipcRenderer;
+const IPCRenderer = require("electron").ipcRenderer;
 
 // Utilities
-const cryptomanager = require("./utils/cryptography.js");
-const filemanager = require("./utils/file.js");
+const CryptoJS = require("./utils/cryptography.js");
+const FileJS = require("./utils/file.js");
 
 // Controller
-const datamanager = require("./controller/data.js");
-const SearchMenu = require("./controller/searchmenu.js");
-const Document = require("./controller/document.js");
+const DataJS = require("./controller/data.js");
+const SearchMenuJS = require("./controller/searchmenu.js");
+const DocumentJS = require("./controller/document.js");
+const BlockmenuJS = require("./controller/blockmenu.js");
+const TablemenuJS = require("./controller/tablemenu.js");
 
 // Model
-const pagemanager = require("./model/page.js");
-const Textline = require("./model/textline.js");
-const Placeholder = require("./model/placeholder.js");
+const PageJS = require("./model/page.js");
+const TextlineJS = require("./model/textline.js");
+const PlaceholderJS = require("./model/placeholder.js");
+const TableJS = require("./model/table.js");
 
-Textline.build($("#pageContent"), "");
+TextlineJS.build($("#pageContent"), "");
 
 // DEBUG Test table build
 // const Table = require("./model/table.js");
@@ -47,23 +50,23 @@ Textline.build($("#pageContent"), "");
 //   ],
 // });
 
-Textline.build($("#pageContent"), "");
-Placeholder.build($(".content"));
+TextlineJS.build($("#pageContent"), "");
+PlaceholderJS.build($(".content"));
 
 const DB = require("./controller/db.js");
 DB.init();
 
-SearchMenu.registerEvents();
-Document.registerEvents();
+SearchMenuJS.registerEvents();
+DocumentJS.registerEvents();
 
 $("#newPage").on("click", function (event) {
-  let pagename = cryptomanager.generateUUID();
-  let templateData = filemanager.readFile("template.html");
-  filemanager.writeFile(
+  let pagename = CryptoJS.generateUUID();
+  let templateData = FileJS.readFile("template.html");
+  FileJS.writeFile(
     "./user_data/pages/" + pagename + ".html",
     templateData
   );
-  pagemanager.addPageToMenu(pagename);
+  PageJS.addPageToMenu(pagename);
   return false;
 });
 
@@ -75,12 +78,6 @@ $(".th_textArea").on("keydown", function (event) {
   }
 });
 
-$(".tableMenuContainer").on("click", function(event){
-  console.log(event.target);
-  const tableMenuContainer = require("./controller/tablemenu.js");
-  tableMenuContainer.open();
-});
-
 // Only as example for interaction between main.js and renderer.js
 // 1) Submit event in index.html
 // 2) Submit event in renderer.js
@@ -90,55 +87,55 @@ $("#btnSubmitPagename").on("click", function (event) {
   let pagename = $("#pagename").val();
   console.log("Call submitForm with pagename " + pagename + "\n");
 
-  ipcRenderer.once("actionReply", function (event, response) {
+  IPCRenderer.once("actionReply", function (event, response) {
     console.log("Handle actionReply with pagename " + pagename + "\n");
     $("#page-title").text(pagename);
   });
-  ipcRenderer.send("submitForm", pagename);
+  IPCRenderer.send("submitForm", pagename);
 });
 
 // Save password entered by user
 $("#btnSavePassword").on("click", function (event) {
   const password = $("#password").val();
-  cryptomanager.PASSWORD = password;
-  console.log("User set password to " + cryptomanager.PASSWORD + "\n");
+  CryptoJS.PASSWORD = password;
+  console.log("User set password to " + CryptoJS.PASSWORD + "\n");
 
-  cryptomanager.IV = cryptomanager.generateIV();
-  console.log("User set iv to " + cryptomanager.IV + "\n");
+  CryptoJS.IV = CryptoJS.generateIV();
+  console.log("User set iv to " + CryptoJS.IV + "\n");
 });
 
 // Set login password
 $("#btnSetPassword").on("click", function (event) {
   const password = $("#password").val();
-  cryptomanager.PASSWORD = password;
-  console.log("User set password to " + cryptomanager.PASSWORD + "\n");
+  CryptoJS.PASSWORD = password;
+  console.log("User set password to " + CryptoJS.PASSWORD + "\n");
 });
 
 // Read password
 $("#btnReadPassword").on("click", function (event) {
-  console.log("User set password to " + cryptomanager.PASSWORD + "\n");
-  console.log("User set iv to " + cryptomanager.IV + "\n");
+  console.log("User set password to " + CryptoJS.PASSWORD + "\n");
+  console.log("User set iv to " + CryptoJS.IV + "\n");
 });
 
 // NEW Load content based on data saved by user
 $("#btnLoad").on("click", function (event) {
-  datamanager.load();
-  Textline.build($("#pageContent"), "");
+  DataJS.load();
+  TextlineJS.build($("#pageContent"), "");
 });
 
 // Save data entered by user
 $("#btnSave").on("click", function (event) {
-  let jsonData = datamanager.save();
-  let data = cryptomanager.IV.toString();
-  data += cryptomanager.encrypt(
+  let jsonData = DataJS.save();
+  let data = CryptoJS.IV.toString();
+  data += CryptoJS.encrypt(
     jsonData,
-    cryptomanager.PASSWORD,
-    cryptomanager.IV
+    CryptoJS.PASSWORD,
+    CryptoJS.IV
   );
-  filemanager.writeFile("data.enc", data);
+  FileJS.writeFile("data.enc", data);
 });
 
 // Restart application
 $("#btnRestart").on("click", function (event) {
-  ipcRenderer.send("restart");
+  IPCRenderer.send("restart");
 });

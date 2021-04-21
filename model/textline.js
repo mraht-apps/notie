@@ -32,9 +32,9 @@ class Textline {
       let textline = $(event.target);
       switch (event.key) {
         case "Enter":
-          if (blockmenu.isOpen()) {
-            blockmenu.addElement(textline);
-            blockmenu.close();
+          if (BlockmenuJS.Blockmenu.isOpen()) {
+            BlockmenuJS.Blockmenu.addElement(textline);
+            BlockmenuJS.Blockmenu.close();
             return;
           }
           let newTextline = Textline.build(textline.parent(), "");
@@ -48,7 +48,7 @@ class Textline {
       // NEW Character: Jump to entry which matches character behind '/'
       let regex = /^[\w\s]+$/;
       if (event.key.match(regex) || event.key == "Escape") {
-        blockmenu.close();
+        BlockmenuJS.Blockmenu.close();
         console.log(textline.prop("scrollHeight"));
       }
     });
@@ -95,7 +95,7 @@ class Textline {
           }
           break;
         case "/":
-          blockmenu.openFirstTime();
+          BlockmenuJS.Blockmenu.openFirstTime();
           break;
       }
     });

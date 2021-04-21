@@ -7,17 +7,17 @@ function load() {
 }
 
 function readData() {
-  const filemanager = require("./file.js");
-  if (filemanager.exists("data.enc")) {
-    let data = filemanager.readFile("data.enc");
-    let ivEnd = cryptomanager.IV_LENGTH * 2;
-    cryptomanager.IV = cryptomanager.parseIV(data.slice(0, ivEnd));
+  const FileJS = require("./file.js");
+  if (FileJS.exists("data.enc")) {
+    let data = FileJS.readFile("data.enc");
+    let ivEnd = CryptoJS.IV_LENGTH * 2;
+    CryptoJS.IV = CryptoJS.parseIV(data.slice(0, ivEnd));
 
     data = data.slice(ivEnd, data.length);
-    let decryptedData = cryptomanager.decrypt(
+    let decryptedData = CryptoJS.decrypt(
       data,
-      cryptomanager.PASSWORD,
-      cryptomanager.IV
+      CryptoJS.PASSWORD,
+      CryptoJS.IV
     );
 
     jsonData = JSON.parse(decryptedData);
@@ -65,7 +65,7 @@ function loadTextline(element) {
 }
 
 function loadTable(element) {
-  let table = new tablemanager.Table(
+  let table = new TableJS.Table(
     element.caption,
     element.columns,
     element.rows

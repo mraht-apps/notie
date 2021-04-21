@@ -1,6 +1,6 @@
 // OPT Encapsulate loading and saving functions into table.js or textline.js
 // OPT Show error if no or wrong password has been supplied
-const filemanager = require("../utils/file.js");
+const FileJS = require("../utils/file.js");
 const table = require("../model/table.js");
 const Textline = require("../model/textline.js");
 
@@ -11,16 +11,16 @@ function load() {
 }
 
 function readData() {
-  if (filemanager.exists("data.enc")) {
-    let data = filemanager.readFile("data.enc");
-    let ivEnd = cryptomanager.IV_LENGTH * 2;
-    cryptomanager.IV = cryptomanager.parseIV(data.slice(0, ivEnd));
+  if (FileJS.exists("data.enc")) {
+    let data = FileJS.readFile("data.enc");
+    let ivEnd = CryptoJS.IV_LENGTH * 2;
+    CryptoJS.IV = CryptoJS.parseIV(data.slice(0, ivEnd));
 
     data = data.slice(ivEnd, data.length);
-    let decryptedData = cryptomanager.decrypt(
+    let decryptedData = CryptoJS.decrypt(
       data,
-      cryptomanager.PASSWORD,
-      cryptomanager.IV
+      CryptoJS.PASSWORD,
+      CryptoJS.IV
     );
 
     jsonData = JSON.parse(decryptedData);
@@ -107,9 +107,9 @@ function saveTextline(element) {
 function saveTable(element) {
   console.log(element);
 
-  let caption = $(element).find("caption").children("input").val();
+  let caption = $(element).children("caption").children(".captionContainer").children(".tableTitleContainer").children("input").val();
 
-  let columns = element.find("th");
+  let columns = element.children(".tableHead").find("th");
   let columnsContent = [];
 
   for (var i = 0; i < columns.length - 1; i++) {
@@ -122,10 +122,10 @@ function saveTable(element) {
     columnsContent.push(columnContent);
   }
 
-  let rows = element.find("tr");
+  let rows = element.children(".tableBody").children("tr");
   let rowsContent = [];
 
-  for (var i = 1; i < rows.length - 1; i++) {
+  for (var i = 0; i < rows.length - 1; i++) {
     let row = rows.eq(i);
     let cells = $(row).find("td");
 
