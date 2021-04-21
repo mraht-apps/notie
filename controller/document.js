@@ -25,15 +25,16 @@ class Document {
 class Eventhandler {
   // OPT Move relevant source code to blockmenu.js
   static onClick(event) {
+    let element = $(event.target);
     if (
       BlockmenuJS.Blockmenu.isOpen() &&
-      $(event.target).parents().filter(".blockMenu").length == 0 &&
-      !$(event.target).hasClass("blockMenu")
+      element.parents().filter(".blockMenu").length == 0 &&
+      !element.hasClass("blockMenu")
     ) {
       BlockmenuJS.Blockmenu.close();
     }
 
-    if (!$(event.target).parent().hasClass("tableMenuContainer")) {
+    if (!element.parent().hasClass("tableMenuContainer")) {
       TablemenuJS.Tablemenu.close();
     }
   }
