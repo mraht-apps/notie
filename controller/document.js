@@ -35,7 +35,7 @@ class Eventhandler {
     }
 
     if (!element.parent().hasClass("tableMenuContainer")) {
-      TablemenuJS.Tablemenu.close();
+      TablemenuJS.Tablemenu.closeAll();
     }
   }
 
