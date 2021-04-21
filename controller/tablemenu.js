@@ -18,14 +18,13 @@ class Tablemenu {
     return tableMenu.hasClass("visible");
   }
 
-  static close() {
-    // if (!Tablemenu.isOpen()) return;
+  static closeAll() {
     $(".tableMenu").removeClass("visible");
     $(".tableMenu").toggle(false);
   }
 
   static open(tableMenu) {
-    Tablemenu.close();
+    Tablemenu.closeAll();
     tableMenu.addClass("visible");
     tableMenu.toggle(true);
   }
@@ -38,14 +37,14 @@ class Eventhandler {
     if (!Tablemenu.isOpen(tableMenu)) {
       Tablemenu.open(tableMenu);
     } else {
-      Tablemenu.close();
+      Tablemenu.closeAll();
     }
   }
 
   static onClickMenuItem(event) {
     let table = $(event.target).parents(".table");
     TableJS.Table.remove(table);
-    Tablemenu.close();
+    Tablemenu.closeAll();
   }
 }
 
