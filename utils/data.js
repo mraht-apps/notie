@@ -47,8 +47,8 @@ function loadPageContent(jsonData) {
     }
   });
 
-  const tablemanager = require("./table.js");
-  tablemanager.init();
+  const table = require("./table.js");
+  table.Table.init();
 }
 
 function resetPageContent() {

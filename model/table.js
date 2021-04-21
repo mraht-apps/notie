@@ -24,10 +24,41 @@ class Table {
 
   static createCaption(table, captionText) {
     let caption = document.createElement("caption");
-    let input = document.createElement("input");
-    input.type = "text";
-    input.value = captionText;
-    caption.appendChild(input);
+
+    let captionContainer = document.createElement("div");
+    captionContainer.className = "captionContainer";
+
+    let tableTitleContainer = document.createElement("div");
+    tableTitleContainer.className = "tableTitleContainer";
+    let captionInput = document.createElement("input");
+    captionInput.type = "text";
+    captionInput.value = captionText;
+    tableTitleContainer.appendChild(captionInput);
+    captionContainer.appendChild(tableTitleContainer);
+
+    let tableMenuContainer = document.createElement("div");
+    tableMenuContainer.className = "tableMenuContainer";
+    let menuImg = document.createElement("img");
+    menuImg.className = "menuImg";
+    menuImg.src = "res/img/menu.svg";
+    tableMenuContainer.appendChild(menuImg);
+    captionContainer.appendChild(tableMenuContainer);
+    caption.appendChild(captionContainer);
+
+    let tableMenu = document.createElement("div");
+    tableMenu.className = "tableMenu";
+    let tableMenuTable = document.createElement("table");
+    let tr = tableMenuTable.insertRow();
+    tr.id = "deleteTable";
+    let td = document.createElement("td");
+    let deleteImg = document.createElement("img");
+    deleteImg.src = "res/img/trash.svg";
+    td.appendChild(deleteImg);
+    let text = document.createTextNode("Delete");
+    td.appendChild(text);
+    tr.appendChild(td);
+    tableMenu.appendChild(tableMenuTable);
+    caption.appendChild(tableMenu);
     table.insertBefore(caption, table.childNodes[0]);
   }
 
@@ -40,6 +71,7 @@ class Table {
       Table.generateTableRow(table, data, $(this));
     });
     Table.generateTableRowNew(table, data);
+    $(table).children("tbody").addClass("tableBody");
   }
 
   static generateTableRowNew(table, data) {
@@ -97,6 +129,7 @@ class Table {
 
   static generateTableHead(table, data) {
     let thead = table.createTHead();
+    thead.className = "tableHead";
     let tr = thead.insertRow();
 
     $(data.columns).each(function (index, column) {
@@ -220,15 +253,6 @@ class Table {
     $(div).on("dblclick", function (event) {
       Eventhandler.onDblclickColumnSeparator(event);
     });
-
-    // OPT Move document-specific events to separate eventhandler class
-    $(document).on("mousemove", function (event) {
-      Eventhandler.onMousemove(event);
-    });
-
-    $(document).on("mouseup", function (event) {
-      Eventhandler.onMouseup(event);
-    });
   }
 
   static setActiveRow(activeRow) {
@@ -270,7 +294,11 @@ class Eventhandler {
 
   static onDblclickColumnSeparator(event) {
     let column = $(event.target).parent();
-    let text = column.text().trim();
+    let text = column
+      .children(".columnTitle")
+      .children("input:text")
+      .val()
+      .trim();
 
     let tempDiv = document.createElement("div");
     document.body.appendChild(tempDiv);
@@ -311,4 +339,4 @@ class Eventhandler {
   }
 }
 
-module.exports = Table;
+module.exports = { Table, Eventhandler };

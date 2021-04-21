@@ -1,7 +1,7 @@
 // OPT Encapsulate loading and saving functions into table.js or textline.js
 // OPT Show error if no or wrong password has been supplied
 const filemanager = require("../utils/file.js");
-const Table = require("../model/table.js");
+const table = require("../model/table.js");
 const Textline = require("../model/textline.js");
 
 function load() {
@@ -59,7 +59,7 @@ function loadTextline(parent, element) {
 }
 
 function loadTable(parent, data) {
-  Table.build(parent, data);
+  table.Table.build(parent, data);
 }
 
 function save() {

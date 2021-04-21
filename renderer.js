@@ -15,6 +15,7 @@ const filemanager = require("./utils/file.js");
 // Controller
 const datamanager = require("./controller/data.js");
 const SearchMenu = require("./controller/searchmenu.js");
+const Document = require("./controller/document.js");
 
 // Model
 const pagemanager = require("./model/page.js");
@@ -53,6 +54,7 @@ const DB = require("./controller/db.js");
 DB.init();
 
 SearchMenu.registerEvents();
+Document.registerEvents();
 
 $("#newPage").on("click", function (event) {
   let pagename = cryptomanager.generateUUID();
@@ -73,10 +75,10 @@ $(".th_textArea").on("keydown", function (event) {
   }
 });
 
-$(".tableMenu").on("click", function(event){
+$(".tableMenuContainer").on("click", function(event){
   console.log(event.target);
-  const tablemenu = require("./controller/tablemenu.js");
-  tablemenu.open();
+  const tableMenuContainer = require("./controller/tablemenu.js");
+  tableMenuContainer.open();
 });
 
 // Only as example for interaction between main.js and renderer.js

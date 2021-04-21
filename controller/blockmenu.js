@@ -65,49 +65,6 @@ function addElement(textline) {
   }
 }
 
-$(document).on("click", function (event) {
-  if (
-    !isOpen() ||
-    $(event.target).parents().filter(".blockMenu").length > 0 ||
-    $(event.target).hasClass("blockMenu")
-  ) {
-    return;
-  }
-  close();
-});
-
-$(document).on("keypress", function(event) {
-  switch (event.key) {
-    case "Enter":
-      addElement();
-      break;
-  }
-});
-
-$(document).on("keyup", function (event) {
-  if (!isOpen()) return;
-
-  if ($(".active").length == 0) {
-    $(".clickable").eq(0).addClass("active");
-  } else {
-    let currentActiveRow = $(".active").eq(0);
-    let newActiveRow;
-    switch (event.key) {
-      case "ArrowDown":
-        newActiveRow = currentActiveRow.next();
-        break;
-      case "ArrowUp":
-        newActiveRow = currentActiveRow.prev();
-        break;
-    }
-
-    if (newActiveRow && newActiveRow.hasClass("clickable")) {
-      newActiveRow.addClass("active");
-      currentActiveRow.removeClass("active");
-    }
-  }
-});
-
 function isOpen() {
   return $(".blockMenu").hasClass("visible");
 }

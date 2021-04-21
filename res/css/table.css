@@ -164,11 +164,11 @@
   box-shadow: none;
 }
 
-.tableMenuContainer {
+.captionContainer {
   display: flex;
 }
 
-.tableCaption {
+.tableTitleContainer	 {
   width: 80%;
   float: left;
   text-align: left;
@@ -176,7 +176,7 @@
   justify-content: flex-start;
 }
 
-.tableMenu {
+.tableMenuContainer {
   width: 20%;
   float: right;
 
@@ -185,7 +185,7 @@
   justify-content: flex-end;
 }
 
-.tableContextMenu {
+.tableMenu {
   border: 1px solid rgb(236, 236, 236);
   z-index: 99999;
   position: absolute;
@@ -195,24 +195,24 @@
   display: none;
 }
 
-.tableContextMenu table {
+.tableMenu table {
   width: 100%;
 }
 
-.tableContextMenu table td {
+.tableMenu table td {
   display: flex;
   border: none;
   padding: 2px 6px 2px 4px;
   align-items: center;
 }
 
-.tableContextMenu td:hover {
+.tableMenu td:hover {
   background-color: rgb(236, 236, 236);
   border-radius: 4px;
   cursor: pointer;
 }
 
-.tableContextMenu img {
+.tableMenu img {
   width: 18px;
   margin-right: 4px;
 }

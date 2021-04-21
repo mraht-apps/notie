@@ -1,17 +1,17 @@
 function isOpen() {
-  return $(".tableContextMenu").hasClass("visible");
+  return $(".tableMenu").hasClass("visible");
 }
 
 function close() {
   if (!isOpen()) return;
   $(".clickable").removeClass("active");
-  $(".tableContextMenu").removeClass("visible");
-  $(".tableContextMenu").toggle();
+  $(".tableMenu").removeClass("visible");
+  $(".tableMenu").toggle();
 }
 
 function open() {
-  $(".tableContextMenu").addClass("visible");
-  $(".tableContextMenu").toggle();
+  $(".tableMenu").addClass("visible");
+  $(".tableMenu").toggle();
 }
 
 module.exports = {
