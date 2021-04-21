@@ -1,3 +1,5 @@
+const { Table } = require("../model/table");
+
 // FIX Call methods tablemenu-specific
 class Tablemenu {
   static registerEvent(tableMenuContainer) {
@@ -12,28 +14,32 @@ class Tablemenu {
     });
   }
 
-  static isOpen() {
-    return $(".tableMenu").hasClass("visible");
+  static isOpen(tableMenu) {
+    return tableMenu.hasClass("visible");
   }
 
-  // FIX open and close
   static close() {
-    if (!Tablemenu.isOpen()) return;
+    // if (!Tablemenu.isOpen()) return;
     $(".tableMenu").removeClass("visible");
-    $(".tableMenu").toggle();
+    $(".tableMenu").toggle(false);
   }
 
-  static open(element) {
-    let tableMenu = element.parents("caption").children(".tableMenu");
+  static open(tableMenu) {
+    Tablemenu.close();
     tableMenu.addClass("visible");
-    tableMenu.toggle();
+    tableMenu.toggle(true);
   }
 }
 
 class Eventhandler {
   static onClick(event) {
     let element = $(event.target);
-    Tablemenu.open(element);
+    let tableMenu = element.parents("caption").children(".tableMenu");
+    if (!Tablemenu.isOpen(tableMenu)) {
+      Tablemenu.open(tableMenu);
+    } else {
+      Tablemenu.close();
+    }
   }
 
   static onClickMenuItem(event) {
