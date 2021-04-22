@@ -13,10 +13,11 @@ class Blockmenu {
     });
   }
 
-  static openFirstTime() {
+  static openFirstTime(x, y) {
     if (Blockmenu.isOpen()) {
       Blockmenu.closeAll();
     } else {
+      $(".blockMenu").css({ top: y - 100 + "px", left: x + 10 + "px" });
       Blockmenu.open();
       $(".clickable").eq(0).addClass("active");
     }

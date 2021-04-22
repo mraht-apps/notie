@@ -87,9 +87,6 @@
   z-index: 1;
   cursor: col-resize;
   user-select: none;
-
-  -webkit-transition: all 200ms ease-out 0s;
-  -moz-transition: all 200ms ease-out 0s;
   transition: all 200ms ease-out 0s;
 }
 
@@ -183,8 +180,6 @@
   width: 100%;
 
   background-color: transparent;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
   box-shadow: none;
 }
 

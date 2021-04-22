@@ -74,8 +74,40 @@ class Eventhandler {
         break;
       case "/":
         // NEW Calculate position for the blockmenu
-        console.log(event);
-        BlockmenuJS.Blockmenu.openFirstTime();
+        console.log(document.getSelection());
+
+        // OPT Encapsulation, clean-up
+        var sel = document.getSelection(),
+          range,
+          rect;
+        var x = 0,
+          y = 0;
+        if (window.getSelection) {
+          sel = window.getSelection();
+          if (sel.rangeCount) {
+            range = sel.getRangeAt(0).cloneRange();
+            // Fall back to inserting a temporary element
+            if (x == 0 && y == 0) {
+              var span = document.createElement("span");
+              if (span.getClientRects) {
+                // Ensure span has dimensions and position by
+                // adding a zero-width space character
+                span.appendChild(document.createTextNode("\u200b"));
+                range.insertNode(span);
+                rect = span.getClientRects()[0];
+                x = rect.left;
+                y = rect.top;
+                var spanParent = span.parentNode;
+                spanParent.removeChild(span);
+
+                // Glue any broken text nodes back together
+                spanParent.normalize();
+              }
+            }
+          }
+        }
+
+        BlockmenuJS.Blockmenu.openFirstTime(x, y);
         break;
       default:
         textline.data("previousValue", textline.text());
