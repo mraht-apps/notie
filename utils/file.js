@@ -1,36 +1,33 @@
-const fs = require("fs");
+const FS = require("fs");
 
-function exists(filename) {
-  return fs.existsSync(filename);
+class File {
+  static create(filename, data) {
+    return FS.writeFileSync(filename, data, "utf8", function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+  }
+  
+  static exists(filename) {
+    return FS.existsSync(filename);
+  }
+  
+  static readFile(filename) {
+    return FS.readFileSync(filename, "utf8", function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+  }
+  
+  static readFolder(folder) {
+    return FS.readdirSync(folder, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+  }
 }
 
-function readFile(filename) {
-  return fs.readFileSync(filename, "utf8", function (error) {
-    if (error) {
-      console.log(error);
-    }
-  });
-}
-
-function readFolder(folder) {
-  return fs.readdirSync(folder, function (error) {
-    if (error) {
-      console.log(error);
-    }
-  });
-}
-
-function writeFile(filename, data) {
-  fs.writeFileSync(filename, data, "utf8", function (error) {
-    if (error) {
-      console.log(error);
-    }
-  });
-}
-
-module.exports = {
-  exists,
-  readFile,
-  readFolder,
-  writeFile,
-};
+module.exports = File;

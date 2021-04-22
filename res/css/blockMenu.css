@@ -2,13 +2,13 @@
   background-color: #ffffff;
   border: 1px solid #999999;
   cursor: default;
-  display: none;
+  /* display: none; */
   position: absolute;
   text-align: left;
   z-index: 99999;
   padding: 8px 4px 4px 4px;
-  margin-top: -160px; /* 20px */
-  margin-left: 80px;
+  top: 200px;
+  left: 200px;
 }
 
 .blockMenu table {

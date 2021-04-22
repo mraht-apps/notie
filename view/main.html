@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../res/css/style.css" type="text/css" />
+  <link rel="stylesheet" href="../res/css/pagemenu.css" type="text/css" />
+  <link rel="stylesheet" href="../res/css/blockmenu.css" type="text/css" />
+  <link rel="stylesheet" href="../res/css/searchmenu.css" type="text/css" />
+  <link rel="stylesheet" href="../res/css/table.css" type="text/css" />
+  <link rel="stylesheet" href="../res/css/textline.css" type="text/css" />
+</head>
+
+<body>
+
+  <div id="pageContainer">
+    <div id="pageMenu">
+      <div class="pageMenuItem" id="settingsPage" data-url="view/settings.html"><img
+          src="../res/img/settings.svg">Settings
+      </div>
+      <div class="pageMenuItem" id="dashboardPage" data-url="view/dashboard.html"><img
+          src="../res/img/page.svg">Dashboard
+      </div>
+      <div id="pageMenuUserPages">
+        <div id="pageMenuUserPagesTitle">Pages
+          <hr>
+        </div>
+        <div id="newPage" class="pageMenuItem"><img src="../res/img/new.svg">New page</div>
+      </div>
+    </div>
+    <div class="resizeSeparator"></div>
+    <div id="pageContent">
+      <div id="menuBar">
+        <input type="button" id="btnSave" value="Save" />
+        <input type="button" id="btnLoad" value="Load" />
+        <input type="button" id="btnRestart" value="Restart" />
+        <hr>
+      </div>
+      <input type="text" id="pageTitle" placeholder="Untitled">
+      <div id="content">
+      </div>
+    </div>
+  </div>
+
+  <div class="blockMenu">
+    <table>
+      <tbody>
+        <tr>
+          <div class="sectionTitle">BASIC BLOCKS</div>
+        </tr>
+        <!-- <tr class="clickable" data-type="textline">
+              <td>
+                <div class="icon">Aa</div>
+              </td>
+              <td>
+                <div>Text</div>
+                <div class="description">Just start writing with plain text.</div>
+              </td>
+            </tr> -->
+        <tr class="clickable" data-type="table">
+          <td>
+            <div class="icon">Tbl</div>
+          </td>
+          <td>
+            <div>Table</div>
+            <div class="description">Create a table in this page.</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="searchMenu">
+    <b>Search:</b><input type="text">
+    <table>
+      <tbody>
+        <!-- <tr>
+              <td>Table 1</td>
+            </tr>
+            <tr>
+              <td>Table 2</td>
+            </tr> -->
+      </tbody>
+    </table>
+  </div>
+
+  <script src="../renderer.js"></script>
+</body>
+
+</html>

@@ -7,7 +7,7 @@ class Table {
   static build(parent, data) {
     let table = document.createElement("table");
     table.className = "table";
-    const uuid = require("../utils/cryptography.js");
+    const uuid = require("../utils/crypto.js");
     $(table).data("id", uuid.generateUUID());
     this.createCaption(table, data.caption);
 
@@ -39,7 +39,7 @@ class Table {
     let tableMenuContainer = document.createElement("div");
     tableMenuContainer.className = "tableMenuContainer";
     let menuImg = document.createElement("img");
-    menuImg.src = "res/img/menu.svg";
+    menuImg.src = "../res/img/menu.svg";
     tableMenuContainer.appendChild(menuImg);
     TablemenuJS.Tablemenu.registerEvent(tableMenuContainer);
     captionContainer.appendChild(tableMenuContainer);
@@ -53,10 +53,10 @@ class Table {
     TablemenuJS.Tablemenu.registerEventMenuItem(tr);
     let td = document.createElement("td");
     let deleteImg = document.createElement("img");
-    deleteImg.src = "res/img/trash.svg";
+    deleteImg.src = "../res/img/trash.svg";
     td.appendChild(deleteImg);
-    let text = document.createTextNode("Delete");
-    td.appendChild(text);
+    let textNode = document.createTextNode("Delete");
+    td.appendChild(textNode);
     tr.appendChild(td);
     tableMenu.appendChild(tableMenuTable);
     caption.appendChild(tableMenu);
@@ -64,7 +64,7 @@ class Table {
   }
 
   static prepareGeneration(data) {
-    data.columns.push({ name: "+ New", type: "add" });
+    data.columns.push({ name: "New", type: "add" });
   }
 
   static generateTableBody(table, data) {
@@ -82,8 +82,16 @@ class Table {
       Eventhandler.onClickRowAdd(event);
     });
     let td = document.createElement("td");
-    td.textContent = "+ New";
     td.colSpan = numberOfColumns;
+    let div = document.createElement("div");
+    div.className = "newRow";
+    let img = document.createElement("img");
+    img.src = "../res/img/new.svg";
+    img.className = "newImg";
+    div.appendChild(img);
+    let textNode = document.createTextNode("New");
+    div.appendChild(textNode);
+    td.appendChild(div);
     tr.append(td);
   }
 
@@ -151,7 +159,11 @@ class Table {
     div.className = "columnTitle";
 
     if (columnType === "add") {
-      div.textContent = columnName;
+      let img = document.createElement("img");
+      img.src = "../res/img/new.svg";
+      div.appendChild(img);
+      let textNode = document.createTextNode(columnName);
+      div.appendChild(textNode);      
 
       $(th).on("click", function (event) {
         Eventhandler.onClickColumnAdd(event);
@@ -160,10 +172,10 @@ class Table {
       let img = document.createElement("img");
       switch (columnType) {
         case "checkbox":
-          img.src = "./res/img/checkbox.png";
+          img.src = "../res/img/checkbox.svg";
           break;
         case "text":
-          img.src = "./res/img/text.png";
+          img.src = "../res/img/text.svg";
           break;
       }
       div.append(img);

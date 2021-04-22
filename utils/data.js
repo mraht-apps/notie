@@ -28,7 +28,7 @@ function readData() {
 
 function loadPageName(jsonData) {
   console.log("Set pagename to " + jsonData.name);
-  $("#page-title").text(jsonData.name);
+  $("#pageTitle").text(jsonData.name);
 }
 
 function loadPageContent(jsonData) {
@@ -38,11 +38,11 @@ function loadPageContent(jsonData) {
     switch (element.type) {
       case "table":
         let table = loadTable(element);
-        $("#pageContent").append(table);
+        $("#content").append(table);
         break;
       case "textline":
         let textline = loadTextline(element);
-        $("#pageContent").append(textline);
+        $("#content").append(textline);
         break;
     }
   });
@@ -52,7 +52,7 @@ function loadPageContent(jsonData) {
 }
 
 function resetPageContent() {
-  $("#pageContent").empty();
+  $("#content").empty();
 }
 
 function loadTextline(element) {
@@ -86,13 +86,13 @@ function save() {
 }
 
 function savePageName() {
-  return $("#page-title").text();
+  return $("#pageTitle").text();
 }
 
 function savePageContent() {
   let pageContent = [];
 
-  let children = $("#pageContent").children();
+  let children = $("#content").children();
   children.each(function () {
     let element = $(this);
     let textline, table;

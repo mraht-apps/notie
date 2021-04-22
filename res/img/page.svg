@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<svg viewBox="0 0 32 32"
+    xmlns="http://www.w3.org/2000/svg">
+    <title/>
+    <g data-name="19-Document" id="_19-Document">
+        <path fill="rgba(55, 53, 47, 0.4)" d="M28.71,6.29l-6-6A1,1,0,0,0,22,0H6A3,3,0,0,0,3,3V29a3,3,0,0,0,3,3H26a3,3,0,0,0,3-3V7A1,1,0,0,0,28.71,6.29ZM27,29a1,1,0,0,1-1,1H6a1,1,0,0,1-1-1V3A1,1,0,0,1,6,2H21V6a2,2,0,0,0,2,2h4Z"/>
+        <rect height="2" width="18" x="7" y="20" fill="rgba(55, 53, 47, 0.4)"/>
+        <rect height="2" width="18" x="7" y="25" fill="rgba(55, 53, 47, 0.4)"/>
+        <path fill="rgba(55, 53, 47, 0.4)" d="M7,12v4a1,1,0,0,0,1,1H24a1,1,0,0,0,1-1V12a1,1,0,0,0-1-1H8A1,1,0,0,0,7,12Zm2,1H23v2H9Z"/>
+    </g>
+</svg>

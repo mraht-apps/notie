@@ -1,7 +1,7 @@
 class Placeholder {
   static build(parent) {
     let div = document.createElement("div");
-    div.className = "placeholder";
+    div.id = "placeholder";
     Placeholder.registerEvents(div);
     parent.append(div);
   }
@@ -20,4 +20,4 @@ class Eventhandler {
   }
 }
 
-module.exports = Placeholder;
+module.exports = { Placeholder };

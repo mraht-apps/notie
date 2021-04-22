@@ -1,19 +1,21 @@
-function addPageToMenu(pagename) {
-  const FileJS = require("../utils/file.js");
+class Page {
+  static addPageToMenu(pagename) {
+    let pageMenuItem = document.createElement("div");
+    pageMenuItem.className = "pageMenuItem";
+    let img = document.createElement("img");
+    img.src = "../res/img/page.svg";
+    pageMenuItem.appendChild(img);
+    let textNode = document.createTextNode(pagename);
+    pageMenuItem.appendChild(textNode);
+    $("#newPage").before(pageMenuItem);
+  }
 
-  var a = document.createElement("a");
-  a.id = "page";
-  a.href = "#";
-  a.innerText = pagename;
-  a.onclick = function (event) {
-    let page = pagename + ".html";
-    const render = FileJS.readFile("../user_data/pages/" + page);
-    $(".content").html(render);
+  static load(pageMenuItem) {
+    let page = pageMenuItem.data("url");
+    const render = FileJS.readFile(page);
+    $("#content").html(render);
     return false;
-  };
-  $("#pagemenu-content").append(a);
+  }
 }
 
-module.exports = {
-  addPageToMenu,
-};
+module.exports = { Page };

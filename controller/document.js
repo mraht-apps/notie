@@ -27,24 +27,23 @@ class Eventhandler {
   static onClick(event) {
     let element = $(event.target);
     if (
-      BlockmenuJS.Blockmenu.isOpen() &&
-      element.parents().filter(".blockMenu").length == 0 &&
-      !element.hasClass("blockMenu")
+      !element.hasClass("blockMenu") &&
+      element.parents(".blockMenu").length == 0
     ) {
-      BlockmenuJS.Blockmenu.close();
+      BlockmenuJS.Blockmenu.closeAll();
     }
 
-    if (!element.parent().hasClass("tableMenuContainer")) {
+    if (element.parents(".tableMenuContainer").length == 0) {
       TablemenuJS.Tablemenu.closeAll();
     }
   }
 
   static onKeypress(event) {
-    switch (event.key) {
-      case "Enter":
-        BlockmenuJS.Blockmenu.addElement();
-        break;
-    }
+    // switch (event.key) {
+    //   case "Enter":
+    //     BlockmenuJS.Blockmenu.addElement();
+    //     break;
+    // }
   }
 
   static onKeyup(event) {

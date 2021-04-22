@@ -1,115 +1,94 @@
+const General = require("../utils/general");
+
 const placeholderText = "Type '/' for commands";
-const blockmenu = require("../controller/blockmenu.js");
 class Textline {
   static build(parent, text) {
-    let input = document.createElement("input");
-    input.type = "text";
-    input.value = text;
-    input.className = "textline";
+    let textline = document.createElement("div");
+    textline.contentEditable = "true";
+    textline.className = "textline";
+    let textNode = document.createTextNode(text);
+    textline.appendChild(textNode);
+    textline.dataset.placeholder = placeholderText;
 
-    Textline.registerEvents(input);
-    parent.append(input);
-    return input;
+    Textline.registerEvents(textline);
+    parent.append(textline);
+    return textline;
   }
 
-  static registerEvents(input) {
-    $(input).on("focus", function (event) {
-      let textarea = $(event.target);
-      if (textarea.val()) return;
-
-      textarea.prop("placeholder", placeholderText);
-    });
-
-    $(input).on("focusout", function (event) {
-      let textarea = $(event.target);
-      if (textarea.val()) return;
-
-      textarea.prop("placeholder", "");
-    });
-
-    // FIX Create new textline after current textline
-    $(input).on("keypress", function (event) {
-      let textline = $(event.target);
-      switch (event.key) {
-        case "Enter":
-          if (BlockmenuJS.Blockmenu.isOpen()) {
-            BlockmenuJS.Blockmenu.addElement(textline);
-            BlockmenuJS.Blockmenu.close();
-            return;
-          }
-          let newTextline = Textline.build(textline.parent(), "");
-          Textline.registerEvents();
-          textline.after(newTextline);
-          Textline.focusNext($(newTextline));
-          event.preventDefault();
-          break;
-      }
-
-      // NEW Character: Jump to entry which matches character behind '/'
-      let regex = /^[\w\s]+$/;
-      if (event.key.match(regex) || event.key == "Escape") {
-        BlockmenuJS.Blockmenu.close();
-        console.log(textline.prop("scrollHeight"));
-      }
-    });
-
-    $(input).on("keydown", function (event) {
-      let textline = $(event.target);
-      switch (event.key) {
-        case "ArrowUp":
-        case "ArrowDown":
-          event.preventDefault();
-          break;
-        default:
-          textline.data("previousValue", textline.val());
-          break;
-      }
-    });
-
-    $(input).on("keyup", function (event) {
-      // Ignore certain character
-      if (event.key == "Shift") return;
-
-      let textline = $(event.target);
-      switch (event.key) {
-        case "ArrowUp":
-          var prevElement = textline.prev();
-          Textline.focusPrev(prevElement);
-          event.preventDefault();
-          break;
-        case "ArrowDown":
-          var nextElement = textline.next();
-          Textline.focusNext(nextElement);
-          event.preventDefault();
-          break;
-        case "Backspace":
-          var prevElement = textline.prev();
-          var previousValue = textline.data("previousValue");
-          if (
-            !previousValue &&
-            prevElement.is("input:text") &&
-            prevElement.val().trim()
-          ) {
-            textline.remove();
-            Textline.focusPrev(prevElement);
-          }
-          break;
-        case "/":
-          BlockmenuJS.Blockmenu.openFirstTime();
-          break;
-      }
+  static registerEvents(textline) {
+    $(textline).on("keydown", function (event) {
+      Eventhandler.onKeydown(event);
     });
   }
 
   static focusNext(nextElement) {
-    if (!nextElement.is("input:text")) return;
+    if (!nextElement.is(".textline")) return;
     nextElement.trigger("focus");
+    GeneralJS.moveCursorToEnd(null);
   }
 
   static focusPrev(prevElement) {
-    if (!prevElement.is("input:text")) return;
+    if (!prevElement.is(".textline")) return;
     prevElement.trigger("focus");
+    GeneralJS.moveCursorToEnd(null);
+  }
+}
+class Eventhandler {
+  activeTextline;
+
+  static onKeydown(event) {
+    // Ignore certain characters
+    if (event.key == "Shift") return;
+
+    let textline = $(event.target);
+    switch (event.key) {
+      case "ArrowUp":
+        var prevElement = textline.prev();
+        Textline.focusPrev(prevElement);
+        event.preventDefault();
+        break;
+      case "ArrowDown":
+        var nextElement = textline.next();
+        Textline.focusNext(nextElement);
+        event.preventDefault();
+        break;
+      case "Backspace":
+        var prevElement = textline.prev();
+        if (prevElement.is(".textline") && textline.text().length == 0) {
+          textline.remove();
+          Textline.focusPrev(prevElement);
+          event.preventDefault();
+        }
+        break;
+      case "Enter":
+        if (BlockmenuJS.Blockmenu.isOpen()) {
+          BlockmenuJS.Blockmenu.addElement();
+          BlockmenuJS.Blockmenu.closeAll();
+          return;
+        }
+        let newTextline = Textline.build(textline.parent(), "");
+        Textline.registerEvents();
+        textline.after(newTextline);
+        Textline.focusNext($(newTextline));
+        event.preventDefault();
+        break;
+      case "/":
+        // NEW Calculate position for the blockmenu
+        console.log(event);
+        BlockmenuJS.Blockmenu.openFirstTime();
+        break;
+      default:
+        textline.data("previousValue", textline.text());
+        break;
+    }
+
+    // OPT Optimize blockmenu opening (e.g. also on backspace)
+    let regex = /^[\w\s]+$/;
+    if (event.key.match(regex) || event.key == "Escape") {
+      BlockmenuJS.Blockmenu.closeAll();
+      console.log(textline.prop("scrollHeight"));
+    }
   }
 }
 
-module.exports = Textline;
+module.exports = { Textline, Eventhandler };

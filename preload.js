@@ -1,20 +1,6 @@
 window.onload = function () {
-  setSystemInfo();
   addPagesToNavbar();
 };
-
-function setSystemInfo() {
-  const replaceText = (selector, text) => {
-    const element = document.getElementById(selector);
-    if (element) element.innerText = text;
-  };
-
-  for (const type of ["chrome", "node", "electron"]) {
-    replaceText(`${type}-version`, process.versions[type]);
-  }
-
-  replaceText("page-title", "Hello World!");
-}
 
 function addPagesToNavbar() {
   const FileJS = require("./utils/file.js");
@@ -26,6 +12,6 @@ function addPagesToNavbar() {
 
     let sliceIndex = page.indexOf(".html");
     let pagename = page.slice(0, sliceIndex);
-    PageJS.addPageToMenu(pagename);
+    PageJS.Page.addPageToMenu(pagename);
   });
 }
