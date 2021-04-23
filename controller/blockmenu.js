@@ -30,7 +30,7 @@ class Blockmenu {
     switch (elementType) {
       case "table":
         let data = {
-          caption: "Untitled",
+          caption: "",
           columns: [
             { name: "Name", type: "text", width: "120px" },
             { name: "Done", type: "checkbox", width: "20px" },

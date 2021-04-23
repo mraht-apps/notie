@@ -73,7 +73,6 @@
 
 .table caption input {
   text-align: left;
-  padding-bottom: 6px;
   font-size: 20px;
   font-weight: bold;
 }
@@ -82,7 +81,7 @@
   top: 0;
   right: -3px;
   width: 5px;
-  height: 35px;
+  height: 33px;
   position: absolute;
   z-index: 1;
   cursor: col-resize;
@@ -149,7 +148,7 @@
 
 .tableHead th input[type="text"],
 .tableBody td input[type="text"] {
-  padding-left: 4px;
+  padding-left: 6px;
 }
 
 .tableBody tr td:first-of-type {

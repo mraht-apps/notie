@@ -14,11 +14,7 @@ function readData() {
     CryptoJS.IV = CryptoJS.parseIV(data.slice(0, ivEnd));
 
     data = data.slice(ivEnd, data.length);
-    let decryptedData = CryptoJS.decrypt(
-      data,
-      CryptoJS.PASSWORD,
-      CryptoJS.IV
-    );
+    let decryptedData = CryptoJS.decrypt(data, CryptoJS.PASSWORD, CryptoJS.IV);
 
     jsonData = JSON.parse(decryptedData);
     console.log(jsonData);
@@ -34,43 +30,33 @@ function loadPageName(jsonData) {
 function loadPageContent(jsonData) {
   resetPageContent();
 
+  let parent = $("#content");
   $(jsonData.content).each(function (index, element) {
     switch (element.type) {
       case "table":
-        let table = loadTable(element);
+        let table = loadTable(parent, element);
         $("#content").append(table);
         break;
       case "textline":
-        let textline = loadTextline(element);
+        let textline = loadTextline(parent, element);
         $("#content").append(textline);
         break;
     }
   });
 
-  const table = require("./table.js");
-  table.Table.init();
+  TableJS.Table.init();
 }
 
 function resetPageContent() {
   $("#content").empty();
 }
 
-function loadTextline(element) {
-  let textarea = document.createElement("textarea");
-  textarea.className = "line";
-  textarea.rows = "1";
-  textarea.textContent = element.text;
-
-  return textarea;
+function loadTable(parent, element) {
+  return TableJS.Table.build(parent, element);
 }
 
-function loadTable(element) {
-  let table = new TableJS.Table(
-    element.caption,
-    element.columns,
-    element.rows
-  );
-  return table.build();
+function loadTextline(parent, element) {
+  return TextlineJS.Textline.build(parent, element);
 }
 
 function save() {

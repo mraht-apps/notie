@@ -1,4 +1,6 @@
 class Table {
+  static DEFAULT_TITLE = "Untitled";
+
   static parent;
   static captionText;
   static columns;
@@ -9,11 +11,11 @@ class Table {
     table.className = "table";
     const uuid = require("../utils/crypto.js");
     $(table).data("id", uuid.generateUUID());
-    this.createCaption(table, data.caption);
+    Table.createCaption(table, data.caption);
 
-    this.prepareGeneration(data);
-    this.generateTableBody(table, data);
-    this.generateTableHead(table, data);
+    Table.prepareGeneration(data);
+    Table.generateTableBody(table, data);
+    Table.generateTableHead(table, data);
 
     if (parent != null) {
       parent.append(table);
@@ -33,6 +35,7 @@ class Table {
     let captionInput = document.createElement("input");
     captionInput.type = "text";
     captionInput.value = captionText;
+    captionInput.placeholder = Table.DEFAULT_TITLE;
     tableTitleContainer.appendChild(captionInput);
     captionContainer.appendChild(tableTitleContainer);
 
@@ -218,7 +221,7 @@ class Table {
       .children("tr")
       .children("th")
       .each(function () {
-        let column = $(this);
+        let column = $(Table);
         let columnTitleDiv = column.children(".columnTitle").eq(0);
         let input = column.children("div").eq(0).children("input").eq(0);
         let columnName = input.length > 0 ? input.val() : columnTitleDiv.text();
@@ -304,9 +307,9 @@ class Eventhandler {
   static width;
 
   static onMousedownColumnSeparator(event) {
-    this.currentColumn = event.target.parentElement;
-    this.pageX = event.pageX;
-    this.width = this.currentColumn.offsetWidth;
+    Eventhandler.currentColumn = event.target.parentElement;
+    Eventhandler.pageX = event.pageX;
+    Eventhandler.width = Eventhandler.currentColumn.offsetWidth;
   }
 
   static onDblclickColumnSeparator(event) {
@@ -336,23 +339,23 @@ class Eventhandler {
   }
 
   static onMousemove(event) {
-    if (this.currentColumn) {
-      let diffX = event.pageX - this.pageX;
-      let oldWidthStr = this.currentColumn.style.width;
+    if (Eventhandler.currentColumn) {
+      let diffX = event.pageX - Eventhandler.pageX;
+      let oldWidthStr = Eventhandler.currentColumn.style.width;
       let sliceIndex = oldWidthStr.indexOf("px");
       let oldWidth = parseInt(parseInt(oldWidthStr.slice(0, sliceIndex)) + 1);
 
-      let newWidth = this.width + diffX;
+      let newWidth = Eventhandler.width + diffX;
       if (newWidth >= 19 && oldWidth !== newWidth) {
-        this.currentColumn.style.width = newWidth + "px";
+        Eventhandler.currentColumn.style.width = newWidth + "px";
       }
     }
   }
 
   static onMouseup(event) {
-    this.currentColumn = undefined;
-    this.pageX = undefined;
-    this.width = undefined;
+    Eventhandler.currentColumn = undefined;
+    Eventhandler.pageX = undefined;
+    Eventhandler.width = undefined;
   }
 }
 

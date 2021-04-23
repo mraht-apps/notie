@@ -2,7 +2,7 @@
   background-color: #ffffff;
   border: 1px solid #999999;
   cursor: default;
-  /* display: none; */
+  display: none;
   position: absolute;
   text-align: left;
   z-index: 99999;

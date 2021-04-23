@@ -24,6 +24,7 @@ const BlockmenuJS = require("../controller/blockmenu.js");
 const TablemenuJS = require("../controller/tablemenu.js");
 
 // Model
+const EnumsJS = require("../model/enums.js");
 const PageJS = require("../model/page.js");
 const TextlineJS = require("../model/textline.js");
 const PlaceholderJS = require("../model/placeholder.js");
@@ -40,7 +41,7 @@ class Renderer {
     PagemenuJS.Pagemenu.registerEvents();
     BlockmenuJS.Blockmenu.registerEvents();
     SearchMenuJS.registerEvents();
-    DocumentJS.registerEvents( );
+    DocumentJS.registerEvents();
 
     Renderer.registerEvents();
   }
@@ -50,7 +51,7 @@ class Renderer {
       let pagename = CryptoJS.generateUUID();
       let templateData = FileJS.create("template.html");
       FileJS.create("./user_data/pages/" + pagename + ".html", templateData);
-      PageJS.addPageToMenu(pagename);
+      PageJS.create("", pagename);
       return false;
     });
 

@@ -56,7 +56,7 @@ class Data {
   }
   
   static loadTable(parent, data) {
-    table.Table.build(parent, data);
+    TableJS.Table.build(parent, data);
   }
   
   static save() {

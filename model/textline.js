@@ -19,6 +19,10 @@ class Textline {
     $(textline).on("keydown", function (event) {
       Eventhandler.onKeydown(event);
     });
+
+    $(textline).on("focus", function(event) {
+      Eventhandler.onFocus(event);
+    });
   }
 
   static focusNext(nextElement) {
@@ -35,6 +39,10 @@ class Textline {
 }
 class Eventhandler {
   activeTextline;
+
+  static onFocus(event) {
+    Eventhandler.activeTextline = $(event.target);
+  }
 
   static onKeydown(event) {
     // Ignore certain characters
@@ -73,40 +81,7 @@ class Eventhandler {
         event.preventDefault();
         break;
       case "/":
-        // NEW Calculate position for the blockmenu
-        console.log(document.getSelection());
-
-        // OPT Encapsulation, clean-up
-        var sel = document.getSelection(),
-          range,
-          rect;
-        var x = 0,
-          y = 0;
-        if (window.getSelection) {
-          sel = window.getSelection();
-          if (sel.rangeCount) {
-            range = sel.getRangeAt(0).cloneRange();
-            // Fall back to inserting a temporary element
-            if (x == 0 && y == 0) {
-              var span = document.createElement("span");
-              if (span.getClientRects) {
-                // Ensure span has dimensions and position by
-                // adding a zero-width space character
-                span.appendChild(document.createTextNode("\u200b"));
-                range.insertNode(span);
-                rect = span.getClientRects()[0];
-                x = rect.left;
-                y = rect.top;
-                var spanParent = span.parentNode;
-                spanParent.removeChild(span);
-
-                // Glue any broken text nodes back together
-                spanParent.normalize();
-              }
-            }
-          }
-        }
-
+        let {x, y} = GeneralJS.getCursorPositionTextline();
         BlockmenuJS.Blockmenu.openFirstTime(x, y);
         break;
       default:
@@ -118,7 +93,6 @@ class Eventhandler {
     let regex = /^[\w\s]+$/;
     if (event.key.match(regex) || event.key == "Escape") {
       BlockmenuJS.Blockmenu.closeAll();
-      console.log(textline.prop("scrollHeight"));
     }
   }
 }

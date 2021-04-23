@@ -1,5 +1,6 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, dialog, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
+const DB = require("./controller/db");
 
 function createWindow() {
   // Create the browser window.
@@ -7,25 +8,32 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      preload: path.join(__dirname, "preload.js")
-    }
+      preload: path.join(__dirname, "preload.js"),
+    },
   });
 
   mainWindow.loadFile("view/main.html");
   mainWindow.webContents.openDevTools();
   mainWindow.maximize();
+
+  return mainWindow;
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", function () {
-  createWindow();
+  let mainWindow = createWindow();
 
   app.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  });
+
+  mainWindow.on("close", function () {
+    console.log("Window is closing...");
+    // TODO Saving user data, cleanup cache
   });
 });
 
@@ -47,4 +55,11 @@ ipcMain.on("submitForm", function (event, pagename) {
 ipcMain.on("restart", function (event) {
   app.relaunch();
   app.exit();
+});
+
+ipcMain.on("onClickDataFolderPicker", function (event) {
+  let result = dialog.showOpenDialogSync({
+    properties: ["openDirectory"],
+  });
+  event.sender.send("onClickDataFolderPickerReply", result);
 });

@@ -1,64 +1,79 @@
-const Database = require("better-sqlite3");
+const SQLite3 = require("better-sqlite3");
 
-class DB {
+class Database {
   db;
 
   static init() {
     let FileJS = require("../utils/file.js");
     let exists = FileJS.exists("./user_data/notie.db");
 
-    DB.initInstance();
-    DB.initPages(exists);
+    Database.initInstance();
+    Database.initTables(exists);
 
-    let result = DB.all(
+    let result = Database.all(
       "SELECT name FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%';"
     );
     console.log(result);
   }
 
-static searchTables(tableName) {
-  return DB.all(
-    "SELECT name FROM sqlite_master WHERE type ='table' AND name LIKE '%" + tableName + "%';"
-  );
-}
+  static searchTables(tableName) {
+    return Database.all(
+      "SELECT name FROM sqlite_master WHERE type ='table' AND name LIKE '%" +
+        tableName +
+        "%';"
+    );
+  }
 
   static all(sql) {
-    return this.db.prepare(sql).all();
+    return Database.db.prepare(sql).all();
   }
 
   static initInstance() {
-    this.db = new Database("./user_data/notie.db", { verbose: console.log });
-    this.db.pragma("journal_mode = WAL");
-    // NEW Encryption: this.db.pragma('key = "123"'); OR file-based encryption
+    Database.db = new SQLite3("./user_data/notie.db", { verbose: console.log });
+    Database.db.pragma("journal_mode = WAL");
   }
 
-  static initPages(exists) {
+  static initTables(exists) {
     if (!exists) return;
 
-    this.db
-      .prepare(
-        "CREATE TABLE IF NOT EXISTS tables (" +
-          "id   integer PRIMARY KEY AUTOINCREMENT," +
-          "name text NOT NULL );"
-      )
-      .run();
+    // Database.db.prepare("DROP TABLE IF EXISTS element_types;").run();
+    // Database.db.prepare("DROP TABLE IF EXISTS pages;").run();
+    // Database.db.prepare("DROP TABLE IF EXISTS pages_structure;").run();
 
-    console.log("Created db table 'tables'.");
+    let sql = [
+      "CREATE TABLE IF NOT EXISTS element_types (" +
+        "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+        "name TEXT);",
+      "CREATE TABLE IF NOT EXISTS pages (" +
+        "id TEXT PRIMARY KEY," +
+        "name TEXT NOT NULL );",
+      "CREATE TABLE IF NOT EXISTS pages_structure (" +
+        "page_id TEXT," +
+        "element_id TEXT," +
+        "element_type_id INTEGER REFERENCES element_types(id)," +
+        "position INTEGER NOT NULL," +
+        "PRIMARY KEY (page_id, element_id, element_type_id) );",
+      "INSERT INTO element_types(name) VALUES ('table'), ('textline');",
+    ];
+    Database.run(sql);
+
+    // let result = DB.all("SELECT * FROM element_types;");
+    // console.log(result);
   }
 
-  static run(sql) {
-    return this.db.run(sql, function (error) {
-      if (error) console.error(error.message);
-    });
+  static run(sqlArray) {
+    for (let sql of sqlArray) {
+      Database.db.prepare(sql).run();
+    }
   }
 
   static close() {
-    this.db.close(function (error) {
+    Database.db.close(function (error) {
       if (error) return console.error(error.message);
       console.log("Database connection closed.");
     });
-    this.db = null;
+    Database.db = null;
   }
 }
 
-module.exports = DB;
+module.exports = Database;

@@ -32,7 +32,7 @@ input[type="checkbox"]:hover {
 
 input[type="text"] {
   cursor: default;
-  font-size: 20px;
+  padding: 0px;
 }
 
 ::selection {
@@ -59,7 +59,7 @@ input[type="text"] {
   box-shadow: none;
 }
 
-#pageTitle::placeholder {
+::placeholder {
   color: rgb(55, 53, 47, 0.2);
 }
 
