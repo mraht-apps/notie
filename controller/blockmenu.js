@@ -53,7 +53,7 @@ class Blockmenu {
         let table = TableJS.Table.build(null, data);
         let activeTextline = TextlineJS.Eventhandler.activeTextline;
         $(activeTextline).before(table);
-        $(activeTextline).val("");
+        $(activeTextline).text("");
         $(activeTextline).trigger("focus");
         break;
       case "textline":

@@ -13,11 +13,9 @@ html {
 }
 
 body {
+  height: 100%;
+  width: 100%;
   margin: 0px;
-  padding: 8px;
-  min-height: 100%;
-  display: grid;
-  grid-template-rows: auto;
 }
 
 input[type="checkbox"] {
@@ -39,68 +37,6 @@ input[type="text"] {
   background: rgba(45, 170, 219, 0.3);
 }
 
-#pageTitle {
-  padding-top: 0px;
-  padding-bottom: 14px;
-  color: rgb(55, 53, 47);
-
-  font-weight: bold;
-  display: block;
-  font-weight: 700;
-  font-size: 28px;
-  max-width: 100%;
-  width: 100%;
-  white-space: pre-wrap;
-  word-break: break-word;
-
-  outline: none;
-  border: none;
-  background-color: transparent;
-  box-shadow: none;
-}
-
 ::placeholder {
   color: rgb(55, 53, 47, 0.2);
-}
-
-#pageContainer {
-  display: flex;
-  width: 100%;
-  min-height: 100%;
-  overflow: hidden;
-
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-wrap: nowrap;
-  -ms-flex-wrap: nowrap;
-  flex-wrap: nowrap;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  -webkit-align-content: stretch;
-  -ms-flex-line-pack: stretch;
-  align-content: stretch;
-  -webkit-align-items: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
-}
-
-#pageContent {
-  float: right;
-  width: 100%;
-  padding-left: 10px;
-}
-
-#placeholder {
-  width: 100%;
-  height: 100%;
-}
-
-#menuBar {
-  padding-bottom: 6px;
-}
-
-#menuBar input {
-  vertical-align: middle;
 }

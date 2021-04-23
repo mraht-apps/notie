@@ -1,9 +1,9 @@
 class Placeholder {
   static build(parent) {
-    let div = document.createElement("div");
-    div.id = "placeholder";
-    Placeholder.registerEvents(div);
-    parent.append(div);
+    // let div = document.createElement("div");
+    // div.id = "placeholder";
+    Placeholder.registerEvents($("#placeholder"));
+    // parent.append(div);
   }
 
   static registerEvents(div) {

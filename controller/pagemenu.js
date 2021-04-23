@@ -12,7 +12,7 @@ class Pagemenu {
   static registerEvents() {
     $(document.body).on(
       "mousedown",
-      ".resizeSeparator",
+      "#resizeSeparator",
       null,
       function (event) {
         Eventhandler.onMousedown(event);
@@ -56,7 +56,7 @@ class Eventhandler {
       return;
     }
 
-    const targetElement = $(".pageMenu");
+    const targetElement = $("#pageMenu");
     Pagemenu.resizeData.startWidth = targetElement.outerWidth();
     Pagemenu.resizeData.startCursorScreenX = event.screenX;
     Pagemenu.resizeData.resizeTarget = targetElement;
