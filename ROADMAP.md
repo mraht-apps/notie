@@ -10,6 +10,10 @@ Version 1.0.0
 [ ] Choosing of user data folder
 [ ] Encryption of the user data folder
 
+Pages creation:
+1) Create page on base of db data in cache folder if being called and not yet existent
+2) Remove files in cache folder if app is being closed
+
 Version 1.1.0
 =====================================================================
 [ ] Table filter

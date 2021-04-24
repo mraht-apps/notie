@@ -29,7 +29,7 @@ class Database {
   }
 
   static initInstance() {
-    Database.db = new SQLite3("./user_data/notie.db", { verbose: console.log });
+    Database.db = new SQLite3(SettingsJS.DATA_FOLDER + "notie.db", { verbose: console.log });
     Database.db.pragma("journal_mode = WAL");
   }
 

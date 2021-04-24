@@ -49,7 +49,7 @@ class Renderer {
   static registerEvents() {
     $("#newPage").on("click", function (event) {
       let pagename = CryptoJS.generateUUID();
-      FileJS.create("./user_data/pages/" + pagename + ".html", "");
+      FileJS.create("./cache/" + pagename + ".html", "");
       PageJS.Page.create("", pagename);
       return false;
     });
