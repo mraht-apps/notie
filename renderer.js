@@ -34,7 +34,7 @@ class Renderer {
   static init() {
     PageJS.Page.load($("#dashboardPage"));
     TextlineJS.Textline.build($("#content"), "");
-    PlaceholderJS.Placeholder.build($("#content"));
+    PlaceholderJS.Placeholder.registerEvents($("#placeholder"));
 
     DatabaseJS.init();
 
@@ -49,9 +49,8 @@ class Renderer {
   static registerEvents() {
     $("#newPage").on("click", function (event) {
       let pagename = CryptoJS.generateUUID();
-      let templateData = FileJS.create("template.html");
-      FileJS.create("./user_data/pages/" + pagename + ".html", templateData);
-      PageJS.create("", pagename);
+      FileJS.create("./user_data/pages/" + pagename + ".html", "");
+      PageJS.Page.create("", pagename);
       return false;
     });
 

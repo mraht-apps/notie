@@ -41,7 +41,6 @@ class Eventhandler {
       SettingsJS.registerEvents();
     } else {
       TextlineJS.Textline.build($("#content"), "");
-      PlaceholderJS.Placeholder.build($("#content"));
     }
   }
 

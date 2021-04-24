@@ -12,7 +12,7 @@ class Page {
     if (pageId.length == 0) {
       pageId = CryptoJS.generateUUID();
     }
-    pageMenuItem.data("uuid") = pageId;
+    pageMenuItem.dataset.uuid = pageId;
     let img = document.createElement("img");
     img.src = "../res/img/page.svg";
     pageMenuItem.appendChild(img);
@@ -31,8 +31,9 @@ class Page {
     switch (pageId) {
       case "newPage":
         pageId = CryptoJS.generateUUID();
-        var page = FileJS.create(SettingsJS.DATA_FOLDER + id + ".html");
+        FileJS.create(SettingsJS.DATA_FOLDER + pageId + ".html", "");
         $("#content").html(page);
+        TextlineJS.Textline.build($("#content"), "");
         break;
       case "dashboardPage":
       case "settingsPage":
