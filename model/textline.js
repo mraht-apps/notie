@@ -72,6 +72,7 @@ class Eventhandler {
         if (BlockmenuJS.Blockmenu.isOpen()) {
           BlockmenuJS.Blockmenu.addElement();
           BlockmenuJS.Blockmenu.closeAll();
+          event.preventDefault();
           return;
         }
         let newTextline = Textline.build(textline.parent(), "");
