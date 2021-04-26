@@ -19,9 +19,9 @@ const DataJS = require("../controller/data.js");
 const DatabaseJS = require("../controller/db.js");
 const SearchMenuJS = require("../controller/searchmenu.js");
 const DocumentJS = require("../controller/document.js");
-const PagemenuJS = require("../controller/pagemenu.js");
-const BlockmenuJS = require("../controller/blockmenu.js");
-const TablemenuJS = require("../controller/tablemenu.js");
+const PageMenuJS = require("../controller/pagemenu.js");
+const BlockMenuJS = require("../controller/blockmenu.js");
+const TableMenuJS = require("../controller/tablemenu.js");
 
 // Model
 const EnumsJS = require("../model/enums.js");
@@ -32,28 +32,19 @@ const TableJS = require("../model/table.js");
 
 class Renderer {
   static init() {
-    PageJS.Page.load($("#dashboardPage"));
-    TextlineJS.Textline.build($("#content"), "");
-    PlaceholderJS.Placeholder.registerEvents($("#placeholder"));
+    PageJS.Page.firstRun();
 
     DatabaseJS.init();
 
-    PagemenuJS.Pagemenu.registerEvents();
-    BlockmenuJS.Blockmenu.registerEvents();
-    SearchMenuJS.registerEvents();
-    DocumentJS.registerEvents();
+    PageMenuJS.PageMenu.init();
+    BlockMenuJS.BlockMenu.init();
+    SearchMenuJS.SearchMenu.init();
+    DocumentJS.Document.init();
 
     Renderer.registerEvents();
   }
 
   static registerEvents() {
-    $("#newPage").on("click", function (event) {
-      let pagename = CryptoJS.generateUUID();
-      FileJS.create("./cache/" + pagename + ".html", "");
-      PageJS.Page.create("", pagename);
-      return false;
-    });
-
     // Load content based on user-data
     $("#btnLoad").on("click", function (event) {
       Eventhandler.onClickBtnLoad(event);

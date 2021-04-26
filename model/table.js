@@ -9,8 +9,7 @@ class Table {
   static build(parent, data) {
     let table = document.createElement("table");
     table.className = "table";
-    const uuid = require("../utils/crypto.js");
-    $(table).data("id", uuid.generateUUID());
+    $(table).data("uuid", CryptoJS.generateUUID());
     Table.createCaption(table, data.caption);
 
     Table.prepareGeneration(data);
@@ -20,7 +19,6 @@ class Table {
     if (parent != null) {
       parent.append(table);
     }
-
     return table;
   }
 
@@ -44,7 +42,7 @@ class Table {
     let menuImg = document.createElement("img");
     menuImg.src = "../res/img/menu.svg";
     tableMenuContainer.appendChild(menuImg);
-    TablemenuJS.Tablemenu.registerEvent(tableMenuContainer);
+    TableMenuJS.TableMenu.registerEvent(tableMenuContainer);
     captionContainer.appendChild(tableMenuContainer);
     caption.appendChild(captionContainer);
 
@@ -53,7 +51,7 @@ class Table {
     let tableMenuTable = document.createElement("table");
     let tr = tableMenuTable.insertRow();
     tr.id = "deleteTable";
-    TablemenuJS.Tablemenu.registerEventMenuItem(tr);
+    TableMenuJS.TableMenu.registerEventMenuItem(tr);
     let td = document.createElement("td");
     let deleteImg = document.createElement("img");
     deleteImg.src = "../res/img/trash.svg";
@@ -100,6 +98,7 @@ class Table {
 
   static generateTableRow(table, data, row) {
     let tr = table.insertRow();
+    $(tr).data("uuid", CryptoJS.generateUUID(6));
 
     $(data.columns).each(function (columnIndex, column) {
       let exit = Table.generateTableCell(tr, columnIndex, column, row);
@@ -129,7 +128,7 @@ class Table {
       td.appendChild(input);
     }
 
-    let nextTd = $(tr).children("td").eq(columnIndex);
+    let nextTd = $(tr).find("td").eq(columnIndex);
     if (nextTd.length > 0) {
       nextTd.before(td);
     } else {
@@ -156,17 +155,20 @@ class Table {
     let th = document.createElement("th");
     let columnWidth = column.attr("width");
     if (columnWidth) th.style.width = columnWidth;
-    th.dataset.type = columnType;
+    $(th).data("type", columnType);
+    if (columnType != "add") {
+      $(th).data("uuid", CryptoJS.generateUUID(6));
+    }
 
     let div = document.createElement("div");
     div.className = "columnTitle";
 
-    if (columnType === "add") {
+    if (columnType == "add") {
       let img = document.createElement("img");
       img.src = "../res/img/new.svg";
       div.appendChild(img);
       let textNode = document.createTextNode(columnName);
-      div.appendChild(textNode);      
+      div.appendChild(textNode);
 
       $(th).on("click", function (event) {
         Eventhandler.onClickColumnAdd(event);
@@ -209,7 +211,7 @@ class Table {
   }
 
   static addRowByNewRow(table) {
-    let tableRows = $(table).children("tbody").children("tr");
+    let tableRows = $(table).find("tbody > tr");
     let addNewTableRow = tableRows.eq(tableRows.length - 1);
 
     let tr = document.createElement("tr");
@@ -217,13 +219,11 @@ class Table {
 
     let columns = [];
     $(table)
-      .children("thead")
-      .children("tr")
-      .children("th")
+      .find("thead > tr > th")
       .each(function () {
-        let column = $(Table);
-        let columnTitleDiv = column.children(".columnTitle").eq(0);
-        let input = column.children("div").eq(0).children("input").eq(0);
+        let column = $(this);
+        let columnTitleDiv = column.children(".columnTitle");
+        let input = column.children("div > input");
         let columnName = input.length > 0 ? input.val() : columnTitleDiv.text();
         let columnType = column.data("type");
         columns.push({ name: columnName, type: columnType });
@@ -236,7 +236,7 @@ class Table {
 
   static addColumn(table, column) {
     let thead = $(table).children("thead");
-    let headerRow = thead.children("tr").eq(0);
+    let headerRow = thead.children("tr");
     let columnIndex = thead.children("th").length - 1;
     Table.generateTableColumn(headerRow, columnIndex, $(column));
     Table.addRowByNewColumn(table, column);

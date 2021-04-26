@@ -24,7 +24,7 @@ function readData() {
 
 function loadPageName(jsonData) {
   console.log("Set pagename to " + jsonData.name);
-  $("#pageTitle").text(jsonData.name);
+  $("#pageName").text(jsonData.name);
 }
 
 function loadPageContent(jsonData) {
@@ -72,7 +72,7 @@ function save() {
 }
 
 function savePageName() {
-  return $("#pageTitle").text();
+  return $("#pageName").text();
 }
 
 function savePageContent() {

@@ -8,6 +8,7 @@ class Textline {
     textline.className = "textline";
     let textNode = document.createTextNode(text);
     textline.appendChild(textNode);
+    textline.dataset.uuid = CryptoJS.generateUUID(6);
     textline.dataset.placeholder = placeholderText;
 
     Textline.registerEvents(textline);
@@ -20,7 +21,7 @@ class Textline {
       Eventhandler.onKeydown(event);
     });
 
-    $(textline).on("focus", function(event) {
+    $(textline).on("focus", function (event) {
       Eventhandler.onFocus(event);
     });
   }
@@ -62,19 +63,25 @@ class Eventhandler {
         break;
       case "Backspace":
         var prevElement = textline.prev();
-        if (prevElement.is(".textline") && textline.text().length == 0) {
+        if (prevElement.is(".textline") && GeneralJS.getCursorPosition(textline) == 0) {
+          let prevElementTextLength = prevElement.text().length;
+          if (textline.text().length > 0) {
+            prevElement.text(prevElement.text() + textline.text());
+          }
           textline.remove();
-          Textline.focusPrev(prevElement);
+          GeneralJS.moveCursorTo(prevElement, prevElementTextLength);
           event.preventDefault();
         }
         break;
       case "Enter":
-        if (BlockmenuJS.Blockmenu.isOpen()) {
-          BlockmenuJS.Blockmenu.addElement();
-          BlockmenuJS.Blockmenu.closeAll();
+        if (BlockMenuJS.BlockMenu.isOpen()) {
+          BlockMenuJS.BlockMenu.addElement();
+          BlockMenuJS.BlockMenu.closeAll();
           event.preventDefault();
           return;
         }
+        // NEW Enter before text: Add textline before
+        // NEW Enter within text: Split text at cursor position
         let newTextline = Textline.build(textline.parent(), "");
         Textline.registerEvents();
         textline.after(newTextline);
@@ -82,8 +89,8 @@ class Eventhandler {
         event.preventDefault();
         break;
       case "/":
-        let {x, y} = GeneralJS.getCursorPositionTextline();
-        BlockmenuJS.Blockmenu.openFirstTime(x, y);
+        let { x, y } = GeneralJS.getCursorPixelPosition();
+        BlockMenuJS.BlockMenu.openFirstTime(x, y);
         break;
       default:
         textline.data("previousValue", textline.text());
@@ -93,7 +100,7 @@ class Eventhandler {
     // OPT Optimize blockmenu opening (e.g. also on backspace)
     let regex = /^[\w\s]+$/;
     if (event.key.match(regex) || event.key == "Escape") {
-      BlockmenuJS.Blockmenu.closeAll();
+      BlockMenuJS.BlockMenu.closeAll();
     }
   }
 }

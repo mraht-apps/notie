@@ -1,4 +1,8 @@
 class Document {
+  static init() {
+    Document.registerEvents();
+  }
+
   static registerEvents() {
     $(document).on("click", function (event) {
       Eventhandler.onClick(event);
@@ -30,24 +34,24 @@ class Eventhandler {
       !element.hasClass("blockMenu") &&
       element.parents(".blockMenu").length == 0
     ) {
-      BlockmenuJS.Blockmenu.closeAll();
+      BlockMenuJS.BlockMenu.closeAll();
     }
 
     if (element.parents(".tableMenuContainer").length == 0) {
-      TablemenuJS.Tablemenu.closeAll();
+      TableMenuJS.TableMenu.closeAll();
     }
   }
 
   static onKeypress(event) {
     // switch (event.key) {
     //   case "Enter":
-    //     BlockmenuJS.Blockmenu.addElement();
+    //     BlockMenuJS.BlockMenu.addElement();
     //     break;
     // }
   }
 
   static onKeyup(event) {
-    if (!BlockmenuJS.Blockmenu.isOpen()) return;
+    if (!BlockMenuJS.BlockMenu.isOpen()) return;
 
     if ($(".active").length == 0) {
       $(".clickable").eq(0).addClass("active");
@@ -81,4 +85,4 @@ class Eventhandler {
   }
 }
 
-module.exports = Document;
+module.exports = { Document, Eventhandler };

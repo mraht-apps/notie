@@ -1,4 +1,8 @@
-class Blockmenu {
+class BlockMenu {
+  static init() {
+    BlockMenu.registerEvents();
+  }
+
   static registerEvents() {
     $(".blockMenu").on("mouseout", function (event) {
       Eventhandler.onMouseout(event);
@@ -14,11 +18,11 @@ class Blockmenu {
   }
 
   static openFirstTime(x, y) {
-    if (Blockmenu.isOpen()) {
-      Blockmenu.closeAll();
+    if (BlockMenu.isOpen()) {
+      BlockMenu.closeAll();
     } else {
       $(".blockMenu").css({ top: y - 100 + "px", left: x + 10 + "px" });
-      Blockmenu.open();
+      BlockMenu.open();
       $(".clickable").eq(0).addClass("active");
     }
   }
@@ -73,7 +77,7 @@ class Blockmenu {
   }
 
   static open() {
-    Blockmenu.closeAll();
+    BlockMenu.closeAll();
     $(".blockMenu").addClass("visible");
     $(".blockMenu").toggle(true);
   }
@@ -81,8 +85,8 @@ class Blockmenu {
 
 class Eventhandler {
   static onClickMenuItem(event) {
-    Blockmenu.addElement();
-    Blockmenu.closeAll();
+    BlockMenu.addElement();
+    BlockMenu.closeAll();
   }
 
   static onMouseout(event) {
@@ -99,4 +103,4 @@ class Eventhandler {
   }
 }
 
-module.exports = { Blockmenu, Eventhandler };
+module.exports = { BlockMenu, Eventhandler };

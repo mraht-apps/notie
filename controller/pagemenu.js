@@ -1,4 +1,6 @@
-class Pagemenu {
+const Database = require("./db");
+
+class PageMenu {
   static resizeData = {
     tracking: false,
     startWidth: null,
@@ -8,6 +10,24 @@ class Pagemenu {
     parentElement: null,
     maxWidth: null,
   };
+
+  static init() {
+    PageMenu.build();
+    PageMenu.registerEvents();
+  }
+
+  static build() {
+    let pages = DatabaseJS.all("SELECT * FROM pages;");
+    $(pages).each(function () {
+      PageMenu.add(this);
+    });
+  }
+
+  static registerEvent(pageMenuItem) {
+    $(pageMenuItem).on("click", function (event) {
+      Eventhandler.onClickPageMenuItem(event);
+    });
+  }
 
   static registerEvents() {
     $(document.body).on(
@@ -31,17 +51,26 @@ class Pagemenu {
       Eventhandler.onClickPageMenuItem(event);
     });
   }
+
+  static add(page) {
+    let pageMenuItem = document.createElement("div");
+    pageMenuItem.className = "pageMenuItem";
+    pageMenuItem.dataset.uuid = page.id;
+    let img = document.createElement("img");
+    img.src = "../res/img/page.svg";
+    pageMenuItem.appendChild(img);
+    let textNode = document.createTextNode(page.name);
+    pageMenuItem.appendChild(textNode);
+    PageMenu.registerEvent(pageMenuItem);
+
+    $("#newPage").before(pageMenuItem);
+  }
 }
 
 class Eventhandler {
   static onClickPageMenuItem(event) {
     let pageMenuItem = $(event.target);
     PageJS.Page.load(pageMenuItem);
-    if (pageMenuItem.text().trim() == "Settings") {
-      SettingsJS.registerEvents();
-    } else {
-      TextlineJS.Textline.build($("#content"), "");
-    }
   }
 
   static onMousedown(event) {
@@ -56,32 +85,32 @@ class Eventhandler {
     }
 
     const targetElement = $("#pageMenu");
-    Pagemenu.resizeData.startWidth = targetElement.outerWidth();
-    Pagemenu.resizeData.startCursorScreenX = event.screenX;
-    Pagemenu.resizeData.resizeTarget = targetElement;
-    Pagemenu.resizeData.parentElement = handleElement.parentElement;
-    Pagemenu.resizeData.maxWidth =
+    PageMenu.resizeData.startWidth = targetElement.outerWidth();
+    PageMenu.resizeData.startCursorScreenX = event.screenX;
+    PageMenu.resizeData.resizeTarget = targetElement;
+    PageMenu.resizeData.parentElement = handleElement.parentElement;
+    PageMenu.resizeData.maxWidth =
       $(handleElement.parentElement).innerWidth() -
-      Pagemenu.resizeData.handleWidth;
-    Pagemenu.resizeData.tracking = true;
+      PageMenu.resizeData.handleWidth;
+    PageMenu.resizeData.tracking = true;
   }
 
   static onMousemove(event) {
-    if (Pagemenu.resizeData.tracking) {
+    if (PageMenu.resizeData.tracking) {
       const cursorScreenXDelta =
-        event.screenX - Pagemenu.resizeData.startCursorScreenX;
+        event.screenX - PageMenu.resizeData.startCursorScreenX;
       const newWidth = Math.min(
-        Pagemenu.resizeData.startWidth + cursorScreenXDelta,
-        Pagemenu.resizeData.maxWidth
+        PageMenu.resizeData.startWidth + cursorScreenXDelta,
+        PageMenu.resizeData.maxWidth
       );
 
-      $(Pagemenu.resizeData.resizeTarget).outerWidth(newWidth);
+      $(PageMenu.resizeData.resizeTarget).outerWidth(newWidth);
     }
   }
 
   static onMouseup(event) {
-    if (Pagemenu.resizeData.tracking) Pagemenu.resizeData.tracking = false;
+    if (PageMenu.resizeData.tracking) PageMenu.resizeData.tracking = false;
   }
 }
 
-module.exports = { Pagemenu, Eventhandler };
+module.exports = { PageMenu, Eventhandler };

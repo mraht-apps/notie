@@ -28,6 +28,7 @@
   max-width: 500px;
   border: 1px solid #e1e1e1;
   color: rgba(25, 23, 17, 0.6);
+  background: rgb(247, 246, 243);
 
   -webkit-order: 0;
   -ms-flex-order: 0;
@@ -66,6 +67,7 @@
 
 #pageMenuUserPagesTitle {
   padding-left: 6px;
+  padding-right: 6px;
 
   font-weight: bold;
   font-size: 12px;
@@ -105,13 +107,13 @@
   vertical-align: middle;
 }
 
-#pageTitleContainer {
+#pageNameContainer {
   grid-row: 2;
   padding-top: 0px;
   padding-bottom: 14px;
 }
 
-#pageTitle {
+#pageName {
   color: rgb(55, 53, 47);
   font-weight: 700;
   font-size: 28px;

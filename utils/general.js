@@ -2,16 +2,19 @@ class General {
   static moveCursorToEnd(element) {
     document.execCommand("selectAll", false, null);
     document.getSelection().collapseToEnd();
-    // let range = document.createRange();
-    // let selection = window.getSelection();
-    // range.selectNodeContents(element.get(0));
-    // range.setStart(element.get(0), element.text().length);
-    // range.setEnd(element.get(0).firstChild, element.text().length);
-    // selection.removeAllRanges();
-    // selection.addRange(range);
   }
 
-  static getCursorPositionTextline() {
+  static moveCursorTo(element, offset) {
+    document.execCommand("selectAll", false, null);
+    // Set the caret to the nth character of the first line of text
+    document.getSelection().collapse(element.get(0).firstChild, offset);
+  }
+
+  static getCursorPosition() {
+    return window.getSelection().baseOffset;
+  }
+
+  static getCursorPixelPosition() {
     var selection = window.getSelection();
     let range = selection.getRangeAt(0).cloneRange();
     var span = document.createElement("span");

@@ -10,6 +10,7 @@ class Eventhandler {
   static onClick(event) {
     let textline = $(".textline:last");
     textline.trigger("focus");
+    GeneralJS.moveCursorToEnd(null);
   }
 }
 

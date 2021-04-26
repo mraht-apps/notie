@@ -1,6 +1,6 @@
 const ElementTypes = {
-  Table: "Table",
-  Textline: "Textline",
+  table: 1,
+  textline: 2,
 };
 
 module.exports = { ElementTypes };

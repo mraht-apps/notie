@@ -35,8 +35,12 @@ function generateIV() {
   return iv;
 }
 
-function generateUUID() {
-  return uuid();
+function generateUUID(length) {
+  if (length && length > 0) {
+    return uuid().slice(-length);
+  } else {
+    return uuid();
+  }
 }
 
 function parseIV(iv) {

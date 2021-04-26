@@ -1,7 +1,7 @@
 const { Table } = require("../model/table");
 
 // FIX Call methods tablemenu-specific
-class Tablemenu {
+class TableMenu {
   static registerEvent(tableMenuContainer) {
     $(tableMenuContainer).on("click", function (event) {
       Eventhandler.onClick(event);
@@ -24,7 +24,7 @@ class Tablemenu {
   }
 
   static open(tableMenu) {
-    Tablemenu.closeAll();
+    TableMenu.closeAll();
     tableMenu.addClass("visible");
     tableMenu.toggle(true);
   }
@@ -34,18 +34,18 @@ class Eventhandler {
   static onClick(event) {
     let element = $(event.target);
     let tableMenu = element.parents("caption").children(".tableMenu");
-    if (!Tablemenu.isOpen(tableMenu)) {
-      Tablemenu.open(tableMenu);
+    if (!TableMenu.isOpen(tableMenu)) {
+      TableMenu.open(tableMenu);
     } else {
-      Tablemenu.closeAll();
+      TableMenu.closeAll();
     }
   }
 
   static onClickMenuItem(event) {
     let table = $(event.target).parents(".table");
     TableJS.Table.remove(table);
-    Tablemenu.closeAll();
+    TableMenu.closeAll();
   }
 }
 
-module.exports = { Tablemenu, Eventhandler };
+module.exports = { TableMenu, Eventhandler };
