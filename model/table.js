@@ -9,7 +9,7 @@ class Table {
   static build(parent, data) {
     let table = document.createElement("table");
     table.className = "table";
-    $(table).data("uuid", CryptoJS.generateUUID());
+    $(table).data("uuid", Crypto.generateUUID());
     Table.createCaption(table, data.caption);
 
     Table.prepareGeneration(data);
@@ -42,7 +42,7 @@ class Table {
     let menuImg = document.createElement("img");
     menuImg.src = "../res/img/menu.svg";
     tableMenuContainer.appendChild(menuImg);
-    TableMenuJS.TableMenu.registerEvent(tableMenuContainer);
+    Tablemenu.registerEvent(tableMenuContainer);
     captionContainer.appendChild(tableMenuContainer);
     caption.appendChild(captionContainer);
 
@@ -51,7 +51,7 @@ class Table {
     let tableMenuTable = document.createElement("table");
     let tr = tableMenuTable.insertRow();
     tr.id = "deleteTable";
-    TableMenuJS.TableMenu.registerEventMenuItem(tr);
+    Tablemenu.registerEventMenuItem(tr);
     let td = document.createElement("td");
     let deleteImg = document.createElement("img");
     deleteImg.src = "../res/img/trash.svg";
@@ -98,7 +98,7 @@ class Table {
 
   static generateTableRow(table, data, row) {
     let tr = table.insertRow();
-    $(tr).data("uuid", CryptoJS.generateUUID(6));
+    $(tr).data("uuid", Crypto.generateUUID(6));
 
     $(data.columns).each(function (columnIndex, column) {
       let exit = Table.generateTableCell(tr, columnIndex, column, row);
@@ -158,7 +158,7 @@ class Table {
       let columnWidth = column.attr("width");
       th.style.width =
         !columnWidth || columnWidth == "undefined" ? "120px" : columnWidth;
-      $(th).data("uuid", CryptoJS.generateUUID(6));
+      $(th).data("uuid", Crypto.generateUUID(6));
     }
 
     let div = document.createElement("div");
@@ -285,6 +285,10 @@ class Table {
   static remove(table) {
     table.remove();
   }
+
+  static trigger(method, event) {
+    Eventhandler[method](event);
+  }
 }
 
 class Eventhandler {
@@ -356,4 +360,4 @@ class Eventhandler {
   }
 }
 
-module.exports = { Table, Eventhandler };
+module.exports = Table;

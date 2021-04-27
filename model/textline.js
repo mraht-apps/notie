@@ -8,7 +8,7 @@ class Textline {
     textline.className = "textline";
     let textNode = document.createTextNode(text);
     textline.appendChild(textNode);
-    textline.dataset.uuid = CryptoJS.generateUUID(6);
+    textline.dataset.uuid = Crypto.generateUUID(6);
     textline.dataset.placeholder = placeholderText;
 
     Textline.registerEvents(textline);
@@ -26,16 +26,22 @@ class Textline {
     });
   }
 
+  static appendBefore(element) {
+    $(Eventhandler.activeTextline).before(element);
+    $(Eventhandler.activeTextline).text("");
+    $(Eventhandler.activeTextline).trigger("focus");
+  }
+
   static focusNext(nextElement) {
     if (!nextElement.is(".textline")) return;
     nextElement.trigger("focus");
-    GeneralJS.moveCursorToEnd(null);
+    General.moveCursorToEnd(null);
   }
 
   static focusPrev(prevElement) {
     if (!prevElement.is(".textline")) return;
     prevElement.trigger("focus");
-    GeneralJS.moveCursorToEnd(null);
+    General.moveCursorToEnd(null);
   }
 }
 class Eventhandler {
@@ -63,20 +69,20 @@ class Eventhandler {
         break;
       case "Backspace":
         var prevElement = textline.prev();
-        if (prevElement.is(".textline") && GeneralJS.getCursorPosition(textline) == 0) {
+        if (prevElement.is(".textline") && General.getCursorPosition(textline) == 0) {
           let prevElementTextLength = prevElement.text().length;
           if (textline.text().length > 0) {
             prevElement.text(prevElement.text() + textline.text());
           }
           textline.remove();
-          GeneralJS.moveCursorTo(prevElement, prevElementTextLength);
+          General.moveCursorTo(prevElement, prevElementTextLength);
           event.preventDefault();
         }
         break;
       case "Enter":
-        if (BlockMenuJS.BlockMenu.isOpen()) {
-          BlockMenuJS.BlockMenu.addElement();
-          BlockMenuJS.BlockMenu.closeAll();
+        if (Blockmenu.isOpen()) {
+          Blockmenu.addElement();
+          Blockmenu.closeAll();
           event.preventDefault();
           return;
         }
@@ -89,8 +95,8 @@ class Eventhandler {
         event.preventDefault();
         break;
       case "/":
-        let { x, y } = GeneralJS.getCursorPixelPosition();
-        BlockMenuJS.BlockMenu.openFirstTime(x, y);
+        let { x, y } = General.getCursorPixelPosition();
+        Blockmenu.openFirstTime(x, y);
         break;
       default:
         textline.data("previousValue", textline.text());
@@ -100,9 +106,9 @@ class Eventhandler {
     // OPT Optimize blockmenu opening (e.g. also on backspace)
     let regex = /^[\w\s]+$/;
     if (event.key.match(regex) || event.key == "Escape") {
-      BlockMenuJS.BlockMenu.closeAll();
+      Blockmenu.closeAll();
     }
   }
 }
 
-module.exports = { Textline, Eventhandler };
+module.exports = Textline;

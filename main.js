@@ -1,6 +1,5 @@
 const { app, dialog, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
-const DB = require("./controller/db");
 
 function createWindow() {
   // Create the browser window.
@@ -19,11 +18,13 @@ function createWindow() {
   return mainWindow;
 }
 
+var mainWindow = null;
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", function () {
-  let mainWindow = createWindow();
+  mainWindow = createWindow();
 
   app.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the
@@ -31,9 +32,8 @@ app.on("ready", function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 
-  mainWindow.on("close", function () {
-    console.log("Window is closing...");
-    // TODO Saving user data, cleanup cache
+  mainWindow.on("close", function (event) {
+    console.log("Closing window...");
   });
 });
 
@@ -61,5 +61,14 @@ ipcMain.on("onClickDataFolderPicker", function (event) {
   let result = dialog.showOpenDialogSync({
     properties: ["openDirectory"],
   });
-  event.sender.send("onClickDataFolderPickerReply", result);
+  event.returnValue = result;
+});
+
+ipcMain.on("determineUserDataFolder", function (event) {
+  event.returnValue = app.getPath("userData");
+});
+
+ipcMain.on("resizeWindow", function (event, width, height) {
+  // FIX size is not being set
+  mainWindow.setSize(width, height);
 });

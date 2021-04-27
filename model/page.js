@@ -7,8 +7,8 @@ class Page {
   static firstRun() {
     $("#pageName").attr("placeholder", Page.DEFAULT_NAME);
     Page.load();
-    TextlineJS.Textline.build($("#content"), "");
-    PlaceholderJS.Placeholder.registerEvents($("#placeholder"));
+    Textline.build($("#content"), "");
+    Placeholder.registerEvents($("#placeholder"));
   }
 
   static create(page) {
@@ -17,7 +17,7 @@ class Page {
     }
 
     Page.addToDatabase(page);
-    PageMenuJS.PageMenu.add(page);
+    Pagemenu.add(page);
     Page.load(
       $(".pageMenuItem").filter(function () {
         return $(this).data("uuid") == page.id;
@@ -27,13 +27,13 @@ class Page {
 
   static addToDatabase(page) {
     if (!page.id || page.id.length == 0) {
-      page.id = CryptoJS.generateUUID();
+      page.id = Crypto.generateUUID();
     }
     if (!page.name || page.name.length == 0) {
       page.name = Page.DEFAULT_NAME;
     }
 
-    DatabaseJS.run([
+    Database.run([
       `REPLACE INTO pages VALUES ('${page.id}', '${page.name}');`,
     ]);
   }
@@ -54,10 +54,10 @@ class Page {
         break;
       case "settingsPage":
         let pageUrl = pageMenuItem.data("url");
-        var page = FileJS.readFile(pageUrl);
+        var page = File.readFile(pageUrl);
         $("#content").html(page);
         $("#pageName").val("Settings");
-        SettingsJS.registerEvents();
+        Settings.registerEvents();
         break;
       default:
         Page.loadPageContent($(pageMenuItem).data("uuid"));
@@ -87,10 +87,10 @@ class Page {
       element = $(element);
       let elementTypeId;
       if (element.is(".table")) {
-        elementTypeId = EnumsJS.ElementTypes.table;
+        elementTypeId = Enums.ElementTypes.table;
         Page.saveTable(element);
       } else if (element.is(".textline")) {
-        elementTypeId = EnumsJS.ElementTypes.textline;
+        elementTypeId = Enums.ElementTypes.textline;
         Page.saveTextline(element);
       }
       let elementId = element.data("uuid");
@@ -100,7 +100,7 @@ class Page {
       }
     });
     sql += ";";
-    DatabaseJS.run([
+    Database.run([
       `DELETE FROM page_elements WHERE page_id = '${pageId}';`,
       sql,
     ]);
@@ -110,7 +110,7 @@ class Page {
     let tableId = table.data("uuid");
     let tableName = table
       .find("caption > .captionContainer > .tableTitleContainer > input")
-      .text();
+      .val();
 
     let sqlStatements = [
       `REPLACE INTO tables VALUES ('${tableId}', '${tableName}');`,
@@ -127,7 +127,7 @@ class Page {
       let columnId = column.data("uuid");
       let columnName = column.find(".columnTitle > input").val();
       let columnType = column.data("type");
-      let columnWidth = column.attr("width");
+      let columnWidth = column.css("width");
 
       let sqlColumnName, sqlColumnType;
 
@@ -187,26 +187,26 @@ class Page {
     });
     sqlStatements.push(`INSERT INTO '${tableId}' VALUES ${sqlValues};`);
 
-    DatabaseJS.run(sqlStatements);
+    Database.run(sqlStatements);
   }
 
   static saveTextline(textline) {
-    DatabaseJS.run([
+    Database.run([
       `REPLACE INTO textlines VALUES(` +
         `'${textline.data("uuid")}', '${textline.text()}');`,
     ]);
   }
 
   static loadPageContent(pageId) {
-    let page = DatabaseJS.get(`SELECT * FROM pages WHERE id = '${pageId}';`);
-    let elements = DatabaseJS.all(
+    let page = Database.get(`SELECT * FROM pages WHERE id = '${pageId}';`);
+    let elements = Database.all(
       `SELECT * FROM page_elements WHERE page_id = '${pageId}' ORDER BY position ASC;`
     );
 
     if (!elements || elements.length == 0) {
-      TextlineJS.Textline.build($("#content"), "");
+      Textline.build($("#content"), "");
     } else {
-      let textlines = DatabaseJS.all(
+      let textlines = Database.all(
         `SELECT txt.* FROM page_elements AS ps ` +
           `INNER JOIN textlines AS txt ON txt.id = ps.id ` +
           `WHERE ps.page_id = '${pageId}';`
@@ -215,40 +215,28 @@ class Page {
       $(elements).each(function (index, element) {
         console.log(element);
         switch (element.type_id) {
-          case EnumsJS.ElementTypes.table:
+          case Enums.ElementTypes.table:
             let tableId = element.id;
-            let sqlTable = DatabaseJS.get(
+            let sqlTable = Database.get(
               `SELECT * FROM tables WHERE id = '${tableId}'`
             );
 
-            let columns = DatabaseJS.all(
+            let columns = Database.all(
               `SELECT * FROM table_columns WHERE table_id = '${tableId}';`
-            );
-            // let columns = [];
-            // $(sqlColumns).each(function () {
-            //   columns.push({
-            //     name: this.name,
-            //     type: this.type,
-            //     width: this.width,
-            //     position: this.position,
-            //   });
-            // });
-
-            columns.sort(function (a, b) {
+            ).sort(function (a, b) {
               return a.position - b.position;
             });
 
-            let sqlValues = DatabaseJS.all(`SELECT * FROM '${tableId}';`);
+            let sqlValues = Database.all(`SELECT * FROM '${tableId}';`);
             let rows = [];
             $(sqlValues).each(function () {
               let sqlValue = this;
-              let objectKeys = Object.keys(sqlValue);
               let row = {};
               $(columns).each(function () {
                 let sqlColumn = this;
                 let cellValue = sqlValue[sqlColumn.id];
-                if(sqlColumn.type == "checkbox") {
-                  cellValue = (cellValue == "true");
+                if (sqlColumn.type == "checkbox") {
+                  cellValue = cellValue == "true";
                 }
                 row[sqlColumn.name] = cellValue;
               });
@@ -256,14 +244,14 @@ class Page {
             });
 
             let data = { caption: sqlTable.name, columns: columns, rows: rows };
-            TableJS.Table.build($("#content"), data);
+            Table.build($("#content"), data);
             break;
-          case EnumsJS.ElementTypes.textline:
+          case Enums.ElementTypes.textline:
             let sqlTextline = $(textlines).filter(function () {
               return this.id == element.id;
             });
             if (!sqlTextline || sqlTextline.length == 0) return;
-            TextlineJS.Textline.build($("#content"), sqlTextline[0].text);
+            Textline.build($("#content"), sqlTextline[0].text);
             break;
         }
       });
@@ -274,4 +262,4 @@ class Page {
   }
 }
 
-module.exports = { Page };
+module.exports = Page;

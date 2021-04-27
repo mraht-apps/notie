@@ -1,6 +1,6 @@
-class BlockMenu {
+class Blockmenu {
   static init() {
-    BlockMenu.registerEvents();
+    Blockmenu.registerEvents();
   }
 
   static registerEvents() {
@@ -18,11 +18,11 @@ class BlockMenu {
   }
 
   static openFirstTime(x, y) {
-    if (BlockMenu.isOpen()) {
-      BlockMenu.closeAll();
+    if (Blockmenu.isOpen()) {
+      Blockmenu.closeAll();
     } else {
       $(".blockMenu").css({ top: y - 100 + "px", left: x + 10 + "px" });
-      BlockMenu.open();
+      Blockmenu.open();
       $(".clickable").eq(0).addClass("active");
     }
   }
@@ -54,14 +54,11 @@ class BlockMenu {
             },
           ],
         };
-        let table = TableJS.Table.build(null, data);
-        let activeTextline = TextlineJS.Eventhandler.activeTextline;
-        $(activeTextline).before(table);
-        $(activeTextline).text("");
-        $(activeTextline).trigger("focus");
+        let table = Table.build(null, data);
+        Textline.appendBefore(table);
         break;
       case "textline":
-        TextlineJS.Textline.build($("#content"), "");
+        Textline.build($("#content"), "");
         break;
     }
   }
@@ -77,7 +74,7 @@ class BlockMenu {
   }
 
   static open() {
-    BlockMenu.closeAll();
+    Blockmenu.closeAll();
     $(".blockMenu").addClass("visible");
     $(".blockMenu").toggle(true);
   }
@@ -85,8 +82,8 @@ class BlockMenu {
 
 class Eventhandler {
   static onClickMenuItem(event) {
-    BlockMenu.addElement();
-    BlockMenu.closeAll();
+    Blockmenu.addElement();
+    Blockmenu.closeAll();
   }
 
   static onMouseout(event) {
@@ -103,4 +100,4 @@ class Eventhandler {
   }
 }
 
-module.exports = { BlockMenu, Eventhandler };
+module.exports = Blockmenu;

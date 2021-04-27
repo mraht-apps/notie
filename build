@@ -7,16 +7,12 @@
 ==============================================================================================================
 npm run package-win
 
-
 Use better-sqlite3:
 ==============================================================================================================
-npm install electron-rebuild
-npm install better-sqlite3
-npm install --global --production windows-build-tools@4.0.0
-# Every time you run "npm install", run this:
-./node_modules/.bin/electron-rebuild
-# On Windows if you have trouble, try:
-.\node_modules\.bin\electron-rebuild.cmd
+1) Delete node_modules folder
+2) npm install electron-rebuild
+3) ./node_modules/.bin/electron-rebuild
+Just ignore errors regarding Visual Studio installation.
 
 Reset npm:
 ==============================================================================================================

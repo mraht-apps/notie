@@ -10,8 +10,8 @@ class Eventhandler {
   static onClick(event) {
     let textline = $(".textline:last");
     textline.trigger("focus");
-    GeneralJS.moveCursorToEnd(null);
+    General.moveCursorToEnd(null);
   }
 }
 
-module.exports = { Placeholder, Eventhandler };
+module.exports = Placeholder;

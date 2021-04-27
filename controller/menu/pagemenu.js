@@ -1,6 +1,6 @@
-const Database = require("./db");
+const Database = require("../database/database");
 
-class PageMenu {
+class Pagemenu {
   static resizeData = {
     tracking: false,
     startWidth: null,
@@ -12,14 +12,14 @@ class PageMenu {
   };
 
   static init() {
-    PageMenu.build();
-    PageMenu.registerEvents();
+    Pagemenu.build();
+    Pagemenu.registerEvents();
   }
 
   static build() {
-    let pages = DatabaseJS.all("SELECT * FROM pages;");
+    let pages = Database.all("SELECT * FROM pages;");
     $(pages).each(function () {
-      PageMenu.add(this);
+      Pagemenu.add(this);
     });
   }
 
@@ -61,7 +61,7 @@ class PageMenu {
     pageMenuItem.appendChild(img);
     let textNode = document.createTextNode(page.name);
     pageMenuItem.appendChild(textNode);
-    PageMenu.registerEvent(pageMenuItem);
+    Pagemenu.registerEvent(pageMenuItem);
 
     $("#newPage").before(pageMenuItem);
   }
@@ -70,7 +70,7 @@ class PageMenu {
 class Eventhandler {
   static onClickPageMenuItem(event) {
     let pageMenuItem = $(event.target);
-    PageJS.Page.load(pageMenuItem);
+    Page.load(pageMenuItem);
   }
 
   static onMousedown(event) {
@@ -85,32 +85,32 @@ class Eventhandler {
     }
 
     const targetElement = $("#pageMenu");
-    PageMenu.resizeData.startWidth = targetElement.outerWidth();
-    PageMenu.resizeData.startCursorScreenX = event.screenX;
-    PageMenu.resizeData.resizeTarget = targetElement;
-    PageMenu.resizeData.parentElement = handleElement.parentElement;
-    PageMenu.resizeData.maxWidth =
+    Pagemenu.resizeData.startWidth = targetElement.outerWidth();
+    Pagemenu.resizeData.startCursorScreenX = event.screenX;
+    Pagemenu.resizeData.resizeTarget = targetElement;
+    Pagemenu.resizeData.parentElement = handleElement.parentElement;
+    Pagemenu.resizeData.maxWidth =
       $(handleElement.parentElement).innerWidth() -
-      PageMenu.resizeData.handleWidth;
-    PageMenu.resizeData.tracking = true;
+      Pagemenu.resizeData.handleWidth;
+    Pagemenu.resizeData.tracking = true;
   }
 
   static onMousemove(event) {
-    if (PageMenu.resizeData.tracking) {
+    if (Pagemenu.resizeData.tracking) {
       const cursorScreenXDelta =
-        event.screenX - PageMenu.resizeData.startCursorScreenX;
+        event.screenX - Pagemenu.resizeData.startCursorScreenX;
       const newWidth = Math.min(
-        PageMenu.resizeData.startWidth + cursorScreenXDelta,
-        PageMenu.resizeData.maxWidth
+        Pagemenu.resizeData.startWidth + cursorScreenXDelta,
+        Pagemenu.resizeData.maxWidth
       );
 
-      $(PageMenu.resizeData.resizeTarget).outerWidth(newWidth);
+      $(Pagemenu.resizeData.resizeTarget).outerWidth(newWidth);
     }
   }
 
   static onMouseup(event) {
-    if (PageMenu.resizeData.tracking) PageMenu.resizeData.tracking = false;
+    if (Pagemenu.resizeData.tracking) Pagemenu.resizeData.tracking = false;
   }
 }
 
-module.exports = { PageMenu, Eventhandler };
+module.exports = Pagemenu;

@@ -1,4 +1,4 @@
-const { Table } = require("../model/table");
+const { Table } = require("../../model/table");
 
 // FIX Call methods tablemenu-specific
 class TableMenu {
@@ -43,9 +43,9 @@ class Eventhandler {
 
   static onClickMenuItem(event) {
     let table = $(event.target).parents(".table");
-    TableJS.Table.remove(table);
+    Table.remove(table);
     TableMenu.closeAll();
   }
 }
 
-module.exports = { TableMenu, Eventhandler };
+module.exports = TableMenu;

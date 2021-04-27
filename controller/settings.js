@@ -1,6 +1,22 @@
 class Settings {
-  static DEFAULT_DATA_FOLDER = "./user_data/";
-  static DATA_FOLDER = Settings.DEFAULT_DATA_FOLDER;
+  static CACHE_FOLDER = "../cache/";
+  static DEFAULT_DATA_FOLDER = "";
+  static DATA_FOLDER = "";
+  static FILE = "settings.json";
+  static DATA = {};
+
+  static init() {
+    Settings.determineUserDataFolder();
+
+    try {
+      let configData = File.readFile(Settings.getFilePath());
+      Settings.DATA = JSON.parse(configData);
+    } catch (e) {
+      File.writeFile(Settings.getFilePath(), JSON.stringify(Settings.DATA));
+    }
+
+    Settings.resizeWindow();
+  }
 
   static registerEvents() {
     $("#btnSavePassword").on("click", function (event) {
@@ -16,40 +32,64 @@ class Settings {
     });
 
     $("#dataFolderPicker").on("click", function (event) {
-      IPCRenderer.send("onClickDataFolderPicker");
-      event.preventDefault();
-    });
-
-    IPCRenderer.on("onClickDataFolderPickerReply", function (event, result) {
-      if(result && result.length > 0 && result[0].trim().length > 0) {
+      let result = IPCRenderer.sendSync("onClickDataFolderPicker");
+      if (result && result.length > 0 && result[0].trim().length > 0) {
         Settings.DATA_FOLDER = result[0];
       } else {
         Settings.DATA_FOLDER = Settings.DEFAULT_DATA_FOLDER;
       }
       console.log(`Set data folder to: ${Settings.DATA_FOLDER}`);
+      event.preventDefault();
     });
+  }
+
+  static determineUserDataFolder() {
+    let result = IPCRenderer.sendSync("determineUserDataFolder");
+    Settings.DATA_FOLDER = result;
+    Settings.DEFAULT_DATA_FOLDER = result;
+    console.log("Set settings folder to: " + result);
+  }
+
+  static getFilePath() {
+    return Settings.DATA_FOLDER + "/" + Settings.FILE;
+  }
+
+  static resizeWindow() {
+    let width = Settings.DATA.width;
+    let height = Settings.DATA.height;
+    if (width > 0 && height > 0) {
+      IPCRenderer.send("resizeWindow", width, height);
+    }
+  }
+
+  static save() {
+    // NEW Remove folder CACHE
+    Settings.DATA["height"] = $(window).height();
+    Settings.DATA["width"] = $(window).width();
+    File.writeFile(Settings.getFilePath(), JSON.stringify(Settings.DATA));
+  }
+
+  static set(key, val) {
+    Config.DATA[key] = val;
   }
 }
 
 class Eventhandler {
   static onClickBtnSavePassword(event) {
     const password = $("#password").val();
-    CryptoJS.PASSWORD = password;
-    console.log("User set password to " + CryptoJS.PASSWORD + "\n");
-
-    CryptoJS.IV = CryptoJS.generateIV();
-    console.log("User set iv to " + CryptoJS.IV + "\n");
+    Crypto.PW = password;
+    console.log("User set password to " + Crypto.PW + "\n");
   }
 
   static onClickBtnSetPassword(event) {
     const password = $("#password").val();
-    CryptoJS.PASSWORD = password;
-    console.log("User set password to " + CryptoJS.PASSWORD + "\n");
+    Crypto.PW = password;
+    console.log("User set password to " + Crypto.PW + "\n");
   }
 
   static onClickBtnReadPassword(event) {
-    console.log("User set password to " + CryptoJS.PASSWORD + "\n");
-    console.log("User set iv to " + CryptoJS.IV + "\n");
+    console.log("User set password to " + Crypto.PW + "\n");
+    console.log("User set iv to " + Crypto.IV + "\n");
   }
 }
 

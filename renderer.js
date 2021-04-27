@@ -9,50 +9,55 @@ window.$ = window.jQuery = require("jquery");
 const IPCRenderer = require("electron").ipcRenderer;
 
 // Utilities
-const GeneralJS = require("../utils/general.js");
-const CryptoJS = require("../utils/crypto.js");
-const FileJS = require("../utils/file.js");
+const General = require("../utils/general.js");
+const Crypto = require("../utils/crypto.js");
+const File = require("../utils/file.js");
 
 // Controller
-const SettingsJS = require("../controller/settings.js");
-const DataJS = require("../controller/data.js");
-const DatabaseJS = require("../controller/db.js");
-const SearchMenuJS = require("../controller/searchmenu.js");
-const DocumentJS = require("../controller/document.js");
-const PageMenuJS = require("../controller/pagemenu.js");
-const BlockMenuJS = require("../controller/blockmenu.js");
-const TableMenuJS = require("../controller/tablemenu.js");
+const Settings = require("../controller/settings.js");
+const Database = require("../controller/database/database.js");
+const Document = require("../controller/document.js");
+
+const Searchmenu = require("../controller/menu/searchmenu.js");
+const Pagemenu = require("../controller/menu/pagemenu.js");
+const Blockmenu = require("../controller/menu/blockmenu.js");
+const Tablemenu = require("../controller/menu/tablemenu.js");
 
 // Model
-const EnumsJS = require("../model/enums.js");
-const PageJS = require("../model/page.js");
-const TextlineJS = require("../model/textline.js");
-const PlaceholderJS = require("../model/placeholder.js");
-const TableJS = require("../model/table.js");
+const Enums = require("../model/enums.js");
+const Page = require("../model/page.js");
+const Textline = require("../model/textline.js");
+const Placeholder = require("../model/placeholder.js");
+const Table = require("../model/table.js");
 
 class Renderer {
   static init() {
-    PageJS.Page.firstRun();
+    Settings.init();
 
-    DatabaseJS.init();
+    Page.firstRun();
 
-    PageMenuJS.PageMenu.init();
-    BlockMenuJS.BlockMenu.init();
-    SearchMenuJS.SearchMenu.init();
-    DocumentJS.Document.init();
+    Database.init();
+
+    Pagemenu.init();
+    Blockmenu.init();
+    Searchmenu.init();
+    Document.init();
 
     Renderer.registerEvents();
   }
 
   static registerEvents() {
-    // Load content based on user-data
-    $("#btnLoad").on("click", function (event) {
-      Eventhandler.onClickBtnLoad(event);
-    });
+    window.onbeforeunload = function (event) {
+      event.preventDefault();
+      console.log("Before unloading window...");
 
-    // Save data entered by user
-    $("#btnSave").on("click", function (event) {
-      Eventhandler.onClickBtnSave(event);
+      Database.close();
+      Settings.save();
+    };
+
+    $("#btnTest").on("click", function (event) {
+      IPCRenderer.send("onClickDataFolderPicker");
+      console.log(Settings.DATA_FOLDER);
     });
 
     // Restart application
@@ -63,17 +68,17 @@ class Renderer {
 }
 
 class Eventhandler {
-  static onClickBtnLoad(event) {
-    DataJS.load();
-    TextlineJS.Textline.build($("#content"), "");
-  }
+  // static onClickBtnLoad(event) {
+  //   DataJS.load();
+  //   Textline.build($("#content"), "");
+  // }
 
-  static onClickBtnSave(event) {
-    let jsonData = DataJS.save();
-    let data = CryptoJS.IV.toString();
-    data += CryptoJS.encrypt(jsonData, CryptoJS.PASSWORD, CryptoJS.IV);
-    FileJS.create("data.enc", data);
-  }
+  // static onClickBtnSave(event) {
+  //   let jsonData = DataJS.save();
+  //   let data = Crypto.IV.toString();
+  //   data += Crypto.encrypt(jsonData, Crypto.PW, Crypto.IV);
+  //   File.writeFile("data.enc", data);
+  // }
 
   static onClickBtnRestart(event) {
     IPCRenderer.send("restart");

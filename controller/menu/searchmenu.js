@@ -1,4 +1,4 @@
-const DB = require("./db");
+const DB = require("../database/database");
 
 class SearchMenu {
   static init() {
@@ -32,4 +32,4 @@ class Eventhandler {
   }
 }
 
-module.exports = { SearchMenu, Eventhandler };
+module.exports = SearchMenu;

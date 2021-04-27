@@ -1,28 +1,36 @@
-const FS = require("fs");
+const Filesystem = require("fs");
 
 class File {
-  static create(filename, data) {
-    return FS.writeFileSync(filename, data, "utf8", function (error) {
+  static writeFile(file, data) {
+    return Filesystem.writeFileSync(file, data, "binary", function (error) {
       if (error) {
         console.log(error);
       }
     });
   }
-  
-  static exists(filename) {
-    return FS.existsSync(filename);
+
+  static exists(file) {
+    return Filesystem.existsSync(file);
   }
-  
-  static readFile(filename) {
-    return FS.readFileSync(filename, "utf8", function (error) {
+
+  static readFile(file) {
+    return Filesystem.readFileSync(file, "binary", function (error) {
       if (error) {
         console.log(error);
       }
     });
   }
-  
+
   static readFolder(folder) {
-    return FS.readdirSync(folder, function (error) {
+    return Filesystem.readdirSync(folder, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+  }
+
+  static removeFile(file) {
+    return Filesystem.unlinkSync(file, function (error) {
       if (error) {
         console.log(error);
       }
