@@ -82,7 +82,7 @@ class Page {
     let children = $("#content").children();
     if (children.length == 0) return;
 
-    let sql = "INSERT INTO pages_structure VALUES";
+    let sql = "INSERT INTO page_elements VALUES";
     children.each(function (index, element) {
       element = $(element);
       let elementTypeId;
@@ -101,7 +101,7 @@ class Page {
     });
     sql += ";";
     DatabaseJS.run([
-      `DELETE FROM pages_structure WHERE page_id = '${pageId}';`,
+      `DELETE FROM page_elements WHERE page_id = '${pageId}';`,
       sql,
     ]);
   }
@@ -121,12 +121,14 @@ class Page {
     let columns = table.find("thead > tr > th").filter(function () {
       return $(this).data("type") != "add";
     });
-    columns.each(function (index, column) {
+    columns.each(function (columnIndex, column) {
       column = $(column);
 
       let columnId = column.data("uuid");
-      let columnType = column.data("type");
       let columnName = column.find(".columnTitle > input").val();
+      let columnType = column.data("type");
+      let columnWidth = column.attr("width");
+
       let sqlColumnName, sqlColumnType;
 
       switch (columnType) {
@@ -134,22 +136,22 @@ class Page {
           return;
         case "checkbox":
         case "text":
-          sqlColumnName = `${columnName}_${columnId}`;
+          sqlColumnName = columnId;
           sqlColumnType = "TEXT";
           break;
         default:
           return;
       }
-      sqlTableStructure += `('${tableId}', '${columnId}', '${columnName}', '${columnType}')`;
+      sqlTableStructure += `('${tableId}', '${columnId}', '${columnName}', '${columnType}', '${columnWidth}', ${columnIndex})`;
 
-      sqlColumns += `${sqlColumnName} ${sqlColumnType}`;
-      if (index < columns.length - 1) {
+      sqlColumns += `'${sqlColumnName}' ${sqlColumnType}`;
+      if (columnIndex < columns.length - 1) {
         sqlTableStructure += ", ";
         sqlColumns += ", ";
       }
     });
     sqlStatements.push(
-      `REPLACE INTO tables_structure VALUES ${sqlTableStructure};`,
+      `REPLACE INTO table_columns VALUES ${sqlTableStructure};`,
       `DROP TABLE IF EXISTS '${tableId}';`,
       `CREATE TABLE IF NOT EXISTS '${tableId}' ` +
         `(id TEXT NOT NULL, ${sqlColumns}, PRIMARY KEY (id) );`
@@ -198,38 +200,67 @@ class Page {
   static loadPageContent(pageId) {
     let page = DatabaseJS.get(`SELECT * FROM pages WHERE id = '${pageId}';`);
     let elements = DatabaseJS.all(
-      `SELECT * FROM pages_structure WHERE page_id = '${pageId}' ORDER BY position ASC;`
+      `SELECT * FROM page_elements WHERE page_id = '${pageId}' ORDER BY position ASC;`
     );
 
     if (!elements || elements.length == 0) {
       TextlineJS.Textline.build($("#content"), "");
     } else {
       let textlines = DatabaseJS.all(
-        `SELECT txt.* FROM pages_structure AS ps ` +
-          `INNER JOIN textlines AS txt ON txt.id = ps.element_id ` +
+        `SELECT txt.* FROM page_elements AS ps ` +
+          `INNER JOIN textlines AS txt ON txt.id = ps.id ` +
           `WHERE ps.page_id = '${pageId}';`
       );
 
       $(elements).each(function (index, element) {
         console.log(element);
-        switch (element.element_type_id) {
+        switch (element.type_id) {
           case EnumsJS.ElementTypes.table:
-            let tableId = element.element_id;
+            let tableId = element.id;
             let sqlTable = DatabaseJS.get(
               `SELECT * FROM tables WHERE id = '${tableId}'`
             );
-            let sqlValues = DatabaseJS.all(`SELECT * FROM '${tableId}';`);
-            let sqlColumns = DatabaseJS.all(
-              `SELECT * FROM tables_structure WHERE table_id = '${tableId}';`
-            );
 
-            // NEW Implement
-            let data = { caption: sqlTable.name, columns: [], rows: [] };
+            let columns = DatabaseJS.all(
+              `SELECT * FROM table_columns WHERE table_id = '${tableId}';`
+            );
+            // let columns = [];
+            // $(sqlColumns).each(function () {
+            //   columns.push({
+            //     name: this.name,
+            //     type: this.type,
+            //     width: this.width,
+            //     position: this.position,
+            //   });
+            // });
+
+            columns.sort(function (a, b) {
+              return a.position - b.position;
+            });
+
+            let sqlValues = DatabaseJS.all(`SELECT * FROM '${tableId}';`);
+            let rows = [];
+            $(sqlValues).each(function () {
+              let sqlValue = this;
+              let objectKeys = Object.keys(sqlValue);
+              let row = {};
+              $(columns).each(function () {
+                let sqlColumn = this;
+                let cellValue = sqlValue[sqlColumn.id];
+                if(sqlColumn.type == "checkbox") {
+                  cellValue = (cellValue == "true");
+                }
+                row[sqlColumn.name] = cellValue;
+              });
+              rows.push(row);
+            });
+
+            let data = { caption: sqlTable.name, columns: columns, rows: rows };
             TableJS.Table.build($("#content"), data);
             break;
           case EnumsJS.ElementTypes.textline:
             let sqlTextline = $(textlines).filter(function () {
-              return this.id == element.element_id;
+              return this.id == element.id;
             });
             if (!sqlTextline || sqlTextline.length == 0) return;
             TextlineJS.Textline.build($("#content"), sqlTextline[0].text);

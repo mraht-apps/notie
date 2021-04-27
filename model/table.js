@@ -154,7 +154,8 @@ class Table {
 
     let th = document.createElement("th");
     let columnWidth = column.attr("width");
-    if (columnWidth) th.style.width = columnWidth;
+    th.style.width =
+      !columnWidth || columnWidth == "undefined" ? "120px" : columnWidth;
     $(th).data("type", columnType);
     if (columnType != "add") {
       $(th).data("uuid", CryptoJS.generateUUID(6));
@@ -302,6 +303,7 @@ class Eventhandler {
     Table.addRow(table);
   }
 
+  // FIX Wrong calculation leads to bigger table columns
   static pageX;
   static currentColumn;
   static width;
@@ -314,11 +316,7 @@ class Eventhandler {
 
   static onDblclickColumnSeparator(event) {
     let column = $(event.target).parent();
-    let text = column
-      .children(".columnTitle")
-      .children("input:text")
-      .val()
-      .trim();
+    let text = column.find(".columnTitle > input:text").val().trim();
 
     let tempDiv = document.createElement("div");
     document.body.appendChild(tempDiv);

@@ -22,7 +22,7 @@ class Database {
     result = Database.all("SELECT * FROM pages;");
     console.log(result);
 
-    result = Database.all("SELECT * FROM pages_structure;");
+    result = Database.all("SELECT * FROM page_elements;");
     console.log(result);
   }
 
@@ -36,8 +36,8 @@ class Database {
   static reset() {
     // Database.db.prepare("DROP TABLE IF EXISTS element_types;").run();
     Database.db.prepare("DROP TABLE IF EXISTS pages;").run();
-    Database.db.prepare("DROP TABLE IF EXISTS pages_structure;").run();
-    Database.db.prepare("DROP TABLE IF EXISTS tables_structure;").run();
+    Database.db.prepare("DROP TABLE IF EXISTS page_elements;").run();
+    Database.db.prepare("DROP TABLE IF EXISTS table_columns;").run();
     Database.db.prepare("DROP TABLE IF EXISTS textlines;").run();
     return false;
   }
@@ -58,18 +58,23 @@ class Database {
         "id TEXT NOT NULL," +
         "name TEXT," +
         "PRIMARY KEY (id) );",
-      "CREATE TABLE IF NOT EXISTS pages_structure (" +
+      "CREATE TABLE IF NOT EXISTS page_elements (" +
         "page_id TEXT NOT NULL," +
-        "element_id TEXT NOT NULL," +
-        "element_type_id INTEGER NOT NULL REFERENCES element_types(id)," +
+        "id TEXT NOT NULL," +
+        "type_id INTEGER NOT NULL REFERENCES element_types(id)," +
         "position INTEGER NOT NULL," +
-        "PRIMARY KEY (page_id, element_id, element_type_id) );",
+        "PRIMARY KEY (page_id, id, type_id) );",
       "CREATE TABLE IF NOT EXISTS 'tables' (" +
         "id TEXT NOT NULL, name TEXT, " +
         "PRIMARY KEY (id) );",
-      "CREATE TABLE IF NOT EXISTS 'tables_structure' (" +
-        "table_id TEXT NOT NULL, column_id TEXT NOT NULL, column_name TEXT, column_type INTEGER NOT NULL, " +
-        "PRIMARY KEY (table_id, column_id) );",
+      "CREATE TABLE IF NOT EXISTS 'table_columns' (" +
+        "table_id TEXT NOT NULL," +
+        "id TEXT NOT NULL," +
+        "name TEXT," +
+        "type INTEGER NOT NULL, " +
+        "width TEXT NOT NULL," +
+        "position INTEGER NOT NULL," +
+        "PRIMARY KEY (table_id, id) );",
       "CREATE TABLE IF NOT EXISTS textlines (" +
         "id TEXT NOT NULL," +
         "text TEXT," +
