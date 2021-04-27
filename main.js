@@ -84,6 +84,10 @@ ipcMain.on("determineWindowData", function (event) {
 });
 
 ipcMain.on("resizeWindow", function (event, windowData) {
-  mainWindow.setSize(windowData.width, windowData.height);
-  mainWindow.setPosition(windowData.x, windowData.y);
+  if (!windowData) {
+    mainWindow.maximize();
+  } else {
+    mainWindow.setSize(windowData.width, windowData.height);
+    mainWindow.setPosition(windowData.x, windowData.y);
+  }
 });
