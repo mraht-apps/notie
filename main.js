@@ -13,12 +13,12 @@ function createWindow() {
 
   mainWindow.loadFile("view/main.html");
   mainWindow.webContents.openDevTools();
-  mainWindow.maximize();
+  // mainWindow.maximize();
 
   return mainWindow;
 }
 
-var mainWindow = null;
+let mainWindow = null;
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -69,6 +69,6 @@ ipcMain.on("determineUserDataFolder", function (event) {
 });
 
 ipcMain.on("resizeWindow", function (event, width, height) {
-  // FIX size is not being set
+  // FIX size is not being set properly
   mainWindow.setSize(width, height);
 });

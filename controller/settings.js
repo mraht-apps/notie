@@ -58,14 +58,15 @@ class Settings {
     let width = Settings.DATA.width;
     let height = Settings.DATA.height;
     if (width > 0 && height > 0) {
+      console.log("Set window size to: " + width + "/" + height);
       IPCRenderer.send("resizeWindow", width, height);
     }
   }
 
   static save() {
     // NEW Remove folder CACHE
-    Settings.DATA["height"] = $(window).height();
-    Settings.DATA["width"] = $(window).width();
+    Settings.DATA.height = $(window).height();
+    Settings.DATA.width = $(window).width();
     File.writeFile(Settings.getFilePath(), JSON.stringify(Settings.DATA));
   }
 
