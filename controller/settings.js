@@ -59,14 +59,21 @@ class Settings {
     let height = Settings.DATA.height;
     if (width > 0 && height > 0) {
       console.log("Set window size to: " + width + "/" + height);
-      IPCRenderer.send("resizeWindow", width, height);
+      IPCRenderer.send("resizeWindow", Settings.DATA.window);
     }
   }
 
   static save() {
-    // NEW Remove folder CACHE
-    Settings.DATA.height = $(window).height();
-    Settings.DATA.width = $(window).width();
+    // NEW Remove folder CACHE and all its files
+
+    Settings.DATA.window = IPCRenderer.sendSync("determineWindowData");
+    
+    // Possible bug in electron if user maximized window: y is -8 which leads 
+    // - in constrast to the negative x of -8 - to a mispositioned window
+    if(Settings.DATA.window.y < 0) {
+      Settings.DATA.window.y = 0;
+    }
+
     File.writeFile(Settings.getFilePath(), JSON.stringify(Settings.DATA));
   }
 

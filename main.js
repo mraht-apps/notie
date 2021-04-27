@@ -1,4 +1,4 @@
-const { app, dialog, BrowserWindow, ipcMain } = require("electron");
+const { app, dialog, screen, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 
 function createWindow() {
@@ -35,6 +35,10 @@ app.on("ready", function () {
   mainWindow.on("close", function (event) {
     console.log("Closing window...");
   });
+
+  mainWindow.on("restore", function (event) {
+    mainWindow.setSize($(window).width(), $(window).height());
+  });
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -68,7 +72,18 @@ ipcMain.on("determineUserDataFolder", function (event) {
   event.returnValue = app.getPath("userData");
 });
 
-ipcMain.on("resizeWindow", function (event, width, height) {
-  // FIX size is not being set properly
-  mainWindow.setSize(width, height);
+ipcMain.on("determineWindowData", function (event) {
+  let position = mainWindow.getPosition();
+  let size = mainWindow.getSize();
+  event.returnValue = {
+    width: size[0],
+    height: size[1],
+    x: position[0],
+    y: position[1],
+  };
+});
+
+ipcMain.on("resizeWindow", function (event, windowData) {
+  mainWindow.setSize(windowData.width, windowData.height);
+  mainWindow.setPosition(windowData.x, windowData.y);
 });

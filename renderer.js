@@ -49,10 +49,9 @@ class Renderer {
   static registerEvents() {
     window.onbeforeunload = function (event) {
       event.preventDefault();
-      console.log("Before unloading window...");
 
       Database.close();
-      Settings.save();
+      Settings.save();      
     };
 
     $("#btnTest").on("click", function (event) {
