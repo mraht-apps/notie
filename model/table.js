@@ -153,11 +153,11 @@ class Table {
     let columnName = column.attr("name");
 
     let th = document.createElement("th");
-    let columnWidth = column.attr("width");
-    th.style.width =
-      !columnWidth || columnWidth == "undefined" ? "120px" : columnWidth;
     $(th).data("type", columnType);
     if (columnType != "add") {
+      let columnWidth = column.attr("width");
+      th.style.width =
+        !columnWidth || columnWidth == "undefined" ? "120px" : columnWidth;
       $(th).data("uuid", CryptoJS.generateUUID(6));
     }
 
@@ -303,7 +303,6 @@ class Eventhandler {
     Table.addRow(table);
   }
 
-  // FIX Wrong calculation leads to bigger table columns
   static pageX;
   static currentColumn;
   static width;
