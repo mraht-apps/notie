@@ -9,6 +9,8 @@ Version 1.0.0
 [ ] Column type can be chosen
 [ ] Choosing of user data folder
 [ ] Encryption of the user data folder
+[ ] Page for images and license
+[ ] Auto updater
 
 Pages creation:
 1) Create page on base of db data in cache folder if being called and not yet existent

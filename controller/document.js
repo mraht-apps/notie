@@ -31,8 +31,8 @@ class Eventhandler {
   static onClick(event) {
     let element = $(event.target);
     if (
-      !element.hasClass("blockMenu") &&
-      element.parents(".blockMenu").length == 0
+      !element.hasClass("blockmenu") &&
+      element.parents(".blockmenu").length == 0
     ) {
       Blockmenu.closeAll();
     }

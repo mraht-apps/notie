@@ -1,4 +1,4 @@
 node_modules
-*.enc
-user_data/
 release-builds/
+settings.json
+cache/*

@@ -1,4 +1,4 @@
-.blockMenu {
+.blockmenu {
   background-color: #ffffff;
   border: 1px solid #999999;
   cursor: default;
@@ -11,14 +11,14 @@
   left: 200px;
 }
 
-.blockMenu table {
+.blockmenu table {
   cursor: pointer;
   border-collapse: collapse;
   border-spacing: 0;
   user-select: none;
 }
 
-.blockMenu tr td:first-child div {
+.blockmenu tr td:first-child div {
   border: 1px solid rgba(55, 53, 47, 0.2);
   padding: 6px;
 
@@ -27,13 +27,13 @@
   text-align: center;
 }
 
-.blockMenu th,
-.blockMenu td {
+.blockmenu th,
+.blockmenu td {
   padding: 6px;
   text-align: left;
 }
 
-.blockMenu .active {
+.blockmenu .active {
   background-color: rgba(55, 53, 47, 0.1);
 }
 

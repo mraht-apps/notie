@@ -1,21 +1,22 @@
+const { app, ipcRenderer } = require("electron");
+
+const File = require("../utils/file.js");
+const Crypto = require("../utils/crypto.js");
+
 class Settings {
-  static CACHE_FOLDER = "../cache/";
-  static DEFAULT_DATA_FOLDER = "";
-  static DATA_FOLDER = "";
+  static CACHE_FOLDER = "./cache/";
   static FILE = "settings.json";
   static DATA = {};
 
   static init() {
-    Settings.determineUserDataFolder();
-
     try {
-      let configData = File.readFile(Settings.getFilePath());
+      let configData = File.readFile(Settings.FILE);
       Settings.DATA = JSON.parse(configData);
     } catch (e) {
-      File.writeFile(Settings.getFilePath(), JSON.stringify(Settings.DATA));
+      File.writeFile(Settings.FILE, JSON.stringify(Settings.DATA));
     }
 
-    Settings.resizeWindow();
+    Settings.determineUserDataFolder();
   }
 
   static registerEvents() {
@@ -23,61 +24,63 @@ class Settings {
       Eventhandler.onClickBtnSavePassword(event);
     });
 
-    $("#btnSetPassword").on("click", function (event) {
-      Eventhandler.onClickBtnSetPassword(event);
+    $("#btnLogin").on("click", function (event) {
+      Eventhandler.onClickBtnLogin(event);
     });
 
-    $("#btnReadPassword").on("click", function (event) {
-      Eventhandler.onClickBtnReadPassword(event);
-    });
-
-    $("#dataFolderPicker").on("click", function (event) {
-      let result = IPCRenderer.sendSync("onClickDataFolderPicker");
+    $("#btnDatabasePicker").on("click", function (event) {
+      let result = ipcRenderer.sendSync("onClickbtnDataFolderPicker");
       if (result && result.length > 0 && result[0].trim().length > 0) {
-        Settings.DATA_FOLDER = result[0];
+        Settings.DATA.FOLDER = result[0];
       } else {
-        Settings.DATA_FOLDER = Settings.DEFAULT_DATA_FOLDER;
+        Settings.DATA.FOLDER = Settings.DATA.DEFAULT_FOLDER;
       }
-      console.log(`Set data folder to: ${Settings.DATA_FOLDER}`);
+      console.log(`Set data folder to: ${Settings.DATA.FOLDER}`);
       event.preventDefault();
     });
   }
 
   static determineUserDataFolder() {
-    let result = IPCRenderer.sendSync("determineUserDataFolder");
-    Settings.DATA_FOLDER = result;
-    Settings.DEFAULT_DATA_FOLDER = result;
+    let result = app.getPath("userData");
+    Settings.DATA.FOLDER = result;
+    Settings.DATA.DEFAULT_FOLDER = result;
     console.log("Set settings folder to: " + result);
   }
 
-  static getFilePath() {
-    return Settings.DATA_FOLDER + "/" + Settings.FILE;
-  }
-
   static resizeWindow() {
-    if(!Settings.DATA.window) {
-      IPCRenderer.send("resizeWindow", null);
-    } else {
-      let width = Settings.DATA.window.width;
-      let height = Settings.DATA.window.height;
-      if (width > 0 && height > 0) {
-        IPCRenderer.send("resizeWindow", Settings.DATA.window);
-      }
-    }
+    ipcRenderer.send("resizeWindow", Settings.DATA.window);
   }
 
   static save() {
-    // NEW Remove folder CACHE and all its files
+    Settings.clearCache();
+    Settings.saveSettings();
+  }
 
-    Settings.DATA.window = IPCRenderer.sendSync("determineWindowData");
+  static clearCache() {
+    try {
+      const path = require("path");
+      let files = File.readFolder(Settings.CACHE_FOLDER);
+      for (const file in files) {
+        File.removeFile(
+          path.join(Settings.CACHE_FOLDER, files[file]),
+          function (error) {
+            if (error) throw error;
+          }
+        );
+      }
+    } catch (e) {}
+  }
 
-    // Possible bug in electron if user maximized window: y is -8 which leads 
+  static saveSettings() {
+    Settings.DATA.window = ipcRenderer.sendSync("determineWindowData");
+
+    // Possible bug in electron if user maximized window: y is -8 which leads
     // - in constrast to the negative x of -8 - to a mispositioned window
-    if(Settings.DATA.window.y < 0) {
+    if (Settings.DATA.window.y < 0) {
       Settings.DATA.window.y = 0;
     }
-
-    File.writeFile(Settings.getFilePath(), JSON.stringify(Settings.DATA));
+    console.log("Save settings data: " + Settings.DATA);
+    File.writeFile(Settings.FILE, JSON.stringify(Settings.DATA));
   }
 
   static set(key, val) {
@@ -86,21 +89,10 @@ class Settings {
 }
 
 class Eventhandler {
-  static onClickBtnSavePassword(event) {
+  static onClickBtnLogin(event) {
     const password = $("#password").val();
     Crypto.PW = password;
     console.log("User set password to " + Crypto.PW + "\n");
-  }
-
-  static onClickBtnSetPassword(event) {
-    const password = $("#password").val();
-    Crypto.PW = password;
-    console.log("User set password to " + Crypto.PW + "\n");
-  }
-
-  static onClickBtnReadPassword(event) {
-    console.log("User set password to " + Crypto.PW + "\n");
-    console.log("User set iv to " + Crypto.IV + "\n");
   }
 }
 

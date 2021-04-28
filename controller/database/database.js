@@ -6,7 +6,7 @@ class Database {
   static DB_FILENAME_DEC = "notie.db";
   static DB_FILENAME_ENC = "notie.edb";
   static DB_FILE_DEC = Settings.CACHE_FOLDER + Database.DB_FILENAME_DEC;
-  static DB_FILE_ENC = Settings.DATA_FOLDER + Database.DB_FILENAME_ENC;
+  static DB_FILE_ENC = Settings.DATA.FOLDER + Database.DB_FILENAME_ENC;
 
   static init() {
     let File = require("../../utils/file.js");
@@ -35,29 +35,18 @@ class Database {
   }
 
   static readFile() {
-    try {
-      if (File.exists(Database.DB_FILE_DEC)) {
-        // Just in case file had not been deleted the previous time
-        Database.writeFile();
-      }
+    if (File.exists(Database.DB_FILE_DEC)) {
+      // Just in case file had not been deleted the previous time
+      Database.writeFile();
+    }
 
-      if (File.exists(Database.DB_FILE_ENC)) {
-        let encryptedData = File.readFile(Database.DB_FILE_ENC);
-        let bufferedData = Crypto.decrypt(encryptedData, Crypto.PW, Crypto.IV);
-        let original = Buffer.from(bufferedData, "base64").toString();
-        File.writeFile(Database.DB_FILE_DEC, original);
-      }
-    } catch (e) {}
-  }
-
-  static writeFile() {
-    try {
-      let original = File.readFile(Database.DB_FILE_DEC);
-      let bufferedData = Buffer.from(original).toString("base64");
-      let encryptedData = Crypto.encrypt(bufferedData, Crypto.PW, Crypto.IV);
-      File.writeFile(Database.DB_FILE_ENC, encryptedData);
-      File.removeFile(Database.DB_FILE_DEC);
-    } catch (e) {}
+    if (File.exists(Database.DB_FILE_ENC)) {
+      let encryptedData = File.readFile(Database.DB_FILE_ENC);
+      encryptedData = Crypto.extractIV(encryptedData);
+      let bufferedData = Crypto.decrypt(encryptedData, Crypto.PW, Crypto.IV);
+      let original = Buffer.from(bufferedData, "base64").toString();
+      File.writeFile(Database.DB_FILE_DEC, original);
+    }
   }
 
   static initInstance() {
@@ -165,6 +154,17 @@ class Database {
       console.log("Database connection closed.");
     });
     Database.db = null;
+  }
+
+  static writeFile() {
+    try {
+      let original = File.readFile(Database.DB_FILE_DEC);
+      let bufferedData = Buffer.from(original).toString("base64");
+      let encryptedData = Crypto.encrypt(bufferedData, Crypto.PW, Crypto.IV);
+      encryptedData = Crypto.appendIV(encryptedData);
+      File.writeFile(Database.DB_FILE_ENC, encryptedData);
+      File.removeFile(Database.DB_FILE_DEC);
+    } catch (e) {}
   }
 }
 

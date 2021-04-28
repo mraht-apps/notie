@@ -3,9 +3,7 @@ const Filesystem = require("fs");
 class File {
   static writeFile(file, data) {
     return Filesystem.writeFileSync(file, data, "binary", function (error) {
-      if (error) {
-        console.log(error);
-      }
+      if (error) throw error;
     });
   }
 
@@ -15,26 +13,31 @@ class File {
 
   static readFile(file) {
     return Filesystem.readFileSync(file, "binary", function (error) {
-      if (error) {
-        console.log(error);
-      }
+      if (error) throw error;
     });
   }
 
   static readFolder(folder) {
-    return Filesystem.readdirSync(folder, function (error) {
-      if (error) {
-        console.log(error);
-      }
+    const path = require("path");
+    return Filesystem.readdirSync(path.resolve(folder), function (error) {
+      if (error) console.log(error);
     });
   }
 
   static removeFile(file) {
     return Filesystem.unlinkSync(file, function (error) {
-      if (error) {
-        console.log(error);
-      }
+      if (error) throw error;
     });
+  }
+
+  static removeFolder(folder) {
+    return Filesystem.rmSync(
+      folder,
+      { recursive: true, force: true },
+      function (error) {
+        if (error) throw error;
+      }
+    );
   }
 }
 

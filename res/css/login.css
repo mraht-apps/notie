@@ -1,0 +1,121 @@
+#loginContainer {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.tab {
+  /* overflow: hidden; */
+  display: flex;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.tabItem {
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  width: 50%;
+}
+
+.firstTabItem {
+  margin-right: 6px;
+}
+
+.tab button {
+  width: 100%;
+  background-color: inherit;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 4px 6px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.tab button:hover {
+  background-color: #ddd;
+}
+
+.tab button.active {
+  background-color: #ddd;
+}
+
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-top: none;
+}
+
+input[type="checkbox"] {
+  margin: 6px 0px 0px 0px;
+}
+
+label {
+  position: relative;
+  top: -3px;
+  left: 4px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.input {
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+.input input {
+  grid-column: 1;
+  width: 100%;
+}
+
+.input .error {
+  border-color: red;
+  box-shadow: 0 0 1px red;
+}
+
+.input button {
+  grid-column: 2;
+  width: 36px;
+  height: 27px;
+  margin-left: 6px;
+  vertical-align: baseline;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  padding: 6px 0px 2px 0px;
+}
+
+.firstLabel {
+  padding: 0px;
+}
+
+img {
+  height: 20px;
+}
+
+#loginMenu {
+  padding: 8px 0px 0px 0px;
+  text-align: center;
+}
+
+#loginMenu button {
+  text-align: left;
+  line-height: 24px;
+  width: 100px;
+  margin: 0px;
+}
+
+#loginMenu button img {
+  vertical-align: middle;
+  margin-bottom: 3px;
+  margin-right: 6px;
+}
+
+#loginMenu button:not(:last-of-type) {
+  margin-right: 6px;
+}

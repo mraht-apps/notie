@@ -4,7 +4,7 @@ class Blockmenu {
   }
 
   static registerEvents() {
-    $(".blockMenu").on("mouseout", function (event) {
+    $(".blockmenu").on("mouseout", function (event) {
       Eventhandler.onMouseout(event);
     });
 
@@ -21,7 +21,7 @@ class Blockmenu {
     if (Blockmenu.isOpen()) {
       Blockmenu.closeAll();
     } else {
-      $(".blockMenu").css({ top: y - 100 + "px", left: x + 10 + "px" });
+      $(".blockmenu").css({ top: y - 100 + "px", left: x + 10 + "px" });
       Blockmenu.open();
       $(".clickable").eq(0).addClass("active");
     }
@@ -64,19 +64,19 @@ class Blockmenu {
   }
 
   static isOpen() {
-    return $(".blockMenu").hasClass("visible");
+    return $(".blockmenu").hasClass("visible");
   }
 
   static closeAll() {
     $(".clickable").removeClass("active");
-    $(".blockMenu").removeClass("visible");
-    $(".blockMenu").toggle(false);
+    $(".blockmenu").removeClass("visible");
+    $(".blockmenu").toggle(false);
   }
 
   static open() {
     Blockmenu.closeAll();
-    $(".blockMenu").addClass("visible");
-    $(".blockMenu").toggle(true);
+    $(".blockmenu").addClass("visible");
+    $(".blockmenu").toggle(true);
   }
 }
 

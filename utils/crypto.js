@@ -48,11 +48,11 @@ class Crypto {
     return iv;
   }
 
-  static packIV(data) {
+  static appendIV(data) {
     return Crypto.IV.toString() + data;
   }
 
-  static unpackIV(data) {
+  static extractIV(data) {
     let ivEnd = Crypto.IV_LENGTH * 2;
     Crypto.IV = Crypto.parseIV(data.slice(0, ivEnd));
     return data.slice(ivEnd, data.length);

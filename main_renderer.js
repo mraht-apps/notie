@@ -5,7 +5,6 @@
 // selectively enable features needed in the rendering
 // process.
 window.$ = window.jQuery = require("jquery");
-
 const IPCRenderer = require("electron").ipcRenderer;
 
 // Utilities
@@ -32,18 +31,18 @@ const Table = require("../model/table.js");
 
 class Renderer {
   static init() {
-    Settings.init();
-
-    Page.firstRun();
-
-    Database.init();
-
-    Pagemenu.init();
-    Blockmenu.init();
-    Searchmenu.init();
-    Document.init();
-
     Renderer.registerEvents();
+    Settings.DATA = IPCRenderer.sendSync("getSettings");
+    let databaseData = IPCRenderer.sendSync("getDatabaseData");
+    console.log(databaseData);
+
+    // Database.init();
+    // Page.firstRun();
+
+    // Pagemenu.init();
+    // Blockmenu.init();
+    // Searchmenu.init();
+    // Document.init();
   }
 
   static registerEvents() {
@@ -51,36 +50,32 @@ class Renderer {
       event.preventDefault();
 
       Database.close();
-      Settings.save();      
+      Settings.save();
     };
 
     $("#btnTest").on("click", function (event) {
-      IPCRenderer.send("onClickDataFolderPicker");
-      console.log(Settings.DATA_FOLDER);
+      IPCRenderer.send("onClickbtnDataFolderPicker");
+      console.log(Settings.DATA.FOLDER);
     });
 
-    // Restart application
     $("#btnRestart").on("click", function (event) {
       Eventhandler.onClickBtnRestart(event);
+    });
+
+    $("#btnExit").on("click", function (event) {
+      console.log("login onclick exit");
+      Eventhandler.onClickBtnExit(event);
     });
   }
 }
 
 class Eventhandler {
-  // static onClickBtnLoad(event) {
-  //   DataJS.load();
-  //   Textline.build($("#content"), "");
-  // }
-
-  // static onClickBtnSave(event) {
-  //   let jsonData = DataJS.save();
-  //   let data = Crypto.IV.toString();
-  //   data += Crypto.encrypt(jsonData, Crypto.PW, Crypto.IV);
-  //   File.writeFile("data.enc", data);
-  // }
+  static onClickBtnExit() {
+    IPCRenderer.send("exit", false);
+  }
 
   static onClickBtnRestart(event) {
-    IPCRenderer.send("restart");
+    IPCRenderer.send("exit", true);
   }
 }
 
