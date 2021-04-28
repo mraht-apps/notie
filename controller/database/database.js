@@ -9,12 +9,17 @@ class Database {
   static DB_FILE_ENC = Settings.DATA.FOLDER + Database.DB_FILENAME_ENC;
 
   static init() {
-    let File = require("../../utils/file.js");
-    let exists = File.exists("./user_data/" + Database.DB_FILENAME_DEC);
+    if (File.exists(Database.DB_FILE_ENC)) {
+      let encryptedData = File.readFile(Database.DB_FILE_ENC);
+      encryptedData = Crypto.extractIV(encryptedData);
+      let bufferedData = Crypto.decrypt(encryptedData, Crypto.PW, Crypto.IV);
+      let original = Buffer.from(bufferedData, "base64").toString();
+      File.writeFile(Database.DB_FILE_DEC, original);
+    }
 
-    try {
-      Database.readFile();
-      Database.initInstance();
+    Database.initInstance();
+
+    try {      
       // exists = Database.reset();
       Database.firstRun(exists);
 
@@ -32,21 +37,6 @@ class Database {
       result = Database.all("SELECT * FROM page_elements;");
       console.log(result);
     } catch (e) {}
-  }
-
-  static readFile() {
-    if (File.exists(Database.DB_FILE_DEC)) {
-      // Just in case file had not been deleted the previous time
-      Database.writeFile();
-    }
-
-    if (File.exists(Database.DB_FILE_ENC)) {
-      let encryptedData = File.readFile(Database.DB_FILE_ENC);
-      encryptedData = Crypto.extractIV(encryptedData);
-      let bufferedData = Crypto.decrypt(encryptedData, Crypto.PW, Crypto.IV);
-      let original = Buffer.from(bufferedData, "base64").toString();
-      File.writeFile(Database.DB_FILE_DEC, original);
-    }
   }
 
   static initInstance() {
