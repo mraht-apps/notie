@@ -1,11 +1,9 @@
-1. Option
+Build & deploy
 ==============================================================================================================
-1) npm install electron-packager -g
-2) electron-packager .\electron-quick-start\ --platform=win32 --arch=x64 --electron-version=12.0.2 --overwrite
-
-2. Option
-==============================================================================================================
-npm run package-win
+1) --dev=false
+2) npm run deploy
+3) Release release on GitHub
+4) --dev=true for development
 
 Use better-sqlite3:
 ==============================================================================================================

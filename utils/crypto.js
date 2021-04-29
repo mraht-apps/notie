@@ -1,7 +1,6 @@
 const CryptoJS = require("crypto-js");
 const { v4: uuid } = require("uuid");
 
-
 class Crypto {
   static IV_LENGTH = 16;
   static IV;
@@ -10,7 +9,9 @@ class Crypto {
     if (!pw || pw.length == 0) {
       throw new Error("Please supply a password!");
     } else if (!iv || iv.length == 0) {
-      throw new Error("IV hasn't been extracted: Possibly invalid encrypted file!");
+      throw new Error(
+        "IV hasn't been extracted: Possibly invalid encrypted file!"
+      );
     }
 
     const key = CryptoJS.enc.Utf8.parse(pw);
@@ -23,22 +24,23 @@ class Crypto {
     }
   }
 
-  static encrypt(clearText, pw, iv) {
+  static encrypt(clearText, pw) {
     if (!pw || pw.length == 0) {
       throw new Error("Please supply a password!");
-    } else if (!iv || iv.length == 0) {
-      iv = Crypto.generateIV();
     }
 
+    Crypto.IV = Crypto.generateIV();
+
     const key = CryptoJS.enc.Utf8.parse(pw);
-    const encrypted = CryptoJS.AES.encrypt(clearText, key, { iv: iv });
+    const encrypted = CryptoJS.AES.encrypt(clearText, key, { iv: Crypto.IV });
     const encryptedText = encrypted.toString();
     return encryptedText;
   }
 
   static generateIV() {
-    Crypto.IV = CryptoJS.lib.WordArray.random(Crypto.IV_LENGTH);
-    console.log("Generated IV: " + Crypto.IV);
+    let iv = CryptoJS.lib.WordArray.random(Crypto.IV_LENGTH);
+    console.log("Generated IV: " + iv);
+    return iv;
   }
 
   static appendIV(data) {

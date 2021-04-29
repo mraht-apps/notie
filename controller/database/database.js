@@ -10,7 +10,11 @@ class Database {
       if (exists) {
         let encryptedData = File.readFile(Settings.ENC_DATABASE);
         encryptedData = Crypto.extractIV(encryptedData);
-        let bufferedData = Crypto.decrypt(encryptedData, Settings.CACHE.PASSWORD, Crypto.IV);
+        let bufferedData = Crypto.decrypt(
+          encryptedData,
+          Settings.CACHE.PASSWORD,
+          Crypto.IV
+        );
         let original = Buffer.from(bufferedData, "base64").toString();
         File.writeFile(Settings.DEC_DATABASE, original);
       }
@@ -146,9 +150,12 @@ class Database {
     try {
       let original = File.readFile(Settings.DEC_DATABASE);
       let bufferedData = Buffer.from(original).toString("base64");
-      let encryptedData = Crypto.encrypt(bufferedData, Settings.CACHE.PASSWORD, Crypto.IV);
+      let encryptedData = Crypto.encrypt(bufferedData, Settings.CACHE.PASSWORD);
       encryptedData = Crypto.appendIV(encryptedData);
       File.writeFile(Settings.ENC_DATABASE, encryptedData);
+    } catch (e) {}
+
+    try {
       File.removeFile(Settings.DEC_DATABASE);
     } catch (e) {}
   }

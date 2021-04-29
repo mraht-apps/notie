@@ -1,4 +1,5 @@
 const { app, dialog, BrowserWindow, ipcMain } = require("electron");
+const { autoUpdater } = require("electron-updater");
 const path = require("path");
 
 const File = require("./utils/file.js");
@@ -6,85 +7,6 @@ const Settings = require("./controller/settings.js");
 
 let mainWindow = null;
 let loginWindow = null;
-
-class Main {
-  static init() {
-    mainWindow = Main.createWindow();
-
-    app.on("activate", function () {
-      // On macOS it's common to re-create a window in the app when the
-      // dock icon is clicked and there are no other windows open.
-      if (BrowserWindow.getAllWindows().length === 0) createWindow();
-    });
-
-    mainWindow.on("close", function (event) {
-      console.log("Closing main window...");
-    });
-  }
-
-  static createWindow() {
-    // Create the browser window.
-    const mainWindow = new BrowserWindow({
-      webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false,
-        preload: path.join(__dirname, "preload.js"),
-      },
-    });
-
-    mainWindow.loadFile("view/main.html");
-    mainWindow.once("ready-to-show", function () {
-      mainWindow.show();
-    });
-
-    mainWindow.webContents.openDevTools();
-
-    return mainWindow;
-  }
-}
-
-class Login {
-  static init() {
-    loginWindow = Login.createWindow();
-
-    app.on("activate", function () {
-      // On macOS it's common to re-create a window in the app when the
-      // dock icon is clicked and there are no other windows open.
-      if (BrowserWindow.getAllWindows().length === 0) Login.createWindow();
-    });
-
-    loginWindow.on("close", function (event) {
-      console.log("Closing login window...");
-    });
-  }
-
-  static createWindow() {
-    loginWindow = new BrowserWindow({
-      webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false,
-      },
-      width: 550,
-      height: 286,
-      parent: mainWindow,
-      // modal: true,
-      show: false,
-      minimizable: false,
-      resizable: false,
-      maximizable: false,
-      autoHideMenuBar: true,
-    });
-    loginWindow.loadFile("view/login.html");
-
-    loginWindow.once("ready-to-show", function () {
-      loginWindow.show();
-    });
-
-    loginWindow.webContents.openDevTools();
-
-    return loginWindow;
-  }
-}
 
 class App {
   static databaseData;
@@ -163,6 +85,10 @@ class App {
       }
     });
 
+    ipcMain.on("setAppVersion", (event) => {
+      mainWindow.setTitle("notie " + app.getVersion());
+    });
+
     // Quit when all windows are closed, except on macOS. There, it's common
     // for applications and their menu bar to stay active until the user quits
     // explicitly with Cmd + Q.
@@ -174,6 +100,125 @@ class App {
       if (restart) app.relaunch();
       app.exit();
     });
+  }
+
+  static isDev() {
+    let start = process.env["npm_package_scripts_start"];
+    let args = start.split("--");
+    return args[1].split("=")[1] == "true";
+  }
+}
+
+class Main {
+  static init() {
+    mainWindow = Main.createWindow();
+
+    app.on("activate", function () {
+      // On macOS it's common to re-create a window in the app when the
+      // dock icon is clicked and there are no other windows open.
+      if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    });
+
+    mainWindow.on("close", function (event) {
+      console.log("Closing main window...");
+    });
+  }
+
+  static createWindow() {
+    // Create the browser window.
+    const mainWindow = new BrowserWindow({
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+        preload: path.join(__dirname, "preload.js"),
+      },
+    });
+
+    mainWindow.loadFile("view/main.html");
+    mainWindow.once("ready-to-show", function () {
+      mainWindow.show();
+    });
+
+    if (App.isDev()) {
+      mainWindow.webContents.openDevTools();
+    } else {
+      // Let autoUpdater check for updates, it will start downloading it automatically
+      autoUpdater.checkForUpdates();
+
+      // Catch the update-available event
+      autoUpdater.addListener("update-available", (info) => {
+        mainWindow.webContents.send("update-available");
+      });
+
+      // Catch the update-not-available event
+      autoUpdater.addListener("update-not-available", (info) => {
+        mainWindow.webContents.send("update-not-available");
+      });
+
+      // Catch the download-progress events
+      autoUpdater.addListener("download-progress", (info) => {
+        mainWindow.webContents.send("prog-made");
+      });
+
+      // Catch the update-downloaded event
+      autoUpdater.addListener("update-downloaded", (info) => {
+        mainWindow.webContents.send("update-downloaded");
+      });
+
+      // Catch the error events
+      autoUpdater.addListener("error", (error) => {
+        mainWindow.webContents.send("error", error.toString());
+      });
+
+      ipcMain.on("quitAndInstall", (event, arg) => {
+        autoUpdater.quitAndInstall();
+      });
+    }
+
+    return mainWindow;
+  }
+}
+
+class Login {
+  static init() {
+    loginWindow = Login.createWindow();
+
+    app.on("activate", function () {
+      // On macOS it's common to re-create a window in the app when the
+      // dock icon is clicked and there are no other windows open.
+      if (BrowserWindow.getAllWindows().length === 0) Login.createWindow();
+    });
+
+    loginWindow.on("close", function (event) {
+      console.log("Closing login window...");
+    });
+  }
+
+  static createWindow() {
+    loginWindow = new BrowserWindow({
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+      },
+      width: 550,
+      height: 286,
+      parent: mainWindow,
+      // modal: true,
+      show: false,
+      minimizable: false,
+      resizable: false,
+      maximizable: false,
+      autoHideMenuBar: true,
+    });
+    loginWindow.loadFile("view/login.html");
+
+    loginWindow.once("ready-to-show", function () {
+      loginWindow.show();
+    });
+
+    loginWindow.webContents.openDevTools();
+
+    return loginWindow;
   }
 }
 

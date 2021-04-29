@@ -1,32 +1,36 @@
 {
   "name": "notie",
-  "version": "08.04.2021-001",
+  "version": "0.0.001",
   "description": "Table-based note-taking app",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
-    "package-mac": "electron-packager . notie --overwrite --platform=darwin --arch=x64 --icon=res/img/icon.ico --prune=true --out=release-builds",
-    "package-win": "electron-packager . notie --overwrite --asar --platform=win32 --arch=x64 --icon=res/img/icon.ico --prune=true --out=release-builds --version-string.ProductName=\"Notie\"",
-    "package-linux": "electron-packager . notie --overwrite --asar --platform=linux --arch=x64 --icon=res/img/icon.ico --prune=true --out=release-builds"
+    "start": "electron .  --dev=false",
+    "build": "electron-builder build --win --publish never",
+    "deploy": "electron-builder build --win --publish always"
   },
-  "repository": "https://github.com/mariusraht1/notie.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mariusraht1/notie.git"
+  },
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "database",
+    "electron-updater",
+    "encryption",
+    "sqlite"
   ],
   "author": "Marius Raht",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mariusraht1/notie/issues"
+  },
   "devDependencies": {
     "electron": "^12.0.2",
-    "electron-builder": "^22.9.1"
+    "electron-builder": "^22.9.1",
+    "electron-rebuild": "^2.3.5"
   },
   "dependencies": {
     "better-sqlite3": "^7.1.5",
     "crypto-js": "^4.0.0",
-    "electron-rebuild": "^2.3.5",
     "electron-updater": "^4.3.8",
     "jquery": "^3.6.0",
     "uuid": "^8.3.2"

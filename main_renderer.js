@@ -5,7 +5,7 @@
 // selectively enable features needed in the rendering
 // process.
 window.$ = window.jQuery = require("jquery");
-const IPCRenderer = require("electron").ipcRenderer;
+const ipcRenderer = require("electron").ipcRenderer;
 const Filepath = require("path");
 
 // Utilities
@@ -32,8 +32,11 @@ const Table = require("../model/table.js");
 
 class Renderer {
   static init() {
+    ipcRenderer.send("setAppVersion");
+
     Renderer.registerEvents();
-    let settings = IPCRenderer.sendSync("getSettings");
+
+    let settings = ipcRenderer.sendSync("getSettings");
     Settings.CACHE = settings.CACHE;
     Settings.DATA = settings.DATA;
 
@@ -66,12 +69,34 @@ class Renderer {
   }
 
   static registerEvents() {
+    ipcRenderer.on("update-downloaded", function (event, text) {
+      console.log("update-downloaded");
+      var container = document.getElementById("btnUpdateApp");
+      container.removeAttribute("disabled");
+    });
+    ipcRenderer.on("update-available", function (event, text) {
+      console.log("update-available");
+    });
+    ipcRenderer.on("error", function (event, text) {
+      console.log("error", text);
+    });
+    ipcRenderer.on("prog-made", function (event, text) {
+      console.log("prog-made");
+    });
+    ipcRenderer.on("update-not-available", function (event, text) {
+      console.log("update-not-available");
+    });
+
     window.onbeforeunload = function (event) {
       event.preventDefault();
 
       Database.close();
       Settings.save();
     };
+
+    $("#btnUpdateApp").on("click", function (event) {
+      ipcRenderer.send("quitAndInstall");
+    });
 
     $("#btnTest").on("click", function (event) {});
 
@@ -88,11 +113,11 @@ class Renderer {
 
 class Eventhandler {
   static onClickBtnExit() {
-    IPCRenderer.send("exit", false);
+    ipcRenderer.send("exit", false);
   }
 
   static onClickBtnRestart(event) {
-    IPCRenderer.send("exit", true);
+    ipcRenderer.send("exit", true);
   }
 }
 

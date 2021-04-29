@@ -4,3 +4,5 @@ settings.json
 cache/*
 *.edb
 *.db
+electron-builder.yml
+dist
