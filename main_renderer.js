@@ -82,6 +82,7 @@ class Renderer {
     });
     ipcRenderer.on("prog-made", function (event, text) {
       console.log("prog-made");
+      console.log(text);
     });
     ipcRenderer.on("update-not-available", function (event, text) {
       console.log("update-not-available");
