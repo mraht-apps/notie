@@ -2,3 +2,5 @@ node_modules
 release-builds/
 settings.json
 cache/*
+*.edb
+*.db
