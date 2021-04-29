@@ -8,10 +8,26 @@ class Renderer {
   static init() {
     Renderer.registerEvents();
 
-    Settings.DATA = IPCRenderer.sendSync("getSettings");
+    let settings = IPCRenderer.sendSync("getSettings");
+    Settings.CACHE = settings.CACHE;
+    Settings.DATA = settings.DATA;
 
-    $("#database").val(Settings.DATA.DEFAULT_FOLDER);
-    $("#createDatabase").trigger("click");
+    if(Settings.CACHE.REMEMBER_DB) {
+      $("#rememberDatabase").prop("checked", true);
+    }
+    if(Settings.CACHE.REMEMBER_PW) {
+      $("#rememberPassword").prop("checked", true);
+    }
+
+    if(Settings.DATA.PASSWORD) {
+      $("#password").val(Settings.DATA.PASSWORD);
+    }
+
+    if (Settings.DATA.DATABASE && Settings.DATA.DATABASE.length > 0) {
+      $("#openDatabase").trigger("click");
+    } else {
+      $("#createDatabase").trigger("click");
+    }
   }
 
   static registerEvents() {
@@ -23,8 +39,14 @@ class Renderer {
       $("#btnDatabasePicker").attr("title", "Choose a database folder");
 
       $("#database").attr("title", "Choose a database folder");
-      $("#database").val(Settings.DATA.DEFAULT_FOLDER);
-      $("#password").trigger("focus");
+      $("#database").val(Settings.CACHE.DEFAULT_FOLDER);
+      $("#database").trigger("change");
+
+      if ($("#database").val() == "" || $("#database").hasClass("error")) {
+        $("#database").trigger("focus");
+      } else {
+        $("#password").trigger("focus");
+      }
     });
 
     $("#openDatabase").on("click", function (event) {
@@ -35,8 +57,14 @@ class Renderer {
       $("#btnDatabasePicker").attr("title", "Choose a database file");
 
       $("#database").attr("title", "Choose a database file");
-      $("#database").val("");
-      $("#database").trigger("focus");
+      $("#database").val(Settings.CACHE.DEFAULT_FILE);
+      $("#database").trigger("change");
+
+      if ($("#database").val() == "" || $("#database").hasClass("error")) {
+        $("#database").trigger("focus");
+      } else {
+        $("#password").trigger("focus");
+      }
     });
 
     $("#database").on("change", function (event) {
@@ -134,8 +162,10 @@ class Eventhandler {
     }
 
     IPCRenderer.send("openDatabase", {
-      path: $("#database").val(),
-      pw: $("#password").val(),
+      REMEMBER_DB: $("#rememberDatabase").is(":checked"),
+      DATABASE: $("#database").val(),
+      REMEMBER_PW: $("#rememberPassword").is(":checked"),
+      PASSWORD: $("#password").val(),
     });
   }
 }

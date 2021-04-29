@@ -1,25 +1,22 @@
 const SQLite3 = require("better-sqlite3");
+const Filepath = require("path");
 
 class Database {
   db;
 
-  static DB_FILENAME_DEC = "notie.db";
-  static DB_FILENAME_ENC = "notie.edb";
-  static DB_FILE_DEC = Settings.CACHE_FOLDER + Database.DB_FILENAME_DEC;
-  static DB_FILE_ENC = Settings.DATA.FOLDER + Database.DB_FILENAME_ENC;
-
   static init() {
-    if (File.exists(Database.DB_FILE_ENC)) {
-      let encryptedData = File.readFile(Database.DB_FILE_ENC);
-      encryptedData = Crypto.extractIV(encryptedData);
-      let bufferedData = Crypto.decrypt(encryptedData, Crypto.PW, Crypto.IV);
-      let original = Buffer.from(bufferedData, "base64").toString();
-      File.writeFile(Database.DB_FILE_DEC, original);
-    }
+    try {
+      let exists = File.exists(Settings.ENC_DATABASE);
+      if (exists) {
+        let encryptedData = File.readFile(Settings.ENC_DATABASE);
+        encryptedData = Crypto.extractIV(encryptedData);
+        let bufferedData = Crypto.decrypt(encryptedData, Settings.CACHE.PASSWORD, Crypto.IV);
+        let original = Buffer.from(bufferedData, "base64").toString();
+        File.writeFile(Settings.DEC_DATABASE, original);
+      }
 
-    Database.initInstance();
-
-    try {      
+      // Also creates a new database file if not existent
+      Database.openConnection();
       // exists = Database.reset();
       Database.firstRun(exists);
 
@@ -39,12 +36,11 @@ class Database {
     } catch (e) {}
   }
 
-  static initInstance() {
-    Database.db = new SQLite3(Database.DB_FILE_DEC, {
+  static openConnection() {
+    Database.db = new SQLite3(Settings.DEC_DATABASE, {
       verbose: console.log,
     });
     Database.db.pragma("journal_mode = WAL");
-    Database.db.pragma("key = 'test'");
   }
 
   static reset() {
@@ -134,7 +130,7 @@ class Database {
 
   static close() {
     Database.closeConnection();
-    Database.writeFile();
+    Database.saveDatabase();
   }
 
   static closeConnection() {
@@ -146,14 +142,14 @@ class Database {
     Database.db = null;
   }
 
-  static writeFile() {
+  static saveDatabase() {
     try {
-      let original = File.readFile(Database.DB_FILE_DEC);
+      let original = File.readFile(Settings.DEC_DATABASE);
       let bufferedData = Buffer.from(original).toString("base64");
-      let encryptedData = Crypto.encrypt(bufferedData, Crypto.PW, Crypto.IV);
+      let encryptedData = Crypto.encrypt(bufferedData, Settings.CACHE.PASSWORD, Crypto.IV);
       encryptedData = Crypto.appendIV(encryptedData);
-      File.writeFile(Database.DB_FILE_ENC, encryptedData);
-      File.removeFile(Database.DB_FILE_DEC);
+      File.writeFile(Settings.ENC_DATABASE, encryptedData);
+      File.removeFile(Settings.DEC_DATABASE);
     } catch (e) {}
   }
 }

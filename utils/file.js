@@ -11,13 +11,22 @@ class File {
     return Filesystem.existsSync(file);
   }
 
+  static isDir(path) {
+    try {
+      var stat = Filesystem.lstatSync(path);
+      return stat.isDirectory();
+    } catch (e) {
+      return false;
+    }
+  }
+
   static readFile(file) {
     return Filesystem.readFileSync(file, "binary", function (error) {
       if (error) throw error;
     });
   }
 
-  static readFolder(folder) {
+  static readDir(folder) {
     const path = require("path");
     return Filesystem.readdirSync(path.resolve(folder), function (error) {
       if (error) console.log(error);
@@ -30,7 +39,7 @@ class File {
     });
   }
 
-  static removeFolder(folder) {
+  static removeDir(folder) {
     return Filesystem.rmSync(
       folder,
       { recursive: true, force: true },

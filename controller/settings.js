@@ -4,95 +4,87 @@ const File = require("../utils/file.js");
 const Crypto = require("../utils/crypto.js");
 
 class Settings {
+  static DEFAULT_DEC_DB_FILENAME = "notie.db";
+  static DEFAULT_ENC_DB_FILENAME = "notie.edb";
+
   static CACHE_FOLDER = "./cache/";
   static FILE = "settings.json";
+
+  static CACHE = {};
   static DATA = {};
 
   static init() {
     try {
       let configData = File.readFile(Settings.FILE);
       Settings.DATA = JSON.parse(configData);
+      Settings.CACHE = {
+        DATABASE: Settings.DATA.DATABASE,
+        PASSWORD: Settings.DATA.PASSWORD,
+      };
     } catch (e) {
       File.writeFile(Settings.FILE, JSON.stringify(Settings.DATA));
     }
 
-    Settings.determineUserDataFolder();
+    Settings.setDefault();
   }
 
   static registerEvents() {
     $("#btnSavePassword").on("click", function (event) {
       Eventhandler.onClickBtnSavePassword(event);
     });
-
-    $("#btnLogin").on("click", function (event) {
-      Eventhandler.onClickBtnLogin(event);
-    });
-
-    $("#btnDatabasePicker").on("click", function (event) {
-      let result = ipcRenderer.sendSync("onClickbtnDataFolderPicker");
-      if (result && result.length > 0 && result[0].trim().length > 0) {
-        Settings.DATA.FOLDER = result[0];
-      } else {
-        Settings.DATA.FOLDER = Settings.DATA.DEFAULT_FOLDER;
-      }
-      console.log(`Set data folder to: ${Settings.DATA.FOLDER}`);
-      event.preventDefault();
-    });
   }
 
-  static determineUserDataFolder() {
+  static setDefault() {
     let result = app.getPath("userData");
-    Settings.DATA.FOLDER = result;
-    Settings.DATA.DEFAULT_FOLDER = result;
-    console.log("Set settings folder to: " + result);
+    Settings.CACHE.DEFAULT_FOLDER = result;
+    Settings.CACHE.DEFAULT_FILE = Settings.DATA.DATABASE;
+
+    Settings.CACHE.REMEMBER_DB = false;
+    if (Settings.DATA.DATABASE && Settings.DATA.DATABASE.length > 0) {
+      Settings.CACHE.REMEMBER_DB = true;
+    }
+
+    Settings.CACHE.REMEMBER_PW = false;
+    if (Settings.DATA.PASSWORD && Settings.DATA.PASSWORD.length > 0) {
+      Settings.CACHE.REMEMBER_PW = true;
+    }
   }
 
   static resizeWindow() {
-    ipcRenderer.send("resizeWindow", Settings.DATA.window);
+    ipcRenderer.send("resizeWindow", Settings.DATA.WINDOW);
   }
 
   static save() {
-    Settings.clearCache();
-    Settings.saveSettings();
-  }
-
-  static clearCache() {
-    try {
-      const path = require("path");
-      let files = File.readFolder(Settings.CACHE_FOLDER);
-      for (const file in files) {
-        File.removeFile(
-          path.join(Settings.CACHE_FOLDER, files[file]),
-          function (error) {
-            if (error) throw error;
-          }
-        );
-      }
-    } catch (e) {}
-  }
-
-  static saveSettings() {
-    Settings.DATA.window = ipcRenderer.sendSync("determineWindowData");
+    Settings.DATA.WINDOW = ipcRenderer.sendSync("determineWindowData");
 
     // Possible bug in electron if user maximized window: y is -8 which leads
     // - in constrast to the negative x of -8 - to a mispositioned window
-    if (Settings.DATA.window.y < 0) {
-      Settings.DATA.window.y = 0;
+    if (Settings.DATA.WINDOW.Y < 0) {
+      Settings.DATA.WINDOW.Y = 0;
     }
-    console.log("Save settings data: " + Settings.DATA);
-    File.writeFile(Settings.FILE, JSON.stringify(Settings.DATA));
-  }
 
-  static set(key, val) {
-    Config.DATA[key] = val;
+    if (Settings.CACHE.REMEMBER_DB) {
+      Settings.DATA.DATABASE = Settings.ENC_DATABASE;
+    } else {
+      delete Settings.DATA.DATABASE;
+    }
+
+    if (Settings.CACHE.REMEMBER_PW) {
+      Settings.DATA.PASSWORD = Settings.CACHE.PASSWORD;
+    } else {
+      delete Settings.DATA.PASSWORD;
+    }
+
+    console.log(Settings.DATA);
+    File.writeFile(Settings.FILE, JSON.stringify(Settings.DATA));
   }
 }
 
 class Eventhandler {
-  static onClickBtnLogin(event) {
+  static onClickBtnSave(event) {
     const password = $("#password").val();
-    Crypto.PW = password;
-    console.log("User set password to " + Crypto.PW + "\n");
+    Settings.CACHE.PASSWORD = password;
+    console.log("User set password to " + Settings.CACHE.PASSWORD + "\n");
   }
 }
 

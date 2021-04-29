@@ -1,6 +1,7 @@
 const { app, dialog, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 
+const File = require("./utils/file.js");
 const Settings = require("./controller/settings.js");
 
 let mainWindow = null;
@@ -79,7 +80,7 @@ class Login {
       loginWindow.show();
     });
 
-    // loginWindow.webContents.openDevTools();
+    loginWindow.webContents.openDevTools();
 
     return loginWindow;
   }
@@ -94,8 +95,12 @@ class App {
     app.on("ready", function () {
       Settings.init();
 
-      // TODO Check if valid database supplied
-      if (Settings.DATA.PW && Settings.DATA.PW.length > 0) {
+      if (
+        Settings.DATA.DATABASE &&
+        File.exists(Settings.DATA.DATABASE) &&
+        Settings.DATA.PASSWORD &&
+        Settings.DATA.PASSWORD.length > 0
+      ) {
         Main.init();
       } else {
         Login.init();
@@ -110,15 +115,15 @@ class App {
       let position = mainWindow.getPosition();
       let size = mainWindow.getSize();
       event.returnValue = {
-        width: size[0],
-        height: size[1],
-        x: position[0],
-        y: position[1],
+        WIDTH: size[0],
+        HEIGHT: size[1],
+        X: position[0],
+        Y: position[1],
       };
     });
 
     ipcMain.on("getSettings", function (event) {
-      event.returnValue = Settings.DATA;
+      event.returnValue = { CACHE: Settings.CACHE, DATA: Settings.DATA };
     });
 
     ipcMain.on("databaseFilePicker", function (event) {
@@ -140,21 +145,21 @@ class App {
     });
 
     ipcMain.on("openDatabase", function (event, databaseData) {
-      App.databaseData = databaseData;
+      Settings.CACHE.REMEMBER_DB = databaseData.REMEMBER_DB;
+      Settings.CACHE.DATABASE = databaseData.DATABASE;
+      Settings.CACHE.REMEMBER_PW = databaseData.REMEMBER_PW;
+      Settings.CACHE.PASSWORD = databaseData.PASSWORD;
+
       Main.init();
       loginWindow.close();
-    });
-
-    ipcMain.on("getDatabaseData", function (event) {
-      event.returnValue = App.databaseData;
     });
 
     ipcMain.on("resizeWindow", function (event, windowData) {
       if (!windowData) {
         mainWindow.maximize();
       } else {
-        mainWindow.setSize(windowData.width, windowData.height);
-        mainWindow.setPosition(windowData.x, windowData.y);
+        mainWindow.setSize(windowData.WIDTH, windowData.HEIGHT);
+        mainWindow.setPosition(windowData.X, windowData.Y);
       }
     });
 

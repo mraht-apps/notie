@@ -1,19 +1,17 @@
 const CryptoJS = require("crypto-js");
 const { v4: uuid } = require("uuid");
-const IV_LENGTH = 16;
+
 
 class Crypto {
-  static PW;
-  static IV = Crypto.generateIV();
+  static IV_LENGTH = 16;
+  static IV;
 
   static decrypt(encryptedText, pw, iv) {
     if (!pw || pw.length == 0) {
       throw new Error("Please supply a password!");
     } else if (!iv || iv.length == 0) {
-      iv = Crypto.generateIV();
+      throw new Error("IV hasn't been extracted: Possibly invalid encrypted file!");
     }
-
-    console.log("Original: " + encryptedText);
 
     const key = CryptoJS.enc.Utf8.parse(pw);
     const decrypted = CryptoJS.AES.decrypt(encryptedText, key, { iv: iv });
@@ -21,7 +19,6 @@ class Crypto {
       throw new Error("Decryption failed.");
     } else {
       const originalText = decrypted.toString(CryptoJS.enc.Utf8);
-      console.log("Decrypted: " + originalText);
       return originalText;
     }
   }
@@ -30,22 +27,18 @@ class Crypto {
     if (!pw || pw.length == 0) {
       throw new Error("Please supply a password!");
     } else if (!iv || iv.length == 0) {
-      throw new Error("Please supply an initialization vector!");
+      iv = Crypto.generateIV();
     }
-
-    console.log("Original: " + clearText);
 
     const key = CryptoJS.enc.Utf8.parse(pw);
     const encrypted = CryptoJS.AES.encrypt(clearText, key, { iv: iv });
     const encryptedText = encrypted.toString();
-    console.log("Encrypted: " + encryptedText);
     return encryptedText;
   }
 
   static generateIV() {
-    let iv = CryptoJS.lib.WordArray.random(IV_LENGTH);
-    console.log("Generated iv: " + iv);
-    return iv;
+    Crypto.IV = CryptoJS.lib.WordArray.random(Crypto.IV_LENGTH);
+    console.log("Generated IV: " + Crypto.IV);
   }
 
   static appendIV(data) {
@@ -55,6 +48,7 @@ class Crypto {
   static extractIV(data) {
     let ivEnd = Crypto.IV_LENGTH * 2;
     Crypto.IV = Crypto.parseIV(data.slice(0, ivEnd));
+    console.log("Extracted IV: " + Crypto.IV);
     return data.slice(ivEnd, data.length);
   }
 

@@ -6,6 +6,7 @@
 // process.
 window.$ = window.jQuery = require("jquery");
 const IPCRenderer = require("electron").ipcRenderer;
+const Filepath = require("path");
 
 // Utilities
 const General = require("../utils/general.js");
@@ -32,11 +33,30 @@ const Table = require("../model/table.js");
 class Renderer {
   static init() {
     Renderer.registerEvents();
-    Settings.DATA = IPCRenderer.sendSync("getSettings");
-    let databaseData = IPCRenderer.sendSync("getDatabaseData");
-    console.log(databaseData);
+    let settings = IPCRenderer.sendSync("getSettings");
+    Settings.CACHE = settings.CACHE;
+    Settings.DATA = settings.DATA;
 
-    // Database.init();
+    if (File.isDir(Settings.CACHE.DATABASE)) {
+      Settings.ENC_DATABASE = Filepath.join(
+        Settings.CACHE.DATABASE,
+        Settings.DEFAULT_ENC_DB_FILENAME
+      );
+      Settings.DEC_DATABASE = Filepath.join(
+        Settings.CACHE_FOLDER,
+        Settings.DEFAULT_DEC_DB_FILENAME
+      );
+    } else {
+      Settings.ENC_DATABASE = Settings.CACHE.DATABASE;
+      Settings.DEC_DATABASE =
+        Filepath.join(
+          Settings.CACHE_FOLDER,
+          Filepath.parse(Settings.CACHE.DATABASE).name
+        ) + ".db";
+    }
+
+    Database.init();
+
     // Page.firstRun();
 
     // Pagemenu.init();
@@ -53,10 +73,7 @@ class Renderer {
       Settings.save();
     };
 
-    $("#btnTest").on("click", function (event) {
-      IPCRenderer.send("onClickbtnDataFolderPicker");
-      console.log(Settings.DATA.FOLDER);
-    });
+    $("#btnTest").on("click", function (event) {});
 
     $("#btnRestart").on("click", function (event) {
       Eventhandler.onClickBtnRestart(event);
