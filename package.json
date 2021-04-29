@@ -1,6 +1,6 @@
 {
   "name": "notie",
-  "version": "0.0.001",
+  "version": "0.0.1",
   "description": "Table-based note-taking app",
   "main": "main.js",
   "scripts": {

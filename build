@@ -5,6 +5,17 @@ Build & deploy
 3) Release release on GitHub
 4) --dev=true for development
 
+electron-builder.yml:
+==============================================================================================================
+appId: "notie"
+win: 
+  icon: "./res/img/icon.ico"
+publish:
+  provider: github
+  owner: mariusraht1
+  repo: notie
+  token: <personal access token>
+
 Use better-sqlite3:
 ==============================================================================================================
 1) Delete node_modules folder

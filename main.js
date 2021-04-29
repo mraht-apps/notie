@@ -5,10 +5,9 @@ const path = require("path");
 const File = require("./utils/file.js");
 const Settings = require("./controller/settings.js");
 
-let mainWindow = null;
-let loginWindow = null;
-
 class App {
+  static loginWindow;
+  static mainWindow;
   static databaseData;
 
   static init() {
@@ -34,8 +33,8 @@ class App {
     });
 
     ipcMain.on("determineWindowData", function (event) {
-      let position = mainWindow.getPosition();
-      let size = mainWindow.getSize();
+      let position = App.mainWindow.getPosition();
+      let size = App.mainWindow.getSize();
       event.returnValue = {
         WIDTH: size[0],
         HEIGHT: size[1],
@@ -73,20 +72,20 @@ class App {
       Settings.CACHE.PASSWORD = databaseData.PASSWORD;
 
       Main.init();
-      loginWindow.close();
+      App.loginWindow.close();
     });
 
     ipcMain.on("resizeWindow", function (event, windowData) {
       if (!windowData) {
-        mainWindow.maximize();
+        App.mainWindow.maximize();
       } else {
-        mainWindow.setSize(windowData.WIDTH, windowData.HEIGHT);
-        mainWindow.setPosition(windowData.X, windowData.Y);
+        App.mainWindow.setSize(windowData.WIDTH, windowData.HEIGHT);
+        App.mainWindow.setPosition(windowData.X, windowData.Y);
       }
     });
 
     ipcMain.on("setAppVersion", (event) => {
-      mainWindow.setTitle("notie " + app.getVersion());
+      App.mainWindow.setTitle("notie " + app.getVersion());
     });
 
     // Quit when all windows are closed, except on macOS. There, it's common
@@ -104,6 +103,7 @@ class App {
 
   static isDev() {
     let start = process.env["npm_package_scripts_start"];
+    if(!start) return false;
     let args = start.split("--");
     return args[1].split("=")[1] == "true";
   }
@@ -111,7 +111,7 @@ class App {
 
 class Main {
   static init() {
-    mainWindow = Main.createWindow();
+    App.mainWindow = Main.createWindow();
 
     app.on("activate", function () {
       // On macOS it's common to re-create a window in the app when the
@@ -119,7 +119,7 @@ class Main {
       if (BrowserWindow.getAllWindows().length === 0) createWindow();
     });
 
-    mainWindow.on("close", function (event) {
+    App.mainWindow.on("close", function (event) {
       console.log("Closing main window...");
     });
   }
@@ -181,7 +181,7 @@ class Main {
 
 class Login {
   static init() {
-    loginWindow = Login.createWindow();
+    App.loginWindow = Login.createWindow();
 
     app.on("activate", function () {
       // On macOS it's common to re-create a window in the app when the
@@ -189,21 +189,19 @@ class Login {
       if (BrowserWindow.getAllWindows().length === 0) Login.createWindow();
     });
 
-    loginWindow.on("close", function (event) {
+    App.loginWindow.on("close", function (event) {
       console.log("Closing login window...");
     });
   }
 
   static createWindow() {
-    loginWindow = new BrowserWindow({
+    const loginWindow = new BrowserWindow({
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
       },
       width: 550,
       height: 286,
-      parent: mainWindow,
-      // modal: true,
       show: false,
       minimizable: false,
       resizable: false,
