@@ -36,6 +36,8 @@ class Renderer {
 
     Renderer.registerEvents();
 
+    // FIX Encrypted file isn't being created
+    // FIX Encrypted file is being created in wrong folder
     let settings = ipcRenderer.sendSync("getSettings");
     Settings.CACHE = settings.CACHE;
     Settings.DATA = settings.DATA;

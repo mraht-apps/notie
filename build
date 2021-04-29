@@ -16,6 +16,12 @@ publish:
   repo: notie
   token: <personal access token>
 
+Auto updater:
+==============================================================================================================
+node_modules > builder-util-runtime > out > httpExecutor.js:
+Line 240 and 257: Change number to 524288000
+Line 241 and 258: Change number to 500
+
 Use better-sqlite3:
 ==============================================================================================================
 1) Delete node_modules folder
