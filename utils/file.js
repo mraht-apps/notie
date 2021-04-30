@@ -7,8 +7,12 @@ class File {
     });
   }
 
-  static exists(file) {
-    return Filesystem.existsSync(file);
+  static createDir(dir) {
+    Filesystem.mkdirSync(dir);
+  }
+
+  static exists(path) {
+    return Filesystem.existsSync(path);
   }
 
   static isDir(path) {
@@ -26,9 +30,9 @@ class File {
     });
   }
 
-  static readDir(folder) {
+  static readDir(dir) {
     const path = require("path");
-    return Filesystem.readdirSync(path.resolve(folder), function (error) {
+    return Filesystem.readdirSync(path.resolve(dir), function (error) {
       if (error) console.log(error);
     });
   }
@@ -39,9 +43,9 @@ class File {
     });
   }
 
-  static removeDir(folder) {
+  static removeDir(dir) {
     return Filesystem.rmSync(
-      folder,
+      dir,
       { recursive: true, force: true },
       function (error) {
         if (error) throw error;

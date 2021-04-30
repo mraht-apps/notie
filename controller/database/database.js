@@ -16,6 +16,13 @@ class Database {
           Crypto.IV
         );
         let original = Buffer.from(bufferedData, "base64").toString();
+        console.log(Filepath.parse(Settings.DEC_DATABASE));
+
+        let dir = Filepath.parse(Settings.DEC_DATABASE).dir;
+        if (!File.exists(dir)) {
+          File.createDir(dir);
+        }
+
         File.writeFile(Settings.DEC_DATABASE, original);
       }
 
@@ -37,7 +44,9 @@ class Database {
 
       result = Database.all("SELECT * FROM page_elements;");
       console.log(result);
-    } catch (e) {}
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   static openConnection() {
