@@ -1,28 +1,28 @@
-const Database = require("better-sqlite3");
-const { Table } = require("./table");
-
 class Page {
   static DEFAULT_NAME = "Untitled";
 
-  static firstRun() {
-    $("#pageName").attr("placeholder", Page.DEFAULT_NAME);
-    Page.load();
-    Textline.build($("#content"), "");
+  static init() {
+    let startpage;
+    let pageId = Settings.DATA.STARTPAGE;
+    if (pageId && pageId.length > 0) {
+      startpage = Database.get(`SELECT * FROM pages WHERE id = '${pageId}';`);
+    }
+
+    if (startpage && startpage.id && startpage.id.length > 0) {
+      Page.load({ id: startpage.id });
+    } else {
+      Page.create();
+    }
+
     Placeholder.registerEvents($("#placeholder"));
   }
 
-  static create(page) {
-    if (!page) {
-      page = { id: "", name: "" };
-    }
+  static create() {
+    let page = { id: "", name: "" };
 
     Page.addToDatabase(page);
     Pagemenu.add(page);
-    Page.load(
-      $(".pageMenuItem").filter(function () {
-        return $(this).data("uuid") == page.id;
-      })
-    );
+    Page.load(page);
   }
 
   static addToDatabase(page) {
@@ -38,31 +38,95 @@ class Page {
     ]);
   }
 
-  static load(pageMenuItem) {
+  static load(page) {
     Page.saveCurrentContent();
 
     $("#content").html("");
     $("#pageName").val("");
     $("#content").removeData("uuid");
 
-    if (!pageMenuItem) return;
+    if (!page) return;
 
-    let pageCssId = pageMenuItem.attr("id");
+    let pageCssId = page.css_id;
     switch (pageCssId) {
       case "newPage":
         Page.create();
         break;
       case "settingsPage":
-        let pageUrl = pageMenuItem.data("url");
+        let pageUrl = page.url;
         var page = File.readFile(Path.join(__dirname, pageUrl));
         $("#content").html(page);
         $("#pageName").val("Settings");
         Settings.registerEvents();
         break;
       default:
-        Page.loadPageContent($(pageMenuItem).data("uuid"));
+        Page.loadPageContent(page.id);
         break;
     }
+  }
+
+  static loadPageContent(pageId) {
+    let page = Database.get(`SELECT * FROM pages WHERE id = '${pageId}';`);
+    let elements = Database.all(
+      `SELECT * FROM page_elements WHERE page_id = '${pageId}' ORDER BY position ASC;`
+    );
+
+    if (!elements || elements.length == 0) {
+      Textline.build($("#content"), "");
+    } else {
+      let textlines = Database.all(
+        `SELECT txt.* FROM page_elements AS ps ` +
+          `INNER JOIN textlines AS txt ON txt.id = ps.id ` +
+          `WHERE ps.page_id = '${pageId}';`
+      );
+
+      $(elements).each(function (index, element) {
+        console.log(element);
+        switch (element.type_id) {
+          case Enums.ElementTypes.table:
+            let tableId = element.id;
+            let sqlTable = Database.get(
+              `SELECT * FROM tables WHERE id = '${tableId}'`
+            );
+
+            let columns = Database.all(
+              `SELECT * FROM table_columns WHERE table_id = '${tableId}';`
+            ).sort(function (a, b) {
+              return a.position - b.position;
+            });
+
+            let sqlValues = Database.all(`SELECT * FROM '${tableId}';`);
+            let rows = [];
+            $(sqlValues).each(function () {
+              let sqlValue = this;
+              let row = {};
+              $(columns).each(function () {
+                let sqlColumn = this;
+                let cellValue = sqlValue[sqlColumn.id];
+                if (sqlColumn.type == "checkbox") {
+                  cellValue = cellValue == "true";
+                }
+                row[sqlColumn.name] = cellValue;
+              });
+              rows.push(row);
+            });
+
+            let data = { caption: sqlTable.name, columns: columns, rows: rows };
+            Table.build($("#content"), data);
+            break;
+          case Enums.ElementTypes.textline:
+            let sqlTextline = $(textlines).filter(function () {
+              return this.id == element.id;
+            });
+            if (!sqlTextline || sqlTextline.length == 0) return;
+            Textline.build($("#content"), sqlTextline[0].text);
+            break;
+        }
+      });
+    }
+
+    $("#content").data("uuid", page.id);
+    $("#pageName").val(page.name);
   }
 
   static saveCurrentContent() {
@@ -195,70 +259,6 @@ class Page {
       `REPLACE INTO textlines VALUES(` +
         `'${textline.data("uuid")}', '${textline.text()}');`,
     ]);
-  }
-
-  static loadPageContent(pageId) {
-    let page = Database.get(`SELECT * FROM pages WHERE id = '${pageId}';`);
-    let elements = Database.all(
-      `SELECT * FROM page_elements WHERE page_id = '${pageId}' ORDER BY position ASC;`
-    );
-
-    if (!elements || elements.length == 0) {
-      Textline.build($("#content"), "");
-    } else {
-      let textlines = Database.all(
-        `SELECT txt.* FROM page_elements AS ps ` +
-          `INNER JOIN textlines AS txt ON txt.id = ps.id ` +
-          `WHERE ps.page_id = '${pageId}';`
-      );
-
-      $(elements).each(function (index, element) {
-        console.log(element);
-        switch (element.type_id) {
-          case Enums.ElementTypes.table:
-            let tableId = element.id;
-            let sqlTable = Database.get(
-              `SELECT * FROM tables WHERE id = '${tableId}'`
-            );
-
-            let columns = Database.all(
-              `SELECT * FROM table_columns WHERE table_id = '${tableId}';`
-            ).sort(function (a, b) {
-              return a.position - b.position;
-            });
-
-            let sqlValues = Database.all(`SELECT * FROM '${tableId}';`);
-            let rows = [];
-            $(sqlValues).each(function () {
-              let sqlValue = this;
-              let row = {};
-              $(columns).each(function () {
-                let sqlColumn = this;
-                let cellValue = sqlValue[sqlColumn.id];
-                if (sqlColumn.type == "checkbox") {
-                  cellValue = cellValue == "true";
-                }
-                row[sqlColumn.name] = cellValue;
-              });
-              rows.push(row);
-            });
-
-            let data = { caption: sqlTable.name, columns: columns, rows: rows };
-            Table.build($("#content"), data);
-            break;
-          case Enums.ElementTypes.textline:
-            let sqlTextline = $(textlines).filter(function () {
-              return this.id == element.id;
-            });
-            if (!sqlTextline || sqlTextline.length == 0) return;
-            Textline.build($("#content"), sqlTextline[0].text);
-            break;
-        }
-      });
-    }
-
-    $("#content").data("uuid", page.id);
-    $("#pageName").val(page.name);
   }
 }
 

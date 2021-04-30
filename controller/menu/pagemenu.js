@@ -1,3 +1,4 @@
+const Page = require("../../model/page");
 const Database = require("../database/database");
 
 class Pagemenu {
@@ -12,6 +13,9 @@ class Pagemenu {
   };
 
   static init() {
+    Pagemenu.registerEvent($("#settingsPage"));
+    Pagemenu.registerEvent($("#newPage"));
+
     Pagemenu.build();
     Pagemenu.registerEvents();
   }
@@ -46,10 +50,6 @@ class Pagemenu {
     $(window).on("mouseup", function (event) {
       Eventhandler.onMouseup(event);
     });
-
-    $(".pageMenuItem").on("click", function (event) {
-      Eventhandler.onClickPageMenuItem(event);
-    });
   }
 
   static add(page) {
@@ -70,7 +70,11 @@ class Pagemenu {
 class Eventhandler {
   static onClickPageMenuItem(event) {
     let pageMenuItem = $(event.target);
-    Page.load(pageMenuItem);
+    Page.load({
+      css_id: pageMenuItem.attr("id"),
+      id: pageMenuItem.data("uuid"),
+      url: pageMenuItem.data("url"),
+    });
   }
 
   static onMousedown(event) {

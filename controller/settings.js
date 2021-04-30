@@ -55,6 +55,8 @@ class Settings {
   }
 
   static save() {
+    Settings.DATA.STARTPAGE = $("#content").data("uuid");
+
     Settings.DATA.WINDOW = ipcRenderer.sendSync("determineWindowData");
 
     // Possible bug in electron if user maximized window: y is -8 which leads

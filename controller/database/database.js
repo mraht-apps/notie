@@ -15,13 +15,11 @@ class Database {
           Crypto.IV
         );
         let original = Buffer.from(bufferedData, "base64").toString();
-        console.log(Path.parse(Settings.DEC_DATABASE));
 
         let dir = Path.parse(Settings.DEC_DATABASE).dir;
         if (!File.exists(dir)) {
           File.createDir(dir);
         }
-
         File.writeFile(Settings.DEC_DATABASE, original);
       }
 
