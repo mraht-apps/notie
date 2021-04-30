@@ -141,37 +141,39 @@ class Main {
 
     mainWindow.webContents.openDevTools();
 
-    // Let autoUpdater check for updates, it will start downloading it automatically
-    autoUpdater.checkForUpdates();
+    if (!App.isDev()) {
+      // Let autoUpdater check for updates, it will start downloading it automatically
+      autoUpdater.checkForUpdates();
 
-    // Catch the update-available event
-    autoUpdater.addListener("update-available", (info) => {
-      mainWindow.webContents.send("update-available");
-    });
+      // Catch the update-available event
+      autoUpdater.addListener("update-available", (info) => {
+        mainWindow.webContents.send("update-available");
+      });
 
-    // Catch the update-not-available event
-    autoUpdater.addListener("update-not-available", (info) => {
-      mainWindow.webContents.send("update-not-available");
-    });
+      // Catch the update-not-available event
+      autoUpdater.addListener("update-not-available", (info) => {
+        mainWindow.webContents.send("update-not-available");
+      });
 
-    // Catch the download-progress events
-    autoUpdater.addListener("download-progress", (info) => {
-      mainWindow.webContents.send("prog-made", info);
-    });
+      // Catch the download-progress events
+      autoUpdater.addListener("download-progress", (info) => {
+        mainWindow.webContents.send("prog-made", info);
+      });
 
-    // Catch the update-downloaded event
-    autoUpdater.addListener("update-downloaded", (info) => {
-      mainWindow.webContents.send("update-downloaded");
-    });
+      // Catch the update-downloaded event
+      autoUpdater.addListener("update-downloaded", (info) => {
+        mainWindow.webContents.send("update-downloaded");
+      });
 
-    // Catch the error events
-    autoUpdater.addListener("error", (error) => {
-      mainWindow.webContents.send("error", error.toString());
-    });
+      // Catch the error events
+      autoUpdater.addListener("error", (error) => {
+        mainWindow.webContents.send("error", error.toString());
+      });
 
-    ipcMain.on("quitAndInstall", (event, arg) => {
-      autoUpdater.quitAndInstall();
-    });
+      ipcMain.on("quitAndInstall", (event, arg) => {
+        autoUpdater.quitAndInstall();
+      });
+    }
 
     return mainWindow;
   }

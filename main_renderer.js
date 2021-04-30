@@ -60,13 +60,19 @@ class Renderer {
         ) + ".db";
     }
 
+    console.log("ENC_DATABASE: " + Settings.ENC_DATABASE);
+    console.log("DEC_DATABASE: " + Settings.DEC_DATABASE);
+    console.log(Settings.CACHE);
+    console.log(Settings.DATA);
+
     Database.init();
 
     // Page.firstRun();
 
-    // Pagemenu.init();
+    Pagemenu.init();
     // Blockmenu.init();
     // Searchmenu.init();
+
     // Document.init();
   }
 

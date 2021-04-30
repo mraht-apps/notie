@@ -25,7 +25,7 @@
 #pageMenu {
   grid-column: 1;
   min-width: 200px;
-  max-width: 500px;
+  max-width: 400px;
   border: 1px solid #e1e1e1;
   color: rgba(25, 23, 17, 0.6);
   background: rgb(247, 246, 243);

@@ -1,10 +1,10 @@
 {
   "name": "notie",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "Table-based note-taking app",
   "main": "main.js",
   "scripts": {
-    "start": "electron . --dev=false",
+    "start": "electron . --dev=true",
     "build": "electron-builder build --win --publish never",
     "deploy": "electron-builder build --win --publish always"
   },
