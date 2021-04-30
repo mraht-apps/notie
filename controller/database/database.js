@@ -1,5 +1,4 @@
 const SQLite3 = require("better-sqlite3");
-const Filepath = require("path");
 
 class Database {
   db;
@@ -16,9 +15,9 @@ class Database {
           Crypto.IV
         );
         let original = Buffer.from(bufferedData, "base64").toString();
-        console.log(Filepath.parse(Settings.DEC_DATABASE));
+        console.log(Path.parse(Settings.DEC_DATABASE));
 
-        let dir = Filepath.parse(Settings.DEC_DATABASE).dir;
+        let dir = Path.parse(Settings.DEC_DATABASE).dir;
         if (!File.exists(dir)) {
           File.createDir(dir);
         }

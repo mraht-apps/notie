@@ -6,7 +6,7 @@
 // process.
 window.$ = window.jQuery = require("jquery");
 const ipcRenderer = require("electron").ipcRenderer;
-const Filepath = require("path");
+const Path = require("path");
 
 // Utilities
 const General = require("../utils/general.js");
@@ -43,20 +43,20 @@ class Renderer {
     Settings.DATA = settings.DATA;
 
     if (File.isDir(Settings.CACHE.DATABASE)) {
-      Settings.ENC_DATABASE = Filepath.join(
+      Settings.ENC_DATABASE = Path.join(
         Settings.CACHE.DATABASE,
         Settings.DEFAULT_ENC_DB_FILENAME
       );
-      Settings.DEC_DATABASE = Filepath.join(
+      Settings.DEC_DATABASE = Path.join(
         Settings.CACHE_FOLDER,
         Settings.DEFAULT_DEC_DB_FILENAME
       );
     } else {
       Settings.ENC_DATABASE = Settings.CACHE.DATABASE;
       Settings.DEC_DATABASE =
-        Filepath.join(
+        Path.join(
           Settings.CACHE_FOLDER,
-          Filepath.parse(Settings.CACHE.DATABASE).name
+          Path.parse(Settings.CACHE.DATABASE).name
         ) + ".db";
     }
 

@@ -54,7 +54,7 @@ class Page {
         break;
       case "settingsPage":
         let pageUrl = pageMenuItem.data("url");
-        var page = File.readFile(pageUrl);
+        var page = File.readFile(Path.join(__dirname, pageUrl));
         $("#content").html(page);
         $("#pageName").val("Settings");
         Settings.registerEvents();
