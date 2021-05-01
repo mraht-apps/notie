@@ -1,0 +1,31 @@
+.tableMenu {
+  border: 1px solid rgb(236, 236, 236);
+  z-index: 99999;
+  position: absolute;
+  right: 8px;
+  width: 150px;
+  background: white;
+  display: none;
+}
+
+.tableMenu table {
+  width: 100%;
+}
+
+.tableMenu table td {
+  display: flex;
+  border: none;
+  padding: 2px 6px 2px 4px;
+  align-items: center;
+}
+
+.tableMenu td:hover {
+  background-color: rgb(236, 236, 236);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.tableMenu img {
+  width: 18px;
+  margin-right: 4px;
+}

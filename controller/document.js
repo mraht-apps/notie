@@ -32,7 +32,7 @@ class Eventhandler {
     let element = $(event.target);
     if (
       !element.hasClass("blockmenu") &&
-      element.parents(".blockmenu").length == 0
+      element.parents("#blockmenu").length == 0
     ) {
       Blockmenu.closeAll();
     }

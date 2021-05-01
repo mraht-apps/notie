@@ -96,7 +96,7 @@ class Eventhandler {
         break;
       case "/":
         let { x, y } = General.getCursorPixelPosition();
-        Blockmenu.openFirstTime(x, y);
+        Blockmenu.open(x, y);
         break;
       default:
         textline.data("previousValue", textline.text());

@@ -1,20 +1,18 @@
 Version 1.0.0
 =====================================================================
 [X] Table deleteable: Menu for table with menuitem "Delete"
+[ ] Changing page name should reflect on page name in navbar immediately
 [ ] Table rows and columns deletable
 [ ] Pages can be deleted
 [ ] Table rows as pages: UUID per row/page, internal pagename is UUID
 [ ] Table creation/deletion: Change Sqlite DB accordingly
 [ ] New column type: Reference to other tables
 [ ] Column type can be chosen
-[ ] Choosing of user data folder
-[ ] Encryption of the user data folder
+[ ] Logout button
+[X] Choosing of filepath to database file
+[X] Encryption of the database file
 [ ] Page for images and license
-[ ] Auto updater
-
-Pages creation:
-1) Create page on base of db data in cache folder if being called and not yet existent
-2) Remove files in cache folder if app is being closed
+[X] Auto updater
 
 Version 1.1.0
 =====================================================================

@@ -8,9 +8,12 @@
   <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
   <!-- CSS Style -->
   <link rel="stylesheet" href="../res/css/style.css" type="text/css" />
-  <link rel="stylesheet" href="../res/css/pagemenu.css" type="text/css" />
-  <link rel="stylesheet" href="../res/css/blockmenu.css" type="text/css" />
-  <link rel="stylesheet" href="../res/css/searchmenu.css" type="text/css" />
+  <link rel="stylesheet" href="../res/css/page.css" type="text/css" />
+  <link rel="stylesheet" href="../res/css/menu/navbar.css" type="text/css" />
+  <link rel="stylesheet" href="../res/css/menu/navbar.css" type="text/css" />
+  <link rel="stylesheet" href="../res/css/menu/blockmenu.css" type="text/css" />
+  <link rel="stylesheet" href="../res/css/menu/searchmenu.css" type="text/css" />
+  <link rel="stylesheet" href="../res/css/menu/tablemenu.css" type="text/css" />
   <link rel="stylesheet" href="../res/css/table.css" type="text/css" />
   <link rel="stylesheet" href="../res/css/textline.css" type="text/css" />
 </head>
@@ -18,15 +21,15 @@
 <body>
 
   <div id="pageContainer">
-    <div id="pageMenu">
-      <div id="settingsPage" class="pageMenuItem" data-url="../view/settings.html"><img
+    <div id="navBar">
+      <div id="settingsPage" class="navBarItem" data-url="../view/settings.html"><img
           src="../res/img/settings.svg">Settings
       </div>
-      <div id="pageMenuUserPages">
-        <div id="pageMenuUserPagesTitle">Pages
+      <div id="navBarPages">
+        <div id="navBarPagesTitle">Pages
           <hr>
         </div>
-        <div id="newPage" class="pageMenuItem"><img src="../res/img/new.svg">New page</div>
+        <div id="newPage" class="navBarItem"><img src="../res/img/new.svg">New page</div>
       </div>
     </div>
     <div id="resizeSeparator"></div>
@@ -74,7 +77,7 @@
     </table>
   </div>
 
-  <div class="searchMenu">
+  <div id="searchMenu">
     <b>Search:</b><input type="text">
     <table>
       <tbody>
@@ -84,6 +87,14 @@
             <tr>
               <td>Table 2</td>
             </tr> -->
+      </tbody>
+    </table>
+  </div>
+
+  <div id="pageMenu">
+    <table>
+      <tbody>
+        <tr id="deletePage"><td><img src = "../res/img/trash.svg">Delete</td></tr>
       </tbody>
     </table>
   </div>

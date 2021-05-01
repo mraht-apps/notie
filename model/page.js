@@ -21,7 +21,7 @@ class Page {
     let page = { id: "", name: "" };
 
     Page.addToDatabase(page);
-    Pagemenu.add(page);
+    Navbar.add(page);
     Page.load(page);
   }
 

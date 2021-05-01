@@ -1,4 +1,4 @@
-.searchMenu {
+#searchMenu {
   background-color: #ffffff;
   border: 1px solid #999999;
   cursor: default;
@@ -11,12 +11,12 @@
   margin-left: 120px;
 }
 
-.searchMenu input {
+#searchMenu input {
   margin-bottom: 6px;
   margin-left: 8px;
 }
 
-.searchMenu table {
+#searchMenu table {
   width: 100%;
   border: 1px solid #999999;
   border-collapse: collapse;
@@ -24,15 +24,15 @@
   user-select: none;
 }
 
-.searchMenu td {
+#searchMenu td {
   padding: 4px;
 }
 
-.searchMenu tr:nth-child(even) {
+#searchMenu tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-.searchMenu tr:hover {
+#searchMenu tr:hover {
   cursor: pointer;
   background-color: rgb(228, 228, 228);
 }

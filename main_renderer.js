@@ -19,7 +19,7 @@ const Database = require("../controller/database/database.js");
 const Document = require("../controller/document.js");
 
 const Searchmenu = require("../controller/menu/searchmenu.js");
-const Pagemenu = require("../controller/menu/pagemenu.js");
+const Navbar = require("../controller/menu/navbar.js");
 const Blockmenu = require("../controller/menu/blockmenu.js");
 const Tablemenu = require("../controller/menu/tablemenu.js");
 
@@ -65,7 +65,7 @@ class Renderer {
 
     Database.init();
     Page.init();
-    Pagemenu.init();
+    Navbar.init();
     // Blockmenu.init();
     // Searchmenu.init();
 
