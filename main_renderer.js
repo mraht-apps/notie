@@ -64,8 +64,10 @@ class Renderer {
     console.log(Settings.DATA);
 
     Database.init();
-    Page.init();
+
     Navbar.init();
+    Page.init();
+    
     // Blockmenu.init();
     // Searchmenu.init();
 
