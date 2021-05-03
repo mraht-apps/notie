@@ -4,9 +4,17 @@ const ElementTypes = {
 };
 
 const ColumnTypes = {
-  chk: 1,
-  txt: 2,
-  ref: 3,
+  1: "chk",
+  2: "txt",
+  3: "ref",
 };
 
-module.exports = { ElementTypes };
+const PageActions = {
+  delete: "deletePage",
+};
+
+const TableActions = {
+  delete: "deleteTable",
+};
+
+module.exports = { ElementTypes, ColumnTypes, PageActions, TableActions };

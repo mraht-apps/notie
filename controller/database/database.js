@@ -25,7 +25,6 @@ class Database {
 
       // Also creates a new database file if not existent
       Database.openConnection();
-      // exists = Database.reset();
       Database.firstRun(exists);
 
       let result = Database.all(

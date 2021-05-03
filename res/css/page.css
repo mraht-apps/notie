@@ -3,7 +3,7 @@
   display: grid;
   grid-template-columns: auto auto 1fr;
   grid-template-rows: auto;
-  overflow: hidden;
+  overflow: auto;
 
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
@@ -25,7 +25,6 @@
 #resizeSeparator {
   grid-column: 2;
   width: 5px;
-  margin-left: -2px;
   z-index: 1;
   cursor: col-resize;
   user-select: none;
@@ -63,8 +62,9 @@
 #pageName {
   color: rgb(55, 53, 47);
   font-weight: 700;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: bold;
+  padding: 0px;
 
   white-space: pre-wrap;
   word-break: break-word;
@@ -77,4 +77,5 @@
 #content {
   width: 100%;
   grid-row: 3;
+  overflow: auto;
 }

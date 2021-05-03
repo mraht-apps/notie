@@ -19,7 +19,7 @@
   align-items: center;
 }
 
-.tableMenu td:hover {
+.tableMenu tr:hover {
   background-color: rgb(236, 236, 236);
   border-radius: 4px;
   cursor: pointer;

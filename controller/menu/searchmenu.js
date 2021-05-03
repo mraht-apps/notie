@@ -6,7 +6,7 @@ class SearchMenu {
   }
 
   static registerEvents() {
-    let input = $("#searchMenu > input:text");
+    let input = $("#searchmenu > input:text");
     input.on("input", function (event) {
       Eventhandler.onInput(event);
     });
@@ -18,7 +18,7 @@ class Eventhandler {
     let input = $(event.target);
     let result = DB.searchTables(input.val());
 
-    let tbody = $("#searchMenu > table > tbody");
+    let tbody = $("#searchmenu > table > tbody");
     tbody.children().remove();
 
     if(result.length == 0) return;      

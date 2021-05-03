@@ -2,8 +2,8 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  overflow: hidden;
-  padding-bottom: 10px;
+  overflow: auto;
+  margin: 6px 0px 10px 0px;
 }
 
 .tableHead th,
@@ -45,14 +45,14 @@
 }
 
 .tableHead th:last-child div {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: normal;
   padding-top: 4px;
 }
 
 .tableHead th:last-child div img {
-  margin-top: 3px;
-  margin-right: 2px;
+  margin-top: 2px;
+  margin-right: 4px;
 }
 
 .tableHead th input {

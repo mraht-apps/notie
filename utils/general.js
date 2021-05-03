@@ -23,6 +23,11 @@ class General {
     span.remove();
     return { x: rect.left, y: rect.top };
   }
+
+  static getSelectedTextLength() {
+    let selection = window.getSelection();
+    return selection.focusOffset - selection.baseOffset;
+  }
 }
 
 module.exports = General;

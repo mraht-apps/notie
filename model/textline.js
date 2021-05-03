@@ -1,27 +1,36 @@
+const Textline_DB = require("../controller/database/textline_db");
 const General = require("../utils/general");
 
 const placeholderText = "Type '/' for commands";
 class Textline {
-  static build(parent, text) {
-    let textline = document.createElement("div");
-    textline.contentEditable = "true";
-    textline.className = "textline";
-    let textNode = document.createTextNode(text);
-    textline.appendChild(textNode);
-    textline.dataset.uuid = Crypto.generateUUID(6);
-    textline.dataset.placeholder = placeholderText;
+  static create(parent, textline) {
+    if (!textline) {
+      textline = { id: "", text: "" };
+    }
 
-    Textline.registerEvents(textline);
-    parent.append(textline);
-    return textline;
+    let htmlTextline = document.createElement("div");
+    htmlTextline.contentEditable = "true";
+    htmlTextline.className = "textline";
+    let textNode = document.createTextNode(textline.text);
+    htmlTextline.appendChild(textNode);
+    if (!textline.id || textline.id.length == 0) {
+      htmlTextline.dataset.uuid = Crypto.generateUUID(6);
+    } else {
+      htmlTextline.dataset.uuid = textline.id;
+    }
+    htmlTextline.dataset.placeholder = placeholderText;
+
+    Textline.registerEvents(htmlTextline);
+    parent.append(htmlTextline);
+    return htmlTextline;
   }
 
-  static registerEvents(textline) {
-    $(textline).on("keydown", function (event) {
+  static registerEvents(htmlTextline) {
+    $(htmlTextline).on("keydown", function (event) {
       Eventhandler.onKeydown(event);
     });
 
-    $(textline).on("focus", function (event) {
+    $(htmlTextline).on("focus", function (event) {
       Eventhandler.onFocus(event);
     });
   }
@@ -43,6 +52,17 @@ class Textline {
     prevElement.trigger("focus");
     General.moveCursorToEnd(null);
   }
+
+  static focusLast() {
+    let textline = $(".textline:last");
+    textline.trigger("focus");
+    General.moveCursorToEnd(null);
+  }
+
+  static remove(textline) {
+    textline.remove();
+    Textline_DB.delete(true, [], textline.data("uuid"));
+  }
 }
 class Eventhandler {
   activeTextline;
@@ -55,7 +75,7 @@ class Eventhandler {
     // Ignore certain characters
     if (event.key == "Shift") return;
 
-    let textline = $(event.target);
+    var textline = $(event.target);
     switch (event.key) {
       case "ArrowUp":
         var prevElement = textline.prev();
@@ -69,12 +89,18 @@ class Eventhandler {
         break;
       case "Backspace":
         var prevElement = textline.prev();
-        if (prevElement.is(".textline") && General.getCursorPosition(textline) == 0) {
-          let prevElementTextLength = prevElement.text().length;
-          if (textline.text().length > 0) {
+        var selectedTextLength = General.getSelectedTextLength();
+
+        if (
+          prevElement.is(".textline") &&
+          General.getCursorPosition(textline) == 0 &&
+          selectedTextLength == 0
+        ) {
+          var prevElementTextLength = prevElement.text().length;
+          if (textline.text().length > 0 && selectedTextLength == 0) {
             prevElement.text(prevElement.text() + textline.text());
           }
-          textline.remove();
+          Textline.remove(textline);
           General.moveCursorTo(prevElement, prevElementTextLength);
           event.preventDefault();
         }
@@ -88,15 +114,14 @@ class Eventhandler {
         }
         // NEW Enter before text: Add textline before
         // NEW Enter within text: Split text at cursor position
-        let newTextline = Textline.build(textline.parent(), "");
+        var newTextline = Textline.create(textline.parent(), null);
         Textline.registerEvents();
         textline.after(newTextline);
         Textline.focusNext($(newTextline));
         event.preventDefault();
         break;
       case "/":
-        let { x, y } = General.getCursorPixelPosition();
-        Blockmenu.open(x, y);
+        Blockmenu.open();
         break;
       default:
         textline.data("previousValue", textline.text());

@@ -6,20 +6,49 @@ class Table {
   static columns;
   static rows;
 
-  static build(parent, data) {
-    let table = document.createElement("table");
-    table.className = "table";
-    $(table).data("uuid", Crypto.generateUUID());
-    Table.createCaption(table, data.caption);
+  static create(parent, table) {
+    if (!table) {
+      table = {
+        id: "",
+        caption: "",
+        columns: [
+          { id: "", name: "Name", type: "text", width: "120px" },
+          { id: "", name: "Done", type: "checkbox", width: "20px" },
+        ],
+        rows: [
+          {
+            Name: "",
+            Done: false,
+          },
+          {
+            Name: "",
+            Done: false,
+          },
+          {
+            Name: "",
+            Done: false,
+          },
+        ],
+      };
+    }
 
-    Table.prepareGeneration(data);
-    Table.generateTableBody(table, data);
-    Table.generateTableHead(table, data);
+    let htmlTable = document.createElement("table");
+    htmlTable.className = "table";
+    if (!table.id || table.id.length == 0) {
+      $(htmlTable).data("uuid", Crypto.generateUUID(6));
+    } else {
+      $(htmlTable).data("uuid", table.id);
+    }
+    Table.createCaption(htmlTable, table.caption);
+
+    Table.prepareGeneration(table);
+    Table.generateTableBody(htmlTable, table);
+    Table.generateTableHead(htmlTable, table);
 
     if (parent != null) {
-      parent.append(table);
+      parent.append(htmlTable);
     }
-    return table;
+    return htmlTable;
   }
 
   static createCaption(table, captionText) {
@@ -138,37 +167,38 @@ class Table {
     return exit;
   }
 
-  static generateTableHead(table, data) {
-    let thead = table.createTHead();
+  static generateTableHead(htmlTable, table) {
+    let thead = htmlTable.createTHead();
     thead.className = "tableHead";
     let tr = thead.insertRow();
 
-    $(data.columns).each(function (index, column) {
-      Table.generateTableColumn(tr, index, $(column));
+    $(table.columns).each(function (index, column) {
+      Table.generateTableColumn(tr, index, column);
     });
   }
 
   static generateTableColumn(tr, index, column) {
-    let columnType = column.attr("type");
-    let columnName = column.attr("name");
-
     let th = document.createElement("th");
-    $(th).data("type", columnType);
-    if (columnType != "add") {
-      let columnWidth = column.attr("width");
-      th.style.width =
-        !columnWidth || columnWidth == "undefined" ? "120px" : columnWidth;
-      $(th).data("uuid", Crypto.generateUUID(6));
+    $(th).data("type", column.type);
+    if (column.type != "add") {
+      let columnWidth = column.width;
+      th.style.width = !columnWidth ? "120px" : columnWidth;
+
+      if (!column.id || column.id.length == 0) {
+        $(th).data("uuid", Crypto.generateUUID(6));
+      } else {
+        $(th).data("uuid", column.id);
+      }
     }
 
     let div = document.createElement("div");
     div.className = "columnTitle";
 
-    if (columnType == "add") {
+    if (column.type == "add") {
       let img = document.createElement("img");
       img.src = "../res/img/new.svg";
       div.appendChild(img);
-      let textNode = document.createTextNode(columnName);
+      let textNode = document.createTextNode(column.name);
       div.appendChild(textNode);
 
       $(th).on("click", function (event) {
@@ -176,7 +206,7 @@ class Table {
       });
     } else {
       let img = document.createElement("img");
-      switch (columnType) {
+      switch (column.type) {
         case "checkbox":
           img.src = "../res/img/checkbox.svg";
           break;
@@ -188,7 +218,7 @@ class Table {
 
       let input = document.createElement("input");
       input.type = "text";
-      input.value = columnName;
+      input.value = column.name;
       div.append(input);
       th.appendChild(div);
 
@@ -282,12 +312,13 @@ class Table {
     activeRow.attr("id", "activeRow");
   }
 
-  static remove(table) {
-    table.remove();
-  }
-
   static trigger(method, event) {
     Eventhandler[method](event);
+  }
+
+  static delete(table) {
+    Table_DB.delete(true, [], [table.data("uuid")]);
+    table.remove();
   }
 }
 

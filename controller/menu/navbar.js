@@ -2,16 +2,6 @@ const Page = require("../../model/page");
 const Database = require("../database/database");
 
 class Navbar {
-  static resizeData = {
-    tracking: false,
-    startWidth: null,
-    startCursorScreenX: null,
-    handleWidth: 10,
-    resizeTarget: null,
-    parentElement: null,
-    maxWidth: null,
-  };
-
   static init() {
     Navbar.registerEvent($("#settingsPage"));
     Navbar.registerEvent($("#newPage"));
@@ -32,7 +22,7 @@ class Navbar {
       Eventhandler.onClickNavbarItem(event);
     });
 
-    $(navBarItem).on("contextmenu", function(event) {
+    $(navBarItem).on("contextmenu", function (event) {
       Eventhandler.onNavbarItemContextmenu(event);
     });
   }
@@ -72,6 +62,16 @@ class Navbar {
 }
 
 class Eventhandler {
+  static resizeData = {
+    tracking: false,
+    startWidth: null,
+    startCursorScreenX: null,
+    handleWidth: 10,
+    resizeTarget: null,
+    parentElement: null,
+    maxWidth: null,
+  };
+
   static onClickNavbarItem(event) {
     let navbarItem = $(event.target);
     Page.load({
@@ -82,7 +82,7 @@ class Eventhandler {
   }
 
   static onNavbarItemContextmenu(event) {
-    Pagemenu.open();
+    Pagemenu.open($(event.target));
   }
 
   static onMousedown(event) {
@@ -97,31 +97,32 @@ class Eventhandler {
     }
 
     const targetElement = $("#navBar");
-    Navbar.resizeData.startWidth = targetElement.outerWidth();
-    Navbar.resizeData.startCursorScreenX = event.screenX;
-    Navbar.resizeData.resizeTarget = targetElement;
-    Navbar.resizeData.parentElement = handleElement.parentElement;
-    Navbar.resizeData.maxWidth =
+    Eventhandler.resizeData.startWidth = targetElement.outerWidth();
+    Eventhandler.resizeData.startCursorScreenX = event.screenX;
+    Eventhandler.resizeData.resizeTarget = targetElement;
+    Eventhandler.resizeData.parentElement = handleElement.parentElement;
+    Eventhandler.resizeData.maxWidth =
       $(handleElement.parentElement).innerWidth() -
-      Navbar.resizeData.handleWidth;
-    Navbar.resizeData.tracking = true;
+      Eventhandler.resizeData.handleWidth;
+    Eventhandler.resizeData.tracking = true;
   }
 
   static onMousemove(event) {
-    if (Navbar.resizeData.tracking) {
+    if (Eventhandler.resizeData.tracking) {
       const cursorScreenXDelta =
-        event.screenX - Navbar.resizeData.startCursorScreenX;
+        event.screenX - Eventhandler.resizeData.startCursorScreenX;
       const newWidth = Math.min(
-        Navbar.resizeData.startWidth + cursorScreenXDelta,
-        Navbar.resizeData.maxWidth
+        Eventhandler.resizeData.startWidth + cursorScreenXDelta,
+        Eventhandler.resizeData.maxWidth
       );
 
-      $(Navbar.resizeData.resizeTarget).outerWidth(newWidth);
+      $(Eventhandler.resizeData.resizeTarget).outerWidth(newWidth);
     }
   }
 
   static onMouseup(event) {
-    if (Navbar.resizeData.tracking) Navbar.resizeData.tracking = false;
+    if (Eventhandler.resizeData.tracking)
+      Eventhandler.resizeData.tracking = false;
   }
 }
 

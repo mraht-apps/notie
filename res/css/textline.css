@@ -2,8 +2,7 @@
   outline: none;
   border: none;
   width: 100%;
-  cursor: default;
-  font-size: 18px;
+  font-size: 16px;
   padding-bottom: 4px;
   text-align: justify;
   word-break: break-all;
@@ -16,4 +15,8 @@
 .textline:empty:focus:before {
   content:attr(data-placeholder);
   color:rgb(55, 53, 47, 0.6);
+}
+
+#placeholder {
+  cursor: text;
 }

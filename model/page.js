@@ -5,7 +5,7 @@ class Page {
     let startpage;
     let pageId = Settings.DATA.STARTPAGE;
     if (pageId && pageId.length > 0) {
-      startpage = Database.get(`SELECT * FROM pages WHERE id = '${pageId}';`);
+      startpage = Page_DB.getById(pageId);
     }
 
     if (startpage && startpage.id && startpage.id.length > 0) {
@@ -14,7 +14,7 @@ class Page {
       Page.create();
     }
 
-    Placeholder.registerEvents($("#placeholder"));
+    Placeholder.init();
   }
 
   static create() {
@@ -33,9 +33,7 @@ class Page {
       page.name = Page.DEFAULT_NAME;
     }
 
-    Database.run([
-      `REPLACE INTO pages VALUES ('${page.id}', '${page.name}');`,
-    ]);
+    Page_DB.add(true, [], page);
   }
 
   static load(page) {
@@ -66,60 +64,59 @@ class Page {
   }
 
   static loadPageContent(pageId) {
-    let page = Database.get(`SELECT * FROM pages WHERE id = '${pageId}';`);
-    let elements = Database.all(
-      `SELECT * FROM page_elements WHERE page_id = '${pageId}' ORDER BY position ASC;`
-    );
+    let page = Page_DB.getById(pageId);
+    let elements = Page_DB.getElements(pageId);
 
     if (!elements || elements.length == 0) {
-      Textline.build($("#content"), "");
+      Textline.create($("#content"), null);
     } else {
-      let textlines = Database.all(
-        `SELECT txt.* FROM page_elements AS ps ` +
-          `INNER JOIN textlines AS txt ON txt.id = ps.id ` +
-          `WHERE ps.page_id = '${pageId}';`
-      );
-
+      let textlines = Page_DB.getTextlines(pageId);
+      let tables = Page_DB.getTables(pageId);
+      let tableColumns = Table_DB.getColumns(tables);
       $(elements).each(function (index, element) {
         console.log(element);
         switch (element.type_id) {
           case Enums.ElementTypes.table:
-            let tableId = element.id;
-            let sqlTable = Database.get(
-              `SELECT * FROM tables WHERE id = '${tableId}'`
-            );
+            let table = $(tables)
+              .filter(function () {
+                return this.id == element.id;
+              })
+              .get(0);
 
-            let columns = Database.all(
-              `SELECT * FROM table_columns WHERE table_id = '${tableId}';`
-            ).sort(function (a, b) {
-              return a.position - b.position;
+            let columns = $(tableColumns).filter(function () {
+              return this.table_id == element.id;
             });
 
-            let sqlValues = Database.all(`SELECT * FROM '${tableId}';`);
+            let values = Table_DB.getValues(table.id);
             let rows = [];
-            $(sqlValues).each(function () {
+            $(values).each(function () {
               let sqlValue = this;
               let row = {};
               $(columns).each(function () {
-                let sqlColumn = this;
-                let cellValue = sqlValue[sqlColumn.id];
-                if (sqlColumn.type == "checkbox") {
+                let column = this;
+                let cellValue = sqlValue[column.id];
+                if (column.type == "checkbox") {
                   cellValue = cellValue == "true";
                 }
-                row[sqlColumn.name] = cellValue;
+                row[column.name] = cellValue;
               });
               rows.push(row);
             });
 
-            let data = { caption: sqlTable.name, columns: columns, rows: rows };
-            Table.build($("#content"), data);
+            let tableData = {
+              id: table.id,
+              caption: table.name,
+              columns: columns,
+              rows: rows,
+            };
+            Table.create($("#content"), tableData);
             break;
           case Enums.ElementTypes.textline:
             let sqlTextline = $(textlines).filter(function () {
               return this.id == element.id;
-            });
-            if (!sqlTextline || sqlTextline.length == 0) return;
-            Textline.build($("#content"), sqlTextline[0].text);
+            })[0];
+            if (!sqlTextline) return;
+            Textline.create($("#content"), sqlTextline);
             break;
         }
       });
@@ -143,31 +140,30 @@ class Page {
   }
 
   static savePageContent(pageId) {
-    let children = $("#content").children();
-    if (children.length == 0) return;
+    let htmlChildren = $("#content").children();
+    if (htmlChildren.length == 0) return;
 
-    let sql = "INSERT INTO page_elements VALUES";
-    children.each(function (index, element) {
-      element = $(element);
+    let sql = "";
+    htmlChildren.each(function (index, htmlChild) {
+      htmlChild = $(htmlChild);
       let elementTypeId;
-      if (element.is(".table")) {
+      if (htmlChild.is(".table")) {
         elementTypeId = Enums.ElementTypes.table;
-        Page.saveTable(element);
-      } else if (element.is(".textline")) {
+        Page.saveTable(htmlChild);
+      } else if (htmlChild.is(".textline")) {
         elementTypeId = Enums.ElementTypes.textline;
-        Page.saveTextline(element);
+        Page.saveTextline(htmlChild);
       }
-      let elementId = element.data("uuid");
-      sql += `('${pageId}', '${elementId}', '${elementTypeId}', '${index}')`;
-      if (index < children.length - 1) {
-        sql += ", ";
-      }
+      let element = { id: htmlChild.data("uuid"), typeId: elementTypeId };
+      sql = Page_DB.buildUpdateElement(
+        sql,
+        htmlChildren.length,
+        index,
+        pageId,
+        element
+      );
     });
-    sql += ";";
-    Database.run([
-      `DELETE FROM page_elements WHERE page_id = '${pageId}';`,
-      sql,
-    ]);
+    Page_DB.updateElement([sql]);
   }
 
   static saveTable(table) {
@@ -176,89 +172,32 @@ class Page {
       .find("caption > .captionContainer > .tableTitleContainer > input")
       .val();
 
-    let sqlStatements = [
-      `REPLACE INTO tables VALUES ('${tableId}', '${tableName}');`,
-    ];
-    let sqlTableStructure = "";
-    let sqlColumns = "";
+    let sqlStatements = [];
+    Table_DB.update(false, sqlStatements, {
+      id: tableId,
+      name: tableName,
+    });
 
-    let columns = table.find("thead > tr > th").filter(function () {
+    let htmlColumns = table.find("thead > tr > th").filter(function () {
       return $(this).data("type") != "add";
     });
-    columns.each(function (columnIndex, column) {
-      column = $(column);
+    Table_DB.updateColumns(false, sqlStatements, tableId, htmlColumns);
 
-      let columnId = column.data("uuid");
-      let columnName = column.find(".columnTitle > input").val();
-      let columnType = column.data("type");
-      let columnWidth = column.css("width");
-
-      let sqlColumnName, sqlColumnType;
-
-      switch (columnType) {
-        case "add":
-          return;
-        case "checkbox":
-        case "text":
-          sqlColumnName = columnId;
-          sqlColumnType = "TEXT";
-          break;
-        default:
-          return;
-      }
-      sqlTableStructure += `('${tableId}', '${columnId}', '${columnName}', '${columnType}', '${columnWidth}', ${columnIndex})`;
-
-      sqlColumns += `'${sqlColumnName}' ${sqlColumnType}`;
-      if (columnIndex < columns.length - 1) {
-        sqlTableStructure += ", ";
-        sqlColumns += ", ";
-      }
-    });
-    sqlStatements.push(
-      `REPLACE INTO table_columns VALUES ${sqlTableStructure};`,
-      `DROP TABLE IF EXISTS '${tableId}';`,
-      `CREATE TABLE IF NOT EXISTS '${tableId}' ` +
-        `(id TEXT NOT NULL, ${sqlColumns}, PRIMARY KEY (id) );`
-    );
-
-    let sqlValues = "";
-    let rows = table.find("tbody > tr").filter(function () {
+    let htmlRows = table.find("tbody > tr").filter(function () {
       return $(this).data("uuid");
     });
-    rows.each(function (rowIndex, row) {
-      row = $(row);
-      sqlValues += `('${row.data("uuid")}', `;
-      columns.each(function (columnIndex, column) {
-        column = $(column);
-
-        let input = row.find("td").eq(columnIndex).find("input");
-        switch (column.data("type")) {
-          case "checkbox":
-            sqlValues += `'${input.is(":checked")}'`;
-            break;
-          case "text":
-            sqlValues += `'${input.val()}'`;
-            break;
-        }
-        if (columnIndex < columns.length - 1) {
-          sqlValues += ", ";
-        }
-      });
-      sqlValues += ")";
-      if (rowIndex < rows.length - 1) {
-        sqlValues += ", ";
-      }
-    });
-    sqlStatements.push(`INSERT INTO '${tableId}' VALUES ${sqlValues};`);
-
-    Database.run(sqlStatements);
+    Table_DB.updateValues(true, sqlStatements, tableId, htmlColumns, htmlRows);
   }
 
   static saveTextline(textline) {
-    Database.run([
-      `REPLACE INTO textlines VALUES(` +
-        `'${textline.data("uuid")}', '${textline.text()}');`,
-    ]);
+    Textline_DB.update(true, [], {
+      id: textline.data("uuid"),
+      text: textline.text(),
+    });
+  }
+
+  static delete(id) {
+    Page_DB.delete(id);
   }
 }
 

@@ -1,18 +1,22 @@
 Version 1.0.0
 =====================================================================
 [X] Table deleteable: Menu for table with menuitem "Delete"
+[ ] Pages can be deleted
 [ ] Changing page name should reflect on page name in navbar immediately
 [ ] Table rows and columns deletable
-[ ] Pages can be deleted
+[ ] Save/load html table from database
 [ ] Table rows as pages: UUID per row/page, internal pagename is UUID
-[ ] Table creation/deletion: Change Sqlite DB accordingly
+[X] Table creation/deletion: Change Sqlite DB accordingly
 [ ] New column type: Reference to other tables
 [ ] Column type can be chosen
+[ ] Page overflow auto to fit content by scrollbar whereas menu remains fixed
 [ ] Logout button
 [X] Choosing of filepath to database file
 [X] Encryption of the database file
 [ ] Page for images and license
 [X] Auto updater
+[X] Settings: Password can be changed
+
 
 Version 1.1.0
 =====================================================================

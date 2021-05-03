@@ -32,9 +32,8 @@ input[type="checkbox"]:hover {
   cursor: pointer;
 }
 
-input[type="text"],
-input[type="password"] {
-  padding-left: 4px;
+hr {
+  border-left: none;
 }
 
 ::selection {

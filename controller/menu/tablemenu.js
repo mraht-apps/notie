@@ -1,7 +1,4 @@
-const { Table } = require("../../model/table");
-
-// FIX Call methods tablemenu-specific
-class TableMenu {
+class Tablemenu {
   static registerEvent(tableMenuContainer) {
     $(tableMenuContainer).on("click", function (event) {
       Eventhandler.onClick(event);
@@ -24,7 +21,7 @@ class TableMenu {
   }
 
   static open(tableMenu) {
-    TableMenu.closeAll();
+    Tablemenu.closeAll();
     tableMenu.addClass("visible");
     tableMenu.toggle(true);
   }
@@ -34,18 +31,27 @@ class Eventhandler {
   static onClick(event) {
     let element = $(event.target);
     let tableMenu = element.parents("caption").children(".tableMenu");
-    if (!TableMenu.isOpen(tableMenu)) {
-      TableMenu.open(tableMenu);
+    
+    if (!Tablemenu.isOpen(tableMenu)) {
+      Tablemenu.open(tableMenu);
     } else {
-      TableMenu.closeAll();
+      Tablemenu.closeAll();
     }
   }
 
   static onClickMenuItem(event) {
+    let action = $(event.target).parent("tr").attr("id");
     let table = $(event.target).parents(".table");
-    Table.remove(table);
-    TableMenu.closeAll();
+
+    switch (action) {
+      case Enums.TableActions["delete"]:
+        Table.delete(table);
+        Textline.focusLast();
+        break;
+    }
+
+    Tablemenu.closeAll();
   }
 }
 
-module.exports = TableMenu;
+module.exports = Tablemenu;

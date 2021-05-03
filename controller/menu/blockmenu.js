@@ -17,11 +17,12 @@ class Blockmenu {
     });
   }
 
-  static open(x, y) {
-    if (Blockmenu.isOpen()) {
-      Blockmenu.closeAll();
-    } else {
-      Blockmenu.closeAll();
+  static open() {
+    let isOpen = Blockmenu.isOpen();
+    Blockmenu.closeAll();
+
+    if (!isOpen) {
+      let { x, y } = General.getCursorPixelPosition();
       $("#blockmenu").css({ top: y - 100 + "px", left: x + 10 + "px" });
       $("#blockmenu").addClass("visible");
       $("#blockmenu").toggle(true);
@@ -35,32 +36,8 @@ class Blockmenu {
 
     switch (elementType) {
       case "table":
-        let data = {
-          caption: "",
-          columns: [
-            { name: "Name", type: "text", width: "120px" },
-            { name: "Done", type: "checkbox", width: "20px" },
-          ],
-          rows: [
-            {
-              Name: "",
-              Done: false,
-            },
-            {
-              Name: "",
-              Done: false,
-            },
-            {
-              Name: "",
-              Done: false,
-            },
-          ],
-        };
-        let table = Table.build(null, data);
-        Textline.appendBefore(table);
-        break;
-      case "textline":
-        Textline.build($("#content"), "");
+        let htmlTable = Table.create(null, null);
+        Textline.appendBefore(htmlTable);
         break;
     }
   }

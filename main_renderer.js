@@ -15,13 +15,19 @@ const File = require("../utils/file.js");
 
 // Controller
 const Settings = require("../controller/settings.js");
-const Database = require("../controller/database/database.js");
 const Document = require("../controller/document.js");
 
 const Searchmenu = require("../controller/menu/searchmenu.js");
 const Navbar = require("../controller/menu/navbar.js");
+const Pagemenu = require("../controller/menu/pagemenu.js");
 const Blockmenu = require("../controller/menu/blockmenu.js");
 const Tablemenu = require("../controller/menu/tablemenu.js");
+
+// Database
+const Database = require("../controller/database/database.js");
+const Page_DB = require("../controller/database/page_db.js");
+const Table_DB = require("../controller/database/table_db.js");
+const Textline_DB = require("../controller/database/textline_db.js");
 
 // Model
 const Enums = require("../model/enums.js");
@@ -67,11 +73,12 @@ class Renderer {
 
     Navbar.init();
     Page.init();
-    
-    // Blockmenu.init();
-    // Searchmenu.init();
 
-    // Document.init();
+    Document.init();
+    Blockmenu.init();
+    Pagemenu.init();
+
+    // Searchmenu.init();
   }
 
   static registerEvents() {
@@ -94,12 +101,15 @@ class Renderer {
       console.log("update-not-available");
     });
 
-    window.onbeforeunload = function (event) {
-      event.preventDefault();
+    $(window).on("beforeunload", function (event) {
+      try {
+        event.preventDefault();
 
-      Database.close();
-      Settings.save();
-    };
+        Page.saveCurrentContent();
+        Database.close();
+        Settings.save();
+      } catch (e) {}
+    });
 
     $("#btnUpdateApp").on("click", function (event) {
       ipcRenderer.send("quitAndInstall");
@@ -110,20 +120,12 @@ class Renderer {
     $("#btnRestart").on("click", function (event) {
       Eventhandler.onClickBtnRestart(event);
     });
-
-    $("#btnExit").on("click", function (event) {
-      console.log("login onclick exit");
-      Eventhandler.onClickBtnExit(event);
-    });
   }
 }
 
 class Eventhandler {
-  static onClickBtnExit() {
-    ipcRenderer.send("exit", false);
-  }
-
   static onClickBtnRestart(event) {
+    $(window).trigger("beforeunload");
     ipcRenderer.send("exit", true);
   }
 }
@@ -132,7 +134,7 @@ Renderer.init();
 
 // DEBUG Test table build
 // const Table = require("./model/table.js");
-// Table.build($("#content"), {
+// Table.create($("#content"), {
 //   caption: "Untitled",
 //   columns: [
 //     { name: "Name", type: "text", width: "120px" },

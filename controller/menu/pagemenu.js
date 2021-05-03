@@ -1,44 +1,53 @@
+const Page = require("../../model/page");
+
 class Pagemenu {
   static init() {
     Pagemenu.registerEvents();
   }
 
   static registerEvents() {
-    $("#pageMenu").on("click", function (event) {
-      Eventhandler.onClick(event);
-    });
-  }
-
-  static registerEventMenuItem(tr) {
-    $(tr).on("click", function (event) {
+    $("#pagemenu table tbody tr").on("click", function (event) {
       Eventhandler.onClickMenuItem(event);
     });
   }
 
-  static isOpen(pageMenu) {
-    return pageMenu.hasClass("visible");
+  static isOpen() {
+    return $("#pagemenu").hasClass("visible");
   }
 
-  static close() {
-    $("#pageMenu").removeClass("visible");
-    $("#pageMenu").toggle(false);
+  static closeAll() {
+    $("#pagemenu").removeClass("visible");
+    $("#pagemenu").toggle(false);
   }
 
-  static open(x, y) {
-    if (Pagemenu.isOpen()) {
-      Pagemenu.closeAll();
-    } else {
-      Pagemenu.closeAll();
-      $("#pageMenu").css({ top: y - 100 + "px", left: x + 10 + "px" });
-      $("#pageMenu").addClass("visible");
-      $("#pageMenu").toggle(true);
+  static open(navbarItem) {
+    let isOpen = Pagemenu.isOpen();
+    Pagemenu.closeAll();
+    if (!isOpen) {
+      Eventhandler.selectedPage = navbarItem;
+      let { x, y } = General.getCursorPixelPosition();
+      $("#pagemenu").css({ top: y + 10 + "px", left: x + "px" });
+      $("#pagemenu").addClass("visible");
+      $("#pagemenu").toggle(true);
     }
   }
 }
 
 class Eventhandler {
+  static selectedPage;
+
   static onClickMenuItem(event) {
-    // NEW Remove page
+    if (!Eventhandler.selectedPage) return;
+    let action = $(event.target).parent("tr").attr("id");
+
+    switch (action) {
+      case Enums.PageActions["delete"]:
+        Page.delete(Eventhandler.selectedPage.data("uuid"));
+        Eventhandler.selectedPage.remove();
+        break;
+    }
+
+    Pagemenu.closeAll();
   }
 }
 

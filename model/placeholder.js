@@ -1,6 +1,8 @@
+const Textline = require("./textline");
+
 class Placeholder {
-  static registerEvents(div) {
-    $(div).on("click", function (event) {
+  static init() {
+    $("#placeholder").on("click", function (event) {
       Eventhandler.onClick(event);
     });
   }
@@ -8,9 +10,7 @@ class Placeholder {
 
 class Eventhandler {
   static onClick(event) {
-    let textline = $(".textline:last");
-    textline.trigger("focus");
-    General.moveCursorToEnd(null);
+    Textline.focusLast();
   }
 }
 

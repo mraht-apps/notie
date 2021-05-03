@@ -12,14 +12,14 @@ class Renderer {
     Settings.CACHE = settings.CACHE;
     Settings.DATA = settings.DATA;
 
-    if(Settings.CACHE.REMEMBER_DB) {
+    if (Settings.CACHE.REMEMBER_DB) {
       $("#rememberDatabase").prop("checked", true);
     }
-    if(Settings.CACHE.REMEMBER_PW) {
+    if (Settings.CACHE.REMEMBER_PW) {
       $("#rememberPassword").prop("checked", true);
     }
 
-    if(Settings.DATA.PASSWORD) {
+    if (Settings.DATA.PASSWORD) {
       $("#password").val(Settings.DATA.PASSWORD);
     }
 
@@ -117,7 +117,10 @@ class Eventhandler {
   }
 
   static onKeyupPassword(event) {
-    if ($("#password").hasClass("error") && $("#password").val().length >= 8) {
+    if (
+      $("#password").hasClass("error") &&
+      Settings.isSuitablePassword($("#password").val())
+    ) {
       $("#password").removeClass("error");
     }
   }

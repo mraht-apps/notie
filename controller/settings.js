@@ -80,13 +80,23 @@ class Settings {
     console.log(Settings.DATA);
     File.writeFile(Settings.FILE, JSON.stringify(Settings.DATA));
   }
+
+  static isSuitablePassword(password) {
+    if (password.length >= 8) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
 
 class Eventhandler {
-  static onClickBtnSave(event) {
-    const password = $("#password").val();
-    Settings.CACHE.PASSWORD = password;
-    console.log("User set password to " + Settings.CACHE.PASSWORD + "\n");
+  static onClickBtnSavePassword(event) {
+    let password = $("#password").val();
+    if (Settings.isSuitablePassword(password)) {
+      Settings.CACHE.PASSWORD = password;
+      console.log("User set password to " + Settings.CACHE.PASSWORD + "\n");
+    }
   }
 }
 
