@@ -1,6 +1,8 @@
 class Page {
   static DEFAULT_NAME = "Untitled";
 
+  // FIX Pages are being shown in page menu even if they were being deleted
+
   static init() {
     let startpage;
     let pageId = Settings.DATA.STARTPAGE;
@@ -124,6 +126,9 @@ class Page {
 
     $("#content").data("uuid", page.id);
     $("#pageName").val(page.name);
+    $("#pageName").on("keyup", function (event) {
+      Eventhandler.onKeyupPageName(event);
+    });
   }
 
   static saveCurrentContent() {
@@ -183,9 +188,7 @@ class Page {
     });
     Table_DB.updateColumns(false, sqlStatements, tableId, htmlColumns);
 
-    let htmlRows = table.find("tbody > tr").filter(function () {
-      return $(this).data("uuid");
-    });
+    let htmlRows = table.find("tbody > tr");
     Table_DB.updateValues(true, sqlStatements, tableId, htmlColumns, htmlRows);
   }
 
@@ -198,6 +201,29 @@ class Page {
 
   static delete(id) {
     Page_DB.delete(id);
+    // FIX Call another page and get rid of old one
+    delete $("#content").data("uuid");
+    $("#settingsPage").trigger("click");
+  }
+}
+
+class Eventhandler {
+  static onKeyupPageName(event) {
+    let pageId = $("#content").data("uuid");
+    let navBarItem = $(".navBarItem").filter(function () {
+      return $(this).data("uuid") == pageId;
+    });
+
+    let pagename = $("#pageName").val();
+    let textNode = navBarItem.contents().filter(function () {
+      return this.nodeType == Node.TEXT_NODE;
+    });
+    if (textNode && textNode.length > 0) {
+      textNode.replaceWith(pagename);
+    } else {
+      let textNode = document.createTextNode(pagename);
+      navBarItem.append(textNode);
+    }
   }
 }
 

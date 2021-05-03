@@ -11,10 +11,20 @@ class Textline_DB {
     return sqlStatements;
   }
 
-  static delete(run = false, sqlStatements = [], id) {
+  static delete(run = false, sqlStatements = [], ids) {
+    if (!ids || ids.length == 0) return;
+
+    let sqlIds = "";
+    $(ids).each(function (index, id) {
+      sqlIds += `'${id}'`;
+      if (index < ids.length - 1) {
+        sqlIds += ", ";
+      }
+    });
+
     sqlStatements.push(
-      `DELETE FROM textlines WHERE id = '${id}';`,
-      `DELETE FROM page_elements WHERE id = '${id}';`
+      `DELETE FROM textlines WHERE id IN (${sqlIds});`,
+      `DELETE FROM page_elements WHERE id IN (${sqlIds});`
     );
 
     if (run) {

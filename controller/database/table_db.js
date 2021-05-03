@@ -115,20 +115,22 @@ class Table_DB {
     return sqlStatements;
   }
 
-  static delete(run = false, sqlStatements = [], tableIds) {
-    let ids = "";
-    $(tableIds).each(function (index, tableId) {
-      ids += `'${tableId}'`;
-      if (index < tableIds.length - 1) {
-        ids += ", ";
+  static delete(run = false, sqlStatements = [], ids) {
+    if(!ids || ids.length == 0) return;
+
+    let sqlIds = "";
+    $(ids).each(function (index, id) {
+      sqlIds += `'${id}'`;
+      if (index < ids.length - 1) {
+        sqlIds += ", ";
       }
-      sqlStatements.push(`DROP TABLE IF EXISTS '${tableId}';`);
+      sqlStatements.push(`DROP TABLE IF EXISTS '${id}';`);
     });
-    ids += "";
+    
     sqlStatements.push(
-      `DELETE FROM tables WHERE id IN (${ids});`,
-      `DELETE FROM table_columns WHERE table_id IN (${ids});`,
-      `DELETE FROM page_elements WHERE id IN (${ids});`
+      `DELETE FROM tables WHERE id IN (${sqlIds});`,
+      `DELETE FROM table_columns WHERE table_id IN (${sqlIds});`,
+      `DELETE FROM page_elements WHERE id IN (${sqlIds});`
     );
 
     if (run) {

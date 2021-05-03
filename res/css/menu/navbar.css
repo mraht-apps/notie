@@ -17,11 +17,8 @@
   align-self: auto;
 }
 
-.navBarItem:hover {
-  background: #e1e1e1;
-}
-
 .navBarItem {
+  height: 32px;
   padding: 6px 8px 6px 8px;
   text-decoration: none;
   display: flex;
@@ -30,6 +27,10 @@
   vertical-align: middle;
   cursor: pointer;
   outline: none;
+}
+
+.navBarItem:hover {
+  background: #e1e1e1;
 }
 
 .navBarItem img {

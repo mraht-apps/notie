@@ -52,9 +52,9 @@ class Navbar {
     navBarItem.dataset.uuid = page.id;
     let img = document.createElement("img");
     img.src = "../res/img/page.svg";
-    navBarItem.appendChild(img);
+    navBarItem.append(img);
     let textNode = document.createTextNode(page.name);
-    navBarItem.appendChild(textNode);
+    navBarItem.append(textNode);
     Navbar.registerEvent(navBarItem);
 
     $("#newPage").before(navBarItem);

@@ -2,7 +2,7 @@ Version 1.0.0
 =====================================================================
 [X] Table deleteable: Menu for table with menuitem "Delete"
 [ ] Pages can be deleted
-[ ] Changing page name should reflect on page name in navbar immediately
+[X] Changing page name should reflect on page name in navbar immediately
 [ ] Table rows and columns deletable
 [ ] Save/load html table from database
 [ ] Table rows as pages: UUID per row/page, internal pagename is UUID

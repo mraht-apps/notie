@@ -53,18 +53,25 @@ class Page_DB {
     return sql;
   }
 
-  static remove(id) {
+  static delete(id) {
     let sqlStatements = [`DELETE FROM pages WHERE id = '${id}';`];
     let pageElements = Page_DB.getElements(id);
 
     let tableIds = [];
+    let textlineIds = [];
     $(pageElements).each(function () {
-      if (this.element_type != Enums.ElementTypes.table) return;
-      tableIds.push(this.id);
+      switch (this.type_id) {
+        case Enums.ElementTypes.table:
+          tableIds.push(this.id);
+          break;
+        case Enums.ElementTypes.textline:
+          textlineIds.push(this.id);
+          break;
+      }
     });
-    Table_DB.remove(tableIds);
 
-    Database.run();
+    Table_DB.delete(false, sqlStatements, tableIds);
+    Textline_DB.delete(true, sqlStatements, textlineIds);
   }
 }
 

@@ -1,5 +1,3 @@
-const Page = require("../../model/page");
-
 class Pagemenu {
   static init() {
     Pagemenu.registerEvents();
