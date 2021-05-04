@@ -107,7 +107,13 @@ class Renderer {
         event.preventDefault();
 
         Page.saveCurrentContent();
+      } catch (e) {}
+
+      try {
         Database.close();
+      } catch (e) {}
+
+      try {
         Settings.save();
       } catch (e) {}
     });

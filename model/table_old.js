@@ -1,3 +1,5 @@
+const General = require("../utils/general");
+
 class Table {
   static DEFAULT_TITLE = "Untitled";
 
@@ -356,39 +358,54 @@ class Eventhandler {
 
     switch (event.key) {
       case "ArrowDown":
-        $(event.target)
+        var input = $(event.target)
           .parents("tr")
           .next()
           .children()
           .eq(columnIndex)
-          .find("div")
+          .children()
           .trigger("focus");
-        General.moveCursorToEnd(null);
+          if(input.is("[contentEditable='true']")) General.selectText();
         event.preventDefault();
         break;
       case "ArrowLeft":
-        // OPT If cursor is not at the beginning of a text, suppress moving
+        if (window.getSelection().baseOffset > 0) return;
         var input = $(event.target).parents("td").prev().children();
+        if (input.length == 0) {
+          input = $(event.target)
+            .parents("tr")
+            .children()
+            .eq($(event.target).parents("tr").children().length - 2)
+            .children();
+        }
         input.trigger("focus");
-        if (input.is("[contentEditable='true']")) General.moveCursorToEnd(null);
+        input.is("[contentEditable='true']") ? General.selectText() : General.deselectText();
         event.preventDefault();
         break;
       case "ArrowRight":
-        // OPT If cursor is not at the end of a text, suppress moving
+        if (window.getSelection().baseOffset < $(event.target).html().length)
+          return;
         var input = $(event.target).parents("td").next().children();
+        if (input.length == 0) {
+          input = $(event.target)
+            .parents("tr")
+            .children()
+            .first("td")
+            .children();
+        }
         input.trigger("focus");
-        if (input.is("[contentEditable='true']")) General.moveCursorToEnd(null);
+        input.is("[contentEditable='true']") ? General.selectText() : General.deselectText();
         event.preventDefault();
         break;
       case "ArrowUp":
-        $(event.target)
+        var input = $(event.target)
           .parents("tr")
           .prev()
           .children()
           .eq(columnIndex)
-          .find("div")
+          .children()
           .trigger("focus");
-        General.moveCursorToEnd(null);
+          if(input.is("[contentEditable='true']")) General.selectText();
         event.preventDefault();
         break;
     }

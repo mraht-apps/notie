@@ -28,6 +28,14 @@ class General {
     let selection = window.getSelection();
     return selection.focusOffset - selection.baseOffset;
   }
+
+  static selectText() {
+    document.execCommand("selectAll", false, null);
+  }
+
+  static deselectText() {
+    window.getSelection().empty();
+  }
 }
 
 module.exports = General;

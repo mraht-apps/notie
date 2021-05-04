@@ -11,6 +11,7 @@ Version 1.0.0 (TBA)
   - Settings: Password can be changed
   - Encryption of the database file
   - Login screen to be able to open or create databases
+  - Navigation with arrow keys between columns and rows
 
 *** Opt
   - ./. (first version)

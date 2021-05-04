@@ -1,6 +1,5 @@
 Version 1.0.0
 =====================================================================
-- Navigation with arrow keys between columns and rows
 - Page overflow auto to fit content by scrollbar whereas menu remains fixed
 - Table rows and columns deletable
 - Table rows as pages: UUID per row/page, internal pagename is UUID

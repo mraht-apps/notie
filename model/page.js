@@ -23,13 +23,13 @@ class Page {
       page.name = Page.DEFAULT_NAME;
     }
 
-    // if (!page.parent || page.parent.length == 0) {
-    //   page.parent = "";
-    // }
+    if (!page.parent || page.parent.length == 0) {
+      page.parent = "";
+    }
 
-    // if (!page.parent_type || page.parent_type.length == 0) {
-    //   page.parent_type = 0;
-    // }
+    if (!page.parent_type || page.parent_type.length == 0) {
+      page.parent_type = 0;
+    }
 
     Page_DB.add(true, [], page);
   }
