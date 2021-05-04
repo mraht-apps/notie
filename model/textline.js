@@ -17,7 +17,8 @@ class Textline {
     } else {
       $(htmlTextline).data("uuid", textline.id);
     }
-    $(htmlTextline).data("placeholder", placeholderText);
+    // css wouldn't recognize this attribute if we'd set it with jquery
+    htmlTextline.dataset.placeholder = placeholderText;
 
     Textline.registerEvents(htmlTextline);
 
