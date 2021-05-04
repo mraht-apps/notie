@@ -1,3 +1,6 @@
+const Page = require("../model/page");
+const Pagemenu = require("./menu/pagemenu");
+
 class Document {
   static init() {
     Document.registerEvents();
@@ -6,10 +9,6 @@ class Document {
   static registerEvents() {
     $(document).on("click", function (event) {
       Eventhandler.onClick(event);
-    });
-
-    $(document).on("keypress", function (event) {
-      Eventhandler.onKeypress(event);
     });
 
     $(document).on("keyup", function (event) {
@@ -42,16 +41,8 @@ class Eventhandler {
     }
   }
 
-  static onKeypress(event) {
-    // switch (event.key) {
-    //   case "Enter":
-    //     Blockmenu.addElement();
-    //     break;
-    // }
-  }
-
   static onKeyup(event) {
-    if (!Blockmenu.isOpen()) return;
+    if (!Blockmenu.isOpen() || Page.isDisabled()) return;
 
     if ($(".active").length == 0) {
       $(".clickable").eq(0).addClass("active");

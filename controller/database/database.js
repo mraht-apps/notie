@@ -69,20 +69,27 @@ class Database {
     if (exists) return;
     Database.initTables();
     Database.initElementTypes();
+    Database.initParentTypes();
   }
 
   static initTables() {
     let sql = [
       "CREATE TABLE IF NOT EXISTS element_types (" +
         "id INTEGER NOT NULL," +
-        "name TEXT," +
+        "name TEXT NOT NULL," +
+        "PRIMARY KEY (id) );",
+      "CREATE TABLE IF NOT EXISTS parent_types (" +
+        "id INTEGER NOT NULL," +
+        "name TEXT NOT NULL," +
         "PRIMARY KEY (id) );",
       "CREATE TABLE IF NOT EXISTS pages (" +
         "id TEXT NOT NULL," +
         "name TEXT," +
+        // "parent TEXT," +
+        // "parent_type_id INTEGER REFERENCES parent_types(id)," +
         "PRIMARY KEY (id) );",
       "CREATE TABLE IF NOT EXISTS page_elements (" +
-        "page_id TEXT NOT NULL," +
+        "page_id TEXT NOT NULL REFERENCES pages(id)," +
         "id TEXT NOT NULL," +
         "type_id INTEGER NOT NULL REFERENCES element_types(id)," +
         "position INTEGER NOT NULL," +
@@ -112,6 +119,20 @@ class Database {
     for (let i = 0; i < types.length; i++) {
       let type = types[i];
       sql += `('${Enums.ElementTypes[type]}', '${type}')`;
+      if (i < types.length - 1) {
+        sql += ", ";
+      }
+    }
+    sql += ";";
+    Database.run([sql]);
+  }
+
+  static initParentTypes() {
+    let sql = "REPLACE INTO parent_types VALUES ";
+    let types = Object.keys(Enums.ParentTypes);
+    for (let i = 0; i < types.length; i++) {
+      let type = types[i];
+      sql += `('${Enums.ParentTypes[type]}', '${type}')`;
       if (i < types.length - 1) {
         sql += ", ";
       }

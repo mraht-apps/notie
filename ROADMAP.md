@@ -1,35 +1,23 @@
 Version 1.0.0
 =====================================================================
-[X] Table deleteable: Menu for table with menuitem "Delete"
-[ ] Pages can be deleted
-[X] Changing page name should reflect on page name in navbar immediately
-[ ] Table rows and columns deletable
-[ ] Save/load html table from database
-[ ] Table rows as pages: UUID per row/page, internal pagename is UUID
-[X] Table creation/deletion: Change Sqlite DB accordingly
-[ ] New column type: Reference to other tables
-[ ] Column type can be chosen
-[ ] Page overflow auto to fit content by scrollbar whereas menu remains fixed
-[ ] Logout button
-[X] Choosing of filepath to database file
-[X] Encryption of the database file
-[ ] Page for images and license
-[X] Auto updater
-[X] Settings: Password can be changed
-
-
-Version 1.1.0
-=====================================================================
-[ ] Table filter
-[ ] Table sorting
-[ ] Creation of sub pages
-[ ] Textlines can be indented within a page (Tab)
-[ ] Navigation with arrow keys between columns and rows
+- Navigation with arrow keys between columns and rows
+- Page overflow auto to fit content by scrollbar whereas menu remains fixed
+- Table rows and columns deletable
+- Table rows as pages: UUID per row/page, internal pagename is UUID
+- New column type: Reference to other tables
+- Column type can be chosen
+- Page for images and licenses
+- Optimize table.js
+- 
 
 Backlog
 =====================================================================
-[ ] Pages can be rearranged within a page hierarchy (Drag 'n Drop)
-[ ] Page elements can be rearranged within pages (Drag 'n Drop)
-[ ] Page elements can be moved to different pages (Drag 'n Drop)
-[ ] New page element: Checkbox
-[ ] 
+- Table filter
+- Table sorting
+- Creation of sub pages
+- Textlines can be indented within a page (Tab)
+- Pages can be rearranged within a page hierarchy (Drag 'n Drop)
+- Page elements can be rearranged within pages (Drag 'n Drop)
+- Page elements can be moved to different pages (Drag 'n Drop)
+- New page element: Checkbox
+- 

@@ -1,82 +1,94 @@
+const Pagemenu = require("../controller/menu/pagemenu");
+
 class Page {
   static DEFAULT_NAME = "Untitled";
 
-  // FIX Pages are being shown in page menu even if they were being deleted
-
   static init() {
-    let startpage;
+    let startpage = { id: "" };
     let pageId = Settings.DATA.STARTPAGE;
     if (pageId && pageId.length > 0) {
       startpage = Page_DB.getById(pageId);
-    }
-
-    if (startpage && startpage.id && startpage.id.length > 0) {
-      Page.load({ id: startpage.id });
-    } else {
-      Page.create();
+      if (startpage) Navigation.next(startpage.id);
     }
 
     Placeholder.init();
-  }
-
-  static create() {
-    let page = { id: "", name: "" };
-
-    Page.addToDatabase(page);
-    Navbar.add(page);
-    Page.load(page);
   }
 
   static addToDatabase(page) {
     if (!page.id || page.id.length == 0) {
       page.id = Crypto.generateUUID();
     }
+
     if (!page.name || page.name.length == 0) {
       page.name = Page.DEFAULT_NAME;
     }
+
+    // if (!page.parent || page.parent.length == 0) {
+    //   page.parent = "";
+    // }
+
+    // if (!page.parent_type || page.parent_type.length == 0) {
+    //   page.parent_type = 0;
+    // }
 
     Page_DB.add(true, [], page);
   }
 
   static load(page) {
     Page.saveCurrentContent();
+    Page.clear();
 
-    $("#content").html("");
-    $("#pageName").val("");
-    $("#content").removeData("uuid");
+    if (!page || (!page.css_id && (!page.id || page.id.length == 0))) {
+      page = { id: "", name: "" };
+      Page.addToDatabase(page);
+      Navbar.add(page);
+    }
 
     if (!page) return;
 
-    let pageCssId = page.css_id;
-    switch (pageCssId) {
+    switch (page.id) {
       case "newPage":
-        Page.create();
+        Page.openNewPage();
         break;
       case "settingsPage":
-        let pageUrl = page.url;
-        var page = File.readFile(Path.join(__dirname, pageUrl));
-        $("#content").html(page);
-        $("#pageName").val("Settings");
-        Settings.registerEvents();
+        Page.openSettingsPage(page);
         break;
       default:
-        Page.loadPageContent(page.id);
+        Page.openUserPage(page.id);
         break;
     }
   }
 
-  static loadPageContent(pageId) {
+  static clear() {
+    $("#content").html("");
+    $("#pageName").val("");
+    $("#content").data("uuid", null);
+  }
+
+  static openNewPage() {
+    Page.load(null);
+  }
+
+  static openSettingsPage(page) {
+    var page = File.readFile(Path.join(__dirname, "../view/settings.html"));
+    $("#content").html(page);
+    $("#pageName").val("Settings");
+    Settings.registerEvents();
+  }
+
+  static openUserPage(pageId) {
     let page = Page_DB.getById(pageId);
     let elements = Page_DB.getElements(pageId);
+    let htmlElement = null;
 
     if (!elements || elements.length == 0) {
-      Textline.create($("#content"), null);
+      htmlElement = Textline.create(null);
+      $("#content").append(htmlElement);
     } else {
       let textlines = Page_DB.getTextlines(pageId);
-      let tables = Page_DB.getTables(pageId);
+      let tables = Table_DB.getByPageId(pageId);
       let tableColumns = Table_DB.getColumns(tables);
       $(elements).each(function (index, element) {
-        console.log(element);
         switch (element.type_id) {
           case Enums.ElementTypes.table:
             let table = $(tables)
@@ -100,7 +112,7 @@ class Page {
                 if (column.type == "checkbox") {
                   cellValue = cellValue == "true";
                 }
-                row[column.name] = cellValue;
+                row[column.id] = cellValue;
               });
               rows.push(row);
             });
@@ -111,16 +123,17 @@ class Page {
               columns: columns,
               rows: rows,
             };
-            Table.create($("#content"), tableData);
+            htmlElement = Table.create(tableData);
             break;
           case Enums.ElementTypes.textline:
             let sqlTextline = $(textlines).filter(function () {
               return this.id == element.id;
             })[0];
             if (!sqlTextline) return;
-            Textline.create($("#content"), sqlTextline);
+            htmlElement = Textline.create(sqlTextline);
             break;
         }
+        $("#content").append(htmlElement);
       });
     }
 
@@ -154,10 +167,10 @@ class Page {
       let elementTypeId;
       if (htmlChild.is(".table")) {
         elementTypeId = Enums.ElementTypes.table;
-        Page.saveTable(htmlChild);
+        Table.save(htmlChild);
       } else if (htmlChild.is(".textline")) {
         elementTypeId = Enums.ElementTypes.textline;
-        Page.saveTextline(htmlChild);
+        Textline.save(htmlChild);
       }
       let element = { id: htmlChild.data("uuid"), typeId: elementTypeId };
       sql = Page_DB.buildUpdateElement(
@@ -171,39 +184,31 @@ class Page {
     Page_DB.updateElement([sql]);
   }
 
-  static saveTable(table) {
-    let tableId = table.data("uuid");
-    let tableName = table
-      .find("caption > .captionContainer > .tableTitleContainer > input")
-      .val();
-
-    let sqlStatements = [];
-    Table_DB.update(false, sqlStatements, {
-      id: tableId,
-      name: tableName,
-    });
-
-    let htmlColumns = table.find("thead > tr > th").filter(function () {
-      return $(this).data("type") != "add";
-    });
-    Table_DB.updateColumns(false, sqlStatements, tableId, htmlColumns);
-
-    let htmlRows = table.find("tbody > tr");
-    Table_DB.updateValues(true, sqlStatements, tableId, htmlColumns, htmlRows);
-  }
-
-  static saveTextline(textline) {
-    Textline_DB.update(true, [], {
-      id: textline.data("uuid"),
-      text: textline.text(),
-    });
-  }
-
   static delete(id) {
     Page_DB.delete(id);
-    // FIX Call another page and get rid of old one
-    delete $("#content").data("uuid");
+    $("#content").data("uuid", null);
     $("#settingsPage").trigger("click");
+  }
+
+  static addElement(elementType) {
+    switch (elementType) {
+      case "table":
+        let tableElement = Table.create(null);
+        Textline.appendBefore(tableElement);
+        break;
+    }
+  }
+
+  static setDisable(disable) {
+    $("#disabledPageContainer").toggle(disable);
+  }
+
+  static isDisabled() {
+    if ($("#disabledPageContainer").css("display") == "none") {
+      return false;
+    } else {
+      return true;
+    }
   }
 }
 

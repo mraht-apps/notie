@@ -22,20 +22,21 @@
 
   <div id="pageContainer">
     <div id="navBar">
-      <div id="settingsPage" class="navBarItem" data-url="../view/settings.html"><img
+      <div id="settingsPage" class="navBarItem" data-uuid="settingsPage"><img
           src="../res/img/settings.svg">Settings
       </div>
       <div id="navBarPages">
         <div id="navBarPagesTitle">Pages
           <hr>
         </div>
-        <div id="newPage" class="navBarItem"><img src="../res/img/new.svg">New page</div>
+        <div id="newPage" class="navBarItem" data-uuid="newPage"><img src="../res/img/new.svg">New page</div>
       </div>
     </div>
     <div id="resizeSeparator"></div>
     <div id="pageContent">
       <div id="menuBar">
         <button id="btnTest">Test</button>
+        <button id="btnLogout">Logout</button>
         <button id="btnRestart">Restart</button>
         <button disabled id="btnUpdateApp">Update Ready</button>
         <hr>
@@ -47,6 +48,7 @@
       <div id="placeholder"></div>
     </div>
   </div>
+  <div id="disabledPageContainer"></div>
 
   <!-- Popup menus -->
   <div id="blockmenu">

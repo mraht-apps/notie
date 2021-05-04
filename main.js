@@ -75,15 +75,6 @@ class App {
       App.loginWindow.close();
     });
 
-    ipcMain.on("resizeWindow", function (event, windowData) {
-      if (!windowData) {
-        App.mainWindow.maximize();
-      } else {
-        App.mainWindow.setSize(windowData.WIDTH, windowData.HEIGHT);
-        App.mainWindow.setPosition(windowData.X, windowData.Y);
-      }
-    });
-
     ipcMain.on("setAppVersion", (event) => {
       App.mainWindow.setTitle("notie " + app.getVersion());
     });
@@ -93,6 +84,11 @@ class App {
     // explicitly with Cmd + Q.
     app.on("window-all-closed", function () {
       if (process.platform !== "darwin") app.quit();
+    });
+
+    ipcMain.on("logout", function(event) {
+      Login.init();
+      App.mainWindow.close();
     });
 
     ipcMain.on("exit", function (event, restart) {
@@ -125,14 +121,34 @@ class Main {
   }
 
   static createWindow() {
-    // Create the browser window.
+    var height = 600;
+    var width = 800;
+    var x = 0;
+    var y = 0;
+    var maximize = false;
+
+    if (!Settings.DATA.WINDOW) {
+      maximize = true;
+    } else {
+      if (Settings.DATA.WINDOW.HEIGHT) height = Settings.DATA.WINDOW.HEIGHT;
+      if (Settings.DATA.WINDOW.WIDTH) width = Settings.DATA.WINDOW.WIDTH;
+      if (Settings.DATA.WINDOW.X) x = Settings.DATA.WINDOW.X;
+      if (Settings.DATA.WINDOW.Y) y = Settings.DATA.WINDOW.Y;
+    }
+
     const mainWindow = new BrowserWindow({
+      height: height,
+      width: width,
+      x: x,
+      y: y,
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
         preload: path.join(__dirname, "preload.js"),
       },
     });
+
+    if (maximize) mainWindow.maximize();
 
     mainWindow.loadFile("view/main.html");
     mainWindow.once("ready-to-show", function () {

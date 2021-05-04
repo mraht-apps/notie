@@ -17,6 +17,10 @@ class Blockmenu {
     });
   }
 
+  static isOpen() {
+    return $("#blockmenu").is(":visible");
+  }
+
   static open() {
     let isOpen = Blockmenu.isOpen();
     Blockmenu.closeAll();
@@ -24,38 +28,22 @@ class Blockmenu {
     if (!isOpen) {
       let { x, y } = General.getCursorPixelPosition();
       $("#blockmenu").css({ top: y - 100 + "px", left: x + 10 + "px" });
-      $("#blockmenu").addClass("visible");
       $("#blockmenu").toggle(true);
       $(".clickable").eq(0).addClass("active");
     }
   }
 
-  static addElement() {
-    let row = $(".active").eq(0);
-    let elementType = row.data("type");
-
-    switch (elementType) {
-      case "table":
-        let htmlTable = Table.create(null, null);
-        Textline.appendBefore(htmlTable);
-        break;
-    }
-  }
-
-  static isOpen() {
-    return $("#blockmenu").hasClass("visible");
-  }
-
   static closeAll() {
     $(".clickable").removeClass("active");
-    $("#blockmenu").removeClass("visible");
     $("#blockmenu").toggle(false);
   }
 }
 
 class Eventhandler {
   static onClickMenuItem(event) {
-    Blockmenu.addElement();
+    let row = $(".active").eq(0);
+    let elementType = row.data("type");
+    Page.addElement(elementType);
     Blockmenu.closeAll();
   }
 

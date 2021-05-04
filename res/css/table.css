@@ -140,14 +140,16 @@
   height: 18px;
 }
 
-.columnTitle img:hover {
+.columnTitle:not(:last-of-type) img:hover {
   background-color: rgb(236, 236, 236);
   border-radius: 4px;
   cursor: pointer;
 }
 
+
+
 .tableHead th input[type="text"],
-.tableBody td input[type="text"] {
+.tableBody td div[contenteditable="true"] {
   padding-left: 6px;
 }
 
@@ -173,6 +175,7 @@
 }
 
 .table input[type="text"],
+.table div[contenteditable="true"],
 .table .textline {
   outline: none;
   border: none;

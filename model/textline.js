@@ -3,25 +3,24 @@ const General = require("../utils/general");
 
 const placeholderText = "Type '/' for commands";
 class Textline {
-  static create(parent, textline) {
+  static create(textline) {
     if (!textline) {
       textline = { id: "", text: "" };
     }
 
     let htmlTextline = document.createElement("div");
     htmlTextline.contentEditable = "true";
-    htmlTextline.className = "textline";
-    let textNode = document.createTextNode(textline.text);
-    htmlTextline.appendChild(textNode);
+    htmlTextline.className = "pageElement textline";
+    $(htmlTextline).html(textline.text);
     if (!textline.id || textline.id.length == 0) {
-      htmlTextline.dataset.uuid = Crypto.generateUUID(6);
+      $(htmlTextline).data("uuid", Crypto.generateUUID(6));
     } else {
-      htmlTextline.dataset.uuid = textline.id;
+      $(htmlTextline).data("uuid", textline.id);
     }
-    htmlTextline.dataset.placeholder = placeholderText;
+    $(htmlTextline).data("placeholder", placeholderText);
 
     Textline.registerEvents(htmlTextline);
-    parent.append(htmlTextline);
+
     return htmlTextline;
   }
 
@@ -59,9 +58,16 @@ class Textline {
     General.moveCursorToEnd(null);
   }
 
-  static remove(textline) {
+  static delete(textline) {
     textline.remove();
-    Textline_DB.delete(true, [], textline.data("uuid"));
+    Textline_DB.delete(true, [], [textline.data("uuid")]);
+  }
+
+  static save(textline) {
+    Textline_DB.update(true, [], {
+      id: textline.data("uuid"),
+      text: textline.text(),
+    });
   }
 }
 class Eventhandler {
@@ -92,7 +98,6 @@ class Eventhandler {
         var selectedTextLength = General.getSelectedTextLength();
 
         if (
-          prevElement.is(".textline") &&
           General.getCursorPosition(textline) == 0 &&
           selectedTextLength == 0
         ) {
@@ -100,21 +105,23 @@ class Eventhandler {
           if (textline.text().length > 0 && selectedTextLength == 0) {
             prevElement.text(prevElement.text() + textline.text());
           }
-          Textline.remove(textline);
-          General.moveCursorTo(prevElement, prevElementTextLength);
+
+          Textline.delete(textline);
+
+          if (prevElement.is(".textline")) {
+            General.moveCursorTo(prevElement, prevElementTextLength);
+          }
           event.preventDefault();
         }
         break;
       case "Enter":
         if (Blockmenu.isOpen()) {
-          Blockmenu.addElement();
+          Page.addElement();
           Blockmenu.closeAll();
           event.preventDefault();
           return;
         }
-        // NEW Enter before text: Add textline before
-        // NEW Enter within text: Split text at cursor position
-        var newTextline = Textline.create(textline.parent(), null);
+        var newTextline = Textline.create(null);
         Textline.registerEvents();
         textline.after(newTextline);
         Textline.focusNext($(newTextline));

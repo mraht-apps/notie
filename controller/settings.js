@@ -50,10 +50,6 @@ class Settings {
     }
   }
 
-  static resizeWindow() {
-    ipcRenderer.send("resizeWindow", Settings.DATA.WINDOW);
-  }
-
   static save() {
     Settings.DATA.STARTPAGE = $("#content").data("uuid");
 

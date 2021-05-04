@@ -10,6 +10,11 @@ class Placeholder {
 
 class Eventhandler {
   static onClick(event) {
+    let lastElement = $("#content").children().last(".pageElement");
+    if (!lastElement.hasClass("textline")) {
+      var textline = Textline.create();
+      $("#content").append(textline);
+    }
     Textline.focusLast();
   }
 }

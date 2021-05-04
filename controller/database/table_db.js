@@ -1,4 +1,12 @@
 class Table_DB {
+  static getByPageId(id) {
+    return Database.all(
+      `SELECT tbl.* FROM page_elements AS ps ` +
+        `INNER JOIN tables AS tbl ON tbl.id = ps.id ` +
+        `WHERE ps.page_id = '${id}';`
+    );
+  }
+
   static getColumns(tables) {
     if (!tables || tables.length == 0) return;
 
@@ -89,13 +97,13 @@ class Table_DB {
       htmlColumns.each(function (columnIndex, htmlColumn) {
         htmlColumn = $(htmlColumn);
 
-        let input = htmlRow.find("td").eq(columnIndex).find("input");
+        let input = htmlRow.find("td").eq(columnIndex).children();
         switch (htmlColumn.data("type")) {
           case "checkbox":
             sqlValues += `'${input.is(":checked")}'`;
             break;
           case "text":
-            sqlValues += `'${input.val()}'`;
+            sqlValues += `'${input.html()}'`;
             break;
         }
         if (columnIndex < htmlColumns.length - 1) {
@@ -116,7 +124,7 @@ class Table_DB {
   }
 
   static delete(run = false, sqlStatements = [], ids) {
-    if(!ids || ids.length == 0) return;
+    if (!ids || ids.length == 0) return;
 
     let sqlIds = "";
     $(ids).each(function (index, id) {
@@ -126,7 +134,7 @@ class Table_DB {
       }
       sqlStatements.push(`DROP TABLE IF EXISTS '${id}';`);
     });
-    
+
     sqlStatements.push(
       `DELETE FROM tables WHERE id IN (${sqlIds});`,
       `DELETE FROM table_columns WHERE table_id IN (${sqlIds});`,

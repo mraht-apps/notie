@@ -146,8 +146,6 @@ class Eventhandler {
     let database = $("#database").val();
     let password = $("#password").val();
 
-    // NEW Consider remember flags
-
     if ($("#openDatabase").hasClass("active") && !File.exists(database)) {
       $("#database").addClass("error");
       $("#database").trigger("focus");

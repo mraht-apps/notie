@@ -1,95 +1,54 @@
-const DEFAULT_DATA = {
-  id: "",
-  caption: "",
-  columns: [
-    { id: "", name: "Name", type: "text", width: "120px" },
-    { id: "", name: "Done", type: "checkbox", width: "20px" },
-  ],
-  rows: [
-    {
-      Name: "",
-      Done: false,
-    },
-    {
-      Name: "",
-      Done: false,
-    },
-    {
-      Name: "",
-      Done: false,
-    },
-  ],
-};
-
 class Table {
-  static ids;
+  static DEFAULT_TITLE = "Untitled";
 
-  static create(ids = []) {
-    this.ids = ids;
+  static captionText;
+  static columns;
+  static rows;
 
-    if (this.ids.length == 0) {
-      this.ids.push(Crypto.generateUUID(6));
-    } else {
-      this.loadFromDatabase();
+  static create(table) {
+    if (!table) {
+      table = {
+        id: "",
+        caption: "",
+        columns: [
+          { id: "", name: "Name", type: "text", width: "120px" },
+          { id: "", name: "Done", type: "checkbox", width: "20px" },
+        ],
+        rows: [
+          {
+            Name: "",
+            Done: false,
+          },
+          {
+            Name: "",
+            Done: false,
+          },
+          {
+            Name: "",
+            Done: false,
+          },
+        ],
+      };
     }
-
-    
-  }
-
-  static loadFromDatabase() {
-    let tables = Table_DB.getByPageId(pageId);
-    let tableColumns = Table_DB.getColumns(tables);
-    let tableValues = Table_DB.getValues(tables);
-
-
-    // let table = $(tables)
-    //   .filter(function () {
-    //     return this.id == element.id;
-    //   })
-    //   .get(0);
-
-    // let columns = $(tableColumns).filter(function () {
-    //   return this.table_id == element.id;
-    // });
-
-    // let values = Table_DB.getValues(table.id);
-    // let rows = [];
-    // $(values).each(function () {
-    //   let sqlValue = this;
-    //   let row = {};
-    //   $(columns).each(function () {
-    //     let column = this;
-    //     let cellValue = sqlValue[column.id];
-    //     if (column.type == "checkbox") {
-    //       cellValue = cellValue == "true";
-    //     }
-    //     row[column.name] = cellValue;
-    //   });
-    //   rows.push(row);
-    // });
-
-    // let tableData = {
-    //   id: table.id,
-    //   caption: table.name,
-    //   columns: columns,
-    //   rows: rows,
-    // };
-  }
-
-  buildHtmlElement() {
-    htmlElement = document.createElement("div");
-    htmlElement.className = "pageElement table";
-    $(htmlElement).data("uuid", this.data.id);
 
     let htmlTable = document.createElement("table");
     htmlTable.className = "table";
-    this.createCaption(htmlTable, table.caption);
+    Table.createCaption(htmlTable, table.caption);
 
-    this.prepareGeneration(table);
-    this.generateTableBody(htmlTable, table);
-    this.generateTableHead(htmlTable, table);
+    Table.prepareGeneration(table);
+    Table.generateTableBody(htmlTable, table);
+    Table.generateTableHead(htmlTable, table);
 
-    htmlElement.append(htmlTable);
+    let divContainer = document.createElement("div");
+    divContainer.className = "pageElement table";
+    if (!table.id || table.id.length == 0) {
+      $(divContainer).data("uuid", Crypto.generateUUID(6));
+    } else {
+      $(divContainer).data("uuid", table.id);
+    }
+    divContainer.append(htmlTable);
+
+    return divContainer;
   }
 
   static createCaption(table, captionText) {
@@ -103,7 +62,7 @@ class Table {
     let captionInput = document.createElement("input");
     captionInput.type = "text";
     captionInput.value = captionText;
-    captionInput.placeholder = "Untitled";
+    captionInput.placeholder = Table.DEFAULT_TITLE;
     tableTitleContainer.appendChild(captionInput);
     captionContainer.appendChild(tableTitleContainer);
 
@@ -146,6 +105,16 @@ class Table {
     $(table).children("tbody").addClass("tableBody");
   }
 
+  static generateTableRow(table, data, row) {
+    let tr = table.insertRow();
+    $(tr).data("uuid", Crypto.generateUUID(6));
+
+    $(data.columns).each(function (columnIndex, column) {
+      let exit = Table.generateTableCell(tr, columnIndex, column, row);
+      if (exit) return false;
+    });
+  }
+
   static generateTableRowNew(table, data) {
     let numberOfColumns = data.columns.length + 1;
     let tr = table.insertRow();
@@ -166,19 +135,9 @@ class Table {
     tr.append(td);
   }
 
-  static generateTableRow(table, data, row) {
-    let tr = table.insertRow();
-    $(tr).data("uuid", Crypto.generateUUID(6));
-
-    $(data.columns).each(function (columnIndex, column) {
-      let exit = Table.generateTableCell(tr, columnIndex, column, row);
-      if (exit) return false;
-    });
-  }
-
   static generateTableCell(tr, columnIndex, column, row) {
     let exit = false;
-    let columnValue = row ? row.attr(column.name) : "";
+    let columnValue = row && column.id ? row.attr(column.id) : "";
     let columnType = column.type;
 
     let td = document.createElement("td");
@@ -186,18 +145,21 @@ class Table {
       let input = null;
       switch (columnType) {
         case "checkbox":
-          let input = document.createElement("input");
+          input = document.createElement("input");
           input.type = columnType;
           input.checked = columnValue;
           break;
         case "text":
           input = document.createElement("div");
           input.contentEditable = "true";
-          input.value = columnValue;
+          $(input).html(columnValue);
           break;
       }
-
       td.appendChild(input);
+
+      $(td).on("keydown", function (event) {
+        Eventhandler.onKeydownTableCell(event);
+      });
     }
 
     let nextTd = $(tr).find("td").eq(columnIndex);
@@ -389,6 +351,49 @@ class Table {
 }
 
 class Eventhandler {
+  static onKeydownTableCell(event) {
+    var columnIndex = $(event.target).parent().index();
+
+    switch (event.key) {
+      case "ArrowDown":
+        $(event.target)
+          .parents("tr")
+          .next()
+          .children()
+          .eq(columnIndex)
+          .find("div")
+          .trigger("focus");
+        General.moveCursorToEnd(null);
+        event.preventDefault();
+        break;
+      case "ArrowLeft":
+        // OPT If cursor is not at the beginning of a text, suppress moving
+        var input = $(event.target).parents("td").prev().children();
+        input.trigger("focus");
+        if (input.is("[contentEditable='true']")) General.moveCursorToEnd(null);
+        event.preventDefault();
+        break;
+      case "ArrowRight":
+        // OPT If cursor is not at the end of a text, suppress moving
+        var input = $(event.target).parents("td").next().children();
+        input.trigger("focus");
+        if (input.is("[contentEditable='true']")) General.moveCursorToEnd(null);
+        event.preventDefault();
+        break;
+      case "ArrowUp":
+        $(event.target)
+          .parents("tr")
+          .prev()
+          .children()
+          .eq(columnIndex)
+          .find("div")
+          .trigger("focus");
+        General.moveCursorToEnd(null);
+        event.preventDefault();
+        break;
+    }
+  }
+
   static onClickColumnAdd(event) {
     let column = {
       name: "Column",

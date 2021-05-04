@@ -1,5 +1,6 @@
 const Page = require("../../model/page");
 const Database = require("../database/database");
+const Navigation = require("../navigation");
 
 class Navbar {
   static init() {
@@ -7,7 +8,7 @@ class Navbar {
     Navbar.registerEvent($("#newPage"));
 
     Navbar.build();
-    Navbar.registerEvents();
+    Navbar.registerResizeEvents();
   }
 
   static build() {
@@ -27,7 +28,7 @@ class Navbar {
     });
   }
 
-  static registerEvents() {
+  static registerResizeEvents() {
     $(document.body).on(
       "mousedown",
       "#resizeSeparator",
@@ -74,11 +75,12 @@ class Eventhandler {
 
   static onClickNavbarItem(event) {
     let navbarItem = $(event.target);
-    Page.load({
-      css_id: navbarItem.attr("id"),
-      id: navbarItem.data("uuid"),
-      url: navbarItem.data("url"),
-    });
+    Navigation.next(navbarItem.data("uuid"));
+    // Page.load({
+    //   css_id: navbarItem.attr("id"),
+    //   id: navbarItem.data("uuid"),
+    //   url: navbarItem.data("url"),
+    // });
   }
 
   static onNavbarItemContextmenu(event) {

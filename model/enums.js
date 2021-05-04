@@ -3,6 +3,12 @@ const ElementTypes = {
   textline: 2,
 };
 
+const ParentTypes = {
+  none: 0,
+  page: 1,
+  table: 2,
+};
+
 const ColumnTypes = {
   1: "chk",
   2: "txt",
@@ -17,4 +23,10 @@ const TableActions = {
   delete: "deleteTable",
 };
 
-module.exports = { ElementTypes, ColumnTypes, PageActions, TableActions };
+module.exports = {
+  ElementTypes,
+  ParentTypes,
+  ColumnTypes,
+  PageActions,
+  TableActions,
+};

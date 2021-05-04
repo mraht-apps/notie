@@ -10,11 +10,10 @@ class Pagemenu {
   }
 
   static isOpen() {
-    return $("#pagemenu").hasClass("visible");
+    return $("#pagemenu").is(":visible");
   }
 
   static closeAll() {
-    $("#pagemenu").removeClass("visible");
     $("#pagemenu").toggle(false);
   }
 
@@ -25,7 +24,6 @@ class Pagemenu {
       Eventhandler.selectedPage = navbarItem;
       let { x, y } = General.getCursorPixelPosition();
       $("#pagemenu").css({ top: y + 10 + "px", left: x + "px" });
-      $("#pagemenu").addClass("visible");
       $("#pagemenu").toggle(true);
     }
   }
@@ -36,7 +34,7 @@ class Eventhandler {
 
   static onClickMenuItem(event) {
     if (!Eventhandler.selectedPage) return;
-    let action = $(event.target).parent("tr").attr("id");
+    let action = $(event.target).parents("tr").attr("id");
 
     switch (action) {
       case Enums.PageActions["delete"]:

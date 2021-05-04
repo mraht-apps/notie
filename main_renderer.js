@@ -16,6 +16,7 @@ const File = require("../utils/file.js");
 // Controller
 const Settings = require("../controller/settings.js");
 const Document = require("../controller/document.js");
+const Navigation = require("../controller/navigation.js");
 
 const Searchmenu = require("../controller/menu/searchmenu.js");
 const Navbar = require("../controller/menu/navbar.js");
@@ -34,7 +35,7 @@ const Enums = require("../model/enums.js");
 const Page = require("../model/page.js");
 const Textline = require("../model/textline.js");
 const Placeholder = require("../model/placeholder.js");
-const Table = require("../model/table.js");
+const Table = require("../model/table_old.js");
 
 class Renderer {
   static init() {
@@ -117,6 +118,10 @@ class Renderer {
 
     $("#btnTest").on("click", function (event) {});
 
+    $("#btnLogout").on("click", function (event) {
+      Eventhandler.onClickBtnLogout(event);
+    });
+
     $("#btnRestart").on("click", function (event) {
       Eventhandler.onClickBtnRestart(event);
     });
@@ -124,6 +129,11 @@ class Renderer {
 }
 
 class Eventhandler {
+  static onClickBtnLogout(event) {
+    $(window).trigger("beforeunload");
+    ipcRenderer.send("logout");
+  }
+
   static onClickBtnRestart(event) {
     $(window).trigger("beforeunload");
     ipcRenderer.send("exit", true);
@@ -131,26 +141,3 @@ class Eventhandler {
 }
 
 Renderer.init();
-
-// DEBUG Test table build
-// const Table = require("./model/table.js");
-// Table.create($("#content"), {
-//   caption: "Untitled",
-//   columns: [
-//     { name: "Name", type: "text", width: "120px" },
-//     { name: "Tags", type: "checkbox", width: "20px" },
-//     { name: "Status", type: "text", width: "120px" },
-//   ],
-//   rows: [
-//     {
-//       Name: "Hallo Welt 1",
-//       Tags: true,
-//       Status: "Offen und in Bearbeitung",
-//     },
-//     {
-//       Name: "Hallo Welt 2",
-//       Tags: false,
-//       Status: "Geschlossen und abgeschlossen",
-//     },
-//   ],
-// });

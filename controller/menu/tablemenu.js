@@ -12,17 +12,15 @@ class Tablemenu {
   }
 
   static isOpen(tableMenu) {
-    return tableMenu.hasClass("visible");
+    return tableMenu.is(":visible");
   }
 
   static closeAll() {
-    $(".tableMenu").removeClass("visible");
     $(".tableMenu").toggle(false);
   }
 
   static open(tableMenu) {
     Tablemenu.closeAll();
-    tableMenu.addClass("visible");
     tableMenu.toggle(true);
   }
 }
