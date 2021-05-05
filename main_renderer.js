@@ -6,7 +6,7 @@
 // process.
 window.$ = window.jQuery = require("jquery");
 const ipcRenderer = require("electron").ipcRenderer;
-const Path = require("path");
+const Filepath = require("path");
 
 // Utilities
 const General = require("../utils/general.js");
@@ -19,8 +19,7 @@ const Document = require("../controller/document.js");
 const Navigation = require("../controller/navigation.js");
 
 const Searchmenu = require("../controller/menu/searchmenu.js");
-const Navbar = require("../controller/menu/navbar.js");
-const Pagemenu = require("../controller/menu/pagemenu.js");
+const Navbarmenu = require("../controller/menu/navbarmenu.js");
 const Blockmenu = require("../controller/menu/blockmenu.js");
 const Tablemenu = require("../controller/menu/tablemenu.js");
 
@@ -32,6 +31,7 @@ const Textline_DB = require("../controller/database/textline_db.js");
 
 // Model
 const Enums = require("../model/enums.js");
+const Navbar = require("../model/navbar.js");
 const Page = require("../model/page.js");
 const Textline = require("../model/textline.js");
 const Placeholder = require("../model/placeholder.js");
@@ -48,20 +48,20 @@ class Renderer {
     Settings.DATA = settings.DATA;
 
     if (File.isDir(Settings.CACHE.DATABASE)) {
-      Settings.ENC_DATABASE = Path.join(
+      Settings.ENC_DATABASE = Filepath.join(
         Settings.CACHE.DATABASE,
         Settings.DEFAULT_ENC_DB_FILENAME
       );
-      Settings.DEC_DATABASE = Path.join(
+      Settings.DEC_DATABASE = Filepath.join(
         Settings.CACHE_FOLDER,
         Settings.DEFAULT_DEC_DB_FILENAME
       );
     } else {
       Settings.ENC_DATABASE = Settings.CACHE.DATABASE;
       Settings.DEC_DATABASE =
-        Path.join(
+        Filepath.join(
           Settings.CACHE_FOLDER,
-          Path.parse(Settings.CACHE.DATABASE).name
+          Filepath.parse(Settings.CACHE.DATABASE).name
         ) + ".db";
     }
 
@@ -77,7 +77,8 @@ class Renderer {
 
     Document.init();
     Blockmenu.init();
-    Pagemenu.init();
+    Navbarmenu.init();
+    Tablemenu.init();
 
     // Searchmenu.init();
   }

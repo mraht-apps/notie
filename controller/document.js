@@ -1,12 +1,13 @@
-const Page = require("../model/page");
-const Pagemenu = require("./menu/pagemenu");
-
 class Document {
   static init() {
     Document.registerEvents();
   }
 
   static registerEvents() {
+    $(document).on("contextmenu", function(event){
+      Eventhandler.onClick(event);
+    });
+
     $(document).on("click", function (event) {
       Eventhandler.onClick(event);
     });
@@ -28,9 +29,9 @@ class Document {
 class Eventhandler {
   static onClick(event) {
     let element = $(event.target);
-    Blockmenu.closeAll(element);
-    Tablemenu.closeAll(element);
-    Pagemenu.closeAll(element);
+    Blockmenu.close(element);
+    Tablemenu.close(element);
+    Navbarmenu.close(element);
   }
 
   static onKeyup(event) {

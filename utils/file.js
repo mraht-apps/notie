@@ -31,8 +31,7 @@ class File {
   }
 
   static readDir(dir) {
-    const path = require("path");
-    return Filesystem.readdirSync(path.resolve(dir), function (error) {
+    return Filesystem.readdirSync(Filepath.resolve(dir), function (error) {
       if (error) console.log(error);
     });
   }

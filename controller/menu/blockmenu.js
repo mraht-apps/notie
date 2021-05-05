@@ -22,27 +22,29 @@ class Blockmenu {
   }
 
   static open() {
-    let isOpen = Blockmenu.isOpen();
-    Blockmenu.closeAll();
-
-    if (!isOpen) {
-      let { x, y } = General.getCursorPixelPosition();
-      $("#blockmenu").css({ top: y - 100 + "px", left: x + 10 + "px" });
-      $("#blockmenu").toggle(true);
-      $(".clickable").eq(0).addClass("active");
-    }
+    Blockmenu.close();
+    let { x, y } = General.getCursorPixelPosition();
+    $("#blockmenu").css({ top: y - 100 + "px", left: x + 10 + "px" });
+    $("#blockmenu").toggle(true);
+    $(".clickable").eq(0).addClass("active");
   }
 
-  static closeAll(element) {
-    if (
-      element &&
-      (element.hasClass("blockmenu") ||
-        element.parents("#blockmenu").length > 0)
-    )
-      return;
-
+  static close(element) {
+    if (!Blockmenu.isOpen() || Blockmenu.clickedOnMenu(element)) return;
     $(".clickable").removeClass("active");
     $("#blockmenu").toggle(false);
+  }
+
+  static clickedOnMenu(element) {
+    if (
+      element &&
+      (element.attr("id") == "blockmenu" ||
+        element.parents("#blockmenu").length > 0)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 
@@ -51,7 +53,7 @@ class Eventhandler {
     let row = $(".clickable.active").eq(0);
     let elementType = row.data("type");
     Page.addElement(elementType);
-    Blockmenu.closeAll();
+    Blockmenu.close();
   }
 
   static onMouseout(event) {

@@ -16,7 +16,3 @@
   content:attr(data-placeholder);
   color:rgb(55, 53, 47, 0.6);
 }
-
-#placeholder {
-  cursor: text;
-}

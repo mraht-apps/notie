@@ -1,5 +1,3 @@
-const Textline = require("./textline");
-
 class Placeholder {
   static init() {
     $("#placeholder").on("click", function (event) {

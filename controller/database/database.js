@@ -16,7 +16,7 @@ class Database {
         );
         let original = Buffer.from(bufferedData, "base64").toString();
 
-        let dir = Path.parse(Settings.DEC_DATABASE).dir;
+        let dir = Filepath.parse(Settings.DEC_DATABASE).dir;
         if (!File.exists(dir)) {
           File.createDir(dir);
         }

@@ -43,11 +43,11 @@
   margin-right: 8px;
 }
 
-.navbarItemMenu {
+#btnNavbarMenu {
   width: 20px;
 }
 
-.navbarItemMenu:hover {
+#btnNavbarMenu:hover {
   background-color: rgb(200, 200, 200);
   border-radius: 4px;
   cursor: pointer;

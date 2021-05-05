@@ -1,7 +1,5 @@
 const { app, ipcRenderer } = require("electron");
-
 const File = require("../utils/file.js");
-const Crypto = require("../utils/crypto.js");
 
 class Settings {
   static DEFAULT_DEC_DB_FILENAME = "notie.db";

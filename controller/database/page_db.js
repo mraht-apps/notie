@@ -1,5 +1,3 @@
-const Database = require("./database");
-
 class Page_DB {
   static getById(id) {
     return Database.get(`SELECT * FROM pages WHERE id = '${id}';`);

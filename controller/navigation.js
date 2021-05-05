@@ -1,6 +1,3 @@
-const Page = require("../model/page");
-const Navbar = require("./menu/navbar");
-
 class Navigation {
   static stack = [];
 

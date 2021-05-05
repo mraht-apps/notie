@@ -1,5 +1,3 @@
-const General = require("../utils/general");
-
 const defaultTable = {
   id: "",
   caption: "",
@@ -105,26 +103,11 @@ class Table {
     tableMenuContainer.className = "tableMenuContainer";
     let menuImg = document.createElement("img");
     menuImg.src = "../res/img/menu.svg";
+    menuImg.id = "btnTableMenu"; 
     tableMenuContainer.appendChild(menuImg);
     Tablemenu.registerEvent(tableMenuContainer);
     captionContainer.appendChild(tableMenuContainer);
     caption.appendChild(captionContainer);
-
-    let tableMenu = document.createElement("div");
-    tableMenu.className = "tableMenu";
-    let tableMenuTable = document.createElement("table");
-    let tr = tableMenuTable.insertRow();
-    tr.id = "deleteTable";
-    Tablemenu.registerEventMenuItem(tr);
-    let td = document.createElement("td");
-    let deleteImg = document.createElement("img");
-    deleteImg.src = "../res/img/trash.svg";
-    td.appendChild(deleteImg);
-    let textNode = document.createTextNode("Delete");
-    td.appendChild(textNode);
-    tr.appendChild(td);
-    tableMenu.appendChild(tableMenuTable);
-    caption.appendChild(tableMenu);
     table.insertBefore(caption, table.childNodes[0]);
   }
 

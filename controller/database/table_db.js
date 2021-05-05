@@ -1,5 +1,3 @@
-const Database = require("./database");
-
 class Table_DB {
   static getByPageId(id) {
     return Database.all(
@@ -12,7 +10,7 @@ class Table_DB {
   static getColumns(tables) {
     if (!tables || tables.length == 0) return;
 
-    let tableIds = tables.map(t => t.id).join(", ");
+    let tableIds = tables.map(t => `'${t.id}'`).join(", ");
     return Database.all(
       `SELECT * FROM table_columns WHERE table_id IN (${tableIds}) ORDER BY position ASC;`
     );

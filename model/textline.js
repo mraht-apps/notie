@@ -1,6 +1,3 @@
-const Textline_DB = require("../controller/database/textline_db");
-const General = require("../utils/general");
-
 const placeholderText = "Type '/' for commands";
 class Textline {
   static createByPageId(pageId) {
@@ -71,8 +68,8 @@ class Textline {
   }
 
   static delete(textline) {
-    textline.remove();
     Textline_DB.delete(true, [], [textline.data("uuid")]);
+    textline.remove();
   }
 
   static save(textline) {
@@ -128,15 +125,16 @@ class Eventhandler {
         break;
       case "Enter":
         if (Blockmenu.isOpen()) {
-          Page.addElement();
-          Blockmenu.closeAll();
-          event.preventDefault();
-          return;
+          var row = $(".clickable.active").eq(0);
+          var elementType = row.data("type");
+          Page.addElement(elementType);
+          Blockmenu.close();
+        } else {
+          var newTextline = Textline.create();
+          Textline.registerEvents();
+          textline.after(newTextline);
+          Textline.focusNext($(newTextline));
         }
-        var newTextline = Textline.create(null);
-        Textline.registerEvents();
-        textline.after(newTextline);
-        Textline.focusNext($(newTextline));
         event.preventDefault();
         break;
       case "/":
@@ -150,7 +148,7 @@ class Eventhandler {
     // OPT Optimize blockmenu opening (e.g. also on backspace)
     let regex = /^[\w\s]+$/;
     if (event.key.match(regex) || event.key == "Escape") {
-      Blockmenu.closeAll();
+      Blockmenu.close();
     }
   }
 }

@@ -1,10 +1,10 @@
 Version 1.0.0
 =====================================================================
-- Page overflow auto to fit content by scrollbar whereas menu remains fixed
 - Table rows and columns deletable
+- Column type can be chosen
 - Table rows as pages: UUID per row/page, internal pagename is UUID
 - New column type: Reference to other tables
-- Column type can be chosen
+- Customize app menubar
 - Page for images and licenses
 - 
 

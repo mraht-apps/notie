@@ -55,9 +55,9 @@ class Navbar {
     navbarItem.append(textNode);
     img = document.createElement("img");
     img.src = "../res/img/menu.svg";
-    img.className = "navbarItemMenu";
+    img.id = "btnNavbarMenu";
     $(img).on("click", function (event) {
-      Eventhandler.onClickNavbarItemMenu(event);
+      Eventhandler.onClickBtnNavbarMenu(event);
     });
     navbarItem.append(img);
     Navbar.registerEvent(navbarItem);
@@ -94,12 +94,11 @@ class Eventhandler {
   }
 
   static onNavbarItemContextmenu(event) {
-    Pagemenu.open($(event.target));
+    Navbarmenu.open($(event.target), { top: event.pageY, left: event.pageX });
   }
 
-  static onClickNavbarItemMenu(event) {
-    let navbarItem = $(event.target).parent();
-    Pagemenu.open(navbarItem);
+  static onClickBtnNavbarMenu(event) {
+    Navbarmenu.open($(event.target));
   }
 
   static onMousedown(event) {

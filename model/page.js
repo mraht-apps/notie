@@ -1,5 +1,3 @@
-const Pagemenu = require("../controller/menu/pagemenu");
-
 class Page {
   static DEFAULT_NAME = "Untitled";
 
@@ -67,7 +65,7 @@ class Page {
   }
 
   static openSettingsPage(page) {
-    var page = File.readFile(Path.join(__dirname, "../view/settings.html"));
+    var page = File.readFile(Filepath.join(__dirname, "../view/settings.html"));
     $("#content").html(page);
     $("#pageName").val("Settings");
     Settings.registerEvents();

@@ -1,5 +1,3 @@
-const DB = require("../database/database");
-
 class SearchMenu {
   static init() {
     SearchMenu.registerEvents();
@@ -16,13 +14,13 @@ class SearchMenu {
 class Eventhandler {
   static onInput(event) {
     let input = $(event.target);
-    let result = DB.searchTables(input.val());
+    let result = Database.searchTables(input.val());
 
     let tbody = $("#searchmenu > table > tbody");
     tbody.children().remove();
 
-    if(result.length == 0) return;      
-    $(result).each(function() {
+    if (result.length == 0) return;
+    $(result).each(function () {
       let tr = document.createElement("tr");
       let td = document.createElement("td");
       td.textContent = this.name;
