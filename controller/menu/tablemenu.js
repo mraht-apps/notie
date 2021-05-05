@@ -15,7 +15,8 @@ class Tablemenu {
     return tableMenu.is(":visible");
   }
 
-  static closeAll() {
+  static closeAll(element) {
+    if (element && element.parents(".tableMenuContainer").length > 0) return;
     $(".tableMenu").toggle(false);
   }
 
@@ -29,7 +30,7 @@ class Eventhandler {
   static onClick(event) {
     let element = $(event.target);
     let tableMenu = element.parents("caption").children(".tableMenu");
-    
+
     if (!Tablemenu.isOpen(tableMenu)) {
       Tablemenu.open(tableMenu);
     } else {

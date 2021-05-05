@@ -49,7 +49,7 @@ class Page_DB {
   }
 
   static delete(id) {
-    let sqlStatements = [`DELETE FROM pages WHERE id = '${id}';`];
+    let sqlStatements = [];
     let pageElements = Page_DB.getElements(id);
 
     let tableIds = [];
@@ -67,6 +67,7 @@ class Page_DB {
 
     Table_DB.delete(false, sqlStatements, tableIds);
     Textline_DB.delete(false, sqlStatements, textlineIds);
+    sqlStatements.push(`DELETE FROM pages WHERE id = '${id}';`);
     Database.run(sqlStatements);
   }
 }

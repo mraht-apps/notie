@@ -6,7 +6,6 @@ Version 1.0.0
 - New column type: Reference to other tables
 - Column type can be chosen
 - Page for images and licenses
-- Optimize table.js
 - 
 
 Backlog

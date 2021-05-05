@@ -53,9 +53,6 @@ label {
   position: relative;
   top: -3px;
   left: 4px;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -o-user-select: none;
   user-select: none;
 }
 

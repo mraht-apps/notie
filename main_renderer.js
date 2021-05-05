@@ -35,7 +35,7 @@ const Enums = require("../model/enums.js");
 const Page = require("../model/page.js");
 const Textline = require("../model/textline.js");
 const Placeholder = require("../model/placeholder.js");
-const Table = require("../model/table_old.js");
+const Table = require("../model/table.js");
 
 class Renderer {
   static init() {

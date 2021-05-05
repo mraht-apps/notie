@@ -13,8 +13,10 @@ class Pagemenu {
     return $("#pagemenu").is(":visible");
   }
 
-  static closeAll() {
+  static closeAll(element) {
+    if (element && element.parents(".navbarItem").length > 0) return;
     $("#pagemenu").toggle(false);
+    $("#disabledPageContainer").toggle(false);
   }
 
   static open(navbarItem) {
@@ -22,9 +24,13 @@ class Pagemenu {
     Pagemenu.closeAll();
     if (!isOpen) {
       Eventhandler.selectedPage = navbarItem;
-      let { x, y } = General.getCursorPixelPosition();
-      $("#pagemenu").css({ top: y + 10 + "px", left: x + "px" });
+      let position = navbarItem.find(".navbarItemMenu").position();
+      $("#pagemenu").css({
+        top: `${position.top + 24}px`,
+        left: `${position.left}px`,
+      });
       $("#pagemenu").toggle(true);
+      $("#disabledPageContainer").toggle(true);
     }
   }
 }

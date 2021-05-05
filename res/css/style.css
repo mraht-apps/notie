@@ -1,9 +1,7 @@
 * {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
     "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
-  -webkit-font-smoothing: auto;
   font-size: 14px;
-  /* include border and padding in element width and height */
   box-sizing: border-box;
 }
 

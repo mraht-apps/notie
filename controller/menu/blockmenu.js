@@ -33,7 +33,14 @@ class Blockmenu {
     }
   }
 
-  static closeAll() {
+  static closeAll(element) {
+    if (
+      element &&
+      (element.hasClass("blockmenu") ||
+        element.parents("#blockmenu").length > 0)
+    )
+      return;
+
     $(".clickable").removeClass("active");
     $("#blockmenu").toggle(false);
   }
@@ -41,18 +48,18 @@ class Blockmenu {
 
 class Eventhandler {
   static onClickMenuItem(event) {
-    let row = $(".active").eq(0);
+    let row = $(".clickable.active").eq(0);
     let elementType = row.data("type");
     Page.addElement(elementType);
     Blockmenu.closeAll();
   }
 
   static onMouseout(event) {
-    $(".active").removeClass("active");
+    $(".clickable.active").removeClass("active");
   }
 
   static onMouseoverMenuItem(event) {
-    $(".active").removeClass("active");
+    $(".clickable.active").removeClass("active");
     let row = $(event.target);
     if (!$(event.target).is("tr")) {
       row = $(event.target).parents().filter(".clickable").eq(0);

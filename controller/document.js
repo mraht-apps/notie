@@ -26,28 +26,20 @@ class Document {
 }
 
 class Eventhandler {
-  // OPT Move relevant source code to blockmenu.js
   static onClick(event) {
     let element = $(event.target);
-    if (
-      !element.hasClass("blockmenu") &&
-      element.parents("#blockmenu").length == 0
-    ) {
-      Blockmenu.closeAll();
-    }
-
-    if (element.parents(".tableMenuContainer").length == 0) {
-      Tablemenu.closeAll();
-    }
+    Blockmenu.closeAll(element);
+    Tablemenu.closeAll(element);
+    Pagemenu.closeAll(element);
   }
 
   static onKeyup(event) {
     if (!Blockmenu.isOpen() || Page.isDisabled()) return;
 
-    if ($(".active").length == 0) {
+    if ($(".clickable.active").length == 0) {
       $(".clickable").eq(0).addClass("active");
     } else {
-      let currentActiveRow = $(".active").eq(0);
+      let currentActiveRow = $(".clickable.active").eq(0);
       let newActiveRow;
       switch (event.key) {
         case "ArrowDown":

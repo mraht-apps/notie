@@ -38,12 +38,6 @@ class Page {
     Page.saveCurrentContent();
     Page.clear();
 
-    if (!page || (!page.css_id && (!page.id || page.id.length == 0))) {
-      page = { id: "", name: "" };
-      Page.addToDatabase(page);
-      Navbar.add(page);
-    }
-
     if (!page) return;
 
     switch (page.id) {
@@ -66,7 +60,10 @@ class Page {
   }
 
   static openNewPage() {
-    Page.load(null);
+    let page = { id: "", name: "" };
+    Page.addToDatabase(page);
+    Navbar.add(page);
+    Navigation.next(page.id);
   }
 
   static openSettingsPage(page) {
@@ -85,54 +82,14 @@ class Page {
       htmlElement = Textline.create(null);
       $("#content").append(htmlElement);
     } else {
-      let textlines = Page_DB.getTextlines(pageId);
-      let tables = Table_DB.getByPageId(pageId);
-      let tableColumns = Table_DB.getColumns(tables);
+      let htmlElements = Table.createByPageId(pageId);
+      htmlElements.push(...Textline.createByPageId(pageId));
+
       $(elements).each(function (index, element) {
-        switch (element.type_id) {
-          case Enums.ElementTypes.table:
-            let table = $(tables)
-              .filter(function () {
-                return this.id == element.id;
-              })
-              .get(0);
-
-            let columns = $(tableColumns).filter(function () {
-              return this.table_id == element.id;
-            });
-
-            let values = Table_DB.getValues(table.id);
-            let rows = [];
-            $(values).each(function () {
-              let sqlValue = this;
-              let row = {};
-              $(columns).each(function () {
-                let column = this;
-                let cellValue = sqlValue[column.id];
-                if (column.type == "checkbox") {
-                  cellValue = cellValue == "true";
-                }
-                row[column.id] = cellValue;
-              });
-              rows.push(row);
-            });
-
-            let tableData = {
-              id: table.id,
-              caption: table.name,
-              columns: columns,
-              rows: rows,
-            };
-            htmlElement = Table.create(tableData);
-            break;
-          case Enums.ElementTypes.textline:
-            let sqlTextline = $(textlines).filter(function () {
-              return this.id == element.id;
-            })[0];
-            if (!sqlTextline) return;
-            htmlElement = Textline.create(sqlTextline);
-            break;
-        }
+        let htmlElement = $(htmlElements).filter(function(){
+          return $(this).data("uuid") == element.id;
+        });
+        if(!htmlElement) return;
         $("#content").append(htmlElement);
       });
     }
@@ -215,19 +172,19 @@ class Page {
 class Eventhandler {
   static onKeyupPageName(event) {
     let pageId = $("#content").data("uuid");
-    let navBarItem = $(".navBarItem").filter(function () {
+    let navbarItem = $(".navbarItem").filter(function () {
       return $(this).data("uuid") == pageId;
     });
 
     let pagename = $("#pageName").val();
-    let textNode = navBarItem.contents().filter(function () {
+    let textNode = navbarItem.contents().filter(function () {
       return this.nodeType == Node.TEXT_NODE;
     });
     if (textNode && textNode.length > 0) {
       textNode.replaceWith(pagename);
     } else {
       let textNode = document.createTextNode(pagename);
-      navBarItem.append(textNode);
+      navbarItem.append(textNode);
     }
   }
 }

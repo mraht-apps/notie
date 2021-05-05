@@ -3,6 +3,17 @@ const General = require("../utils/general");
 
 const placeholderText = "Type '/' for commands";
 class Textline {
+  static createByPageId(pageId) {
+    let htmlElements = [];
+    let textlines = Page_DB.getTextlines(pageId);
+    $(textlines).each(function (index, textline) {
+      let htmlElement = Textline.create(textline);
+      htmlElements.push(htmlElement);
+    });
+
+    return htmlElements;
+  }
+
   static create(textline) {
     if (!textline) {
       textline = { id: "", text: "" };

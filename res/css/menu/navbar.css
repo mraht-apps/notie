@@ -1,4 +1,4 @@
-#navBar {
+#navbar {
   grid-column: 1;
   min-width: 200px;
   max-width: 400px;
@@ -6,43 +6,58 @@
   color: rgba(25, 23, 17, 0.6);
   background: rgb(247, 246, 243);
 
-  -webkit-order: 0;
-  -ms-flex-order: 0;
   order: 0;
-  -webkit-flex: 0 0 auto;
-  -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  -webkit-align-self: auto;
-  -ms-flex-item-align: auto;
   align-self: auto;
+  user-select: none;
 }
 
-.navBarItem {
-  height: 32px;
-  padding: 6px 8px 6px 8px;
+.navbarItem {
+  height: 30px;
+  padding: 5px 8px 5px 8px;
   text-decoration: none;
-  display: flex;
-  text-align: left;
-  align-items: center;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   vertical-align: middle;
   cursor: pointer;
   outline: none;
 }
 
-.navBarItem:hover {
-  background: #e1e1e1;
+.navbarItem:hover {
+  background: #e8e8e8;
 }
 
-.navBarItem img {
+.navbarItem.active:hover {
+  background: #d8d8d8;
+}
+
+.navbarItem.active {
+  background: #e8e8e8;
+  color: rgba(25, 23, 17, 0.8);
+  font-weight: 500;
+}
+
+.navbarItem .navbarItemIcon {
   width: 18px;
+  margin-top: 1px;
   margin-right: 8px;
 }
 
-#navBarPages {
+.navbarItemMenu {
+  width: 20px;
+}
+
+.navbarItemMenu:hover {
+  background-color: rgb(200, 200, 200);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#navbarPages {
   padding-top: 20px;
 }
 
-#navBarPagesTitle {
+#navbarPagesTitle {
   padding-left: 6px;
   padding-right: 6px;
 

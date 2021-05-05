@@ -1,7 +1,3 @@
-const Page = require("../../model/page");
-const Database = require("../database/database");
-const Navigation = require("../navigation");
-
 class Navbar {
   static init() {
     Navbar.registerEvent($("#settingsPage"));
@@ -18,12 +14,12 @@ class Navbar {
     });
   }
 
-  static registerEvent(navBarItem) {
-    $(navBarItem).on("click", function (event) {
+  static registerEvent(navbarItem) {
+    $(navbarItem).on("click", function (event) {
       Eventhandler.onClickNavbarItem(event);
     });
 
-    $(navBarItem).on("contextmenu", function (event) {
+    $(navbarItem).on("contextmenu", function (event) {
       Eventhandler.onNavbarItemContextmenu(event);
     });
   }
@@ -48,17 +44,34 @@ class Navbar {
   }
 
   static add(page) {
-    let navBarItem = document.createElement("div");
-    navBarItem.className = "navBarItem";
-    navBarItem.dataset.uuid = page.id;
+    let navbarItem = document.createElement("div");
+    navbarItem.className = "navbarItem navbarUserItem";
+    navbarItem.dataset.uuid = page.id;
     let img = document.createElement("img");
     img.src = "../res/img/page.svg";
-    navBarItem.append(img);
+    img.className = "navbarItemIcon";
+    navbarItem.append(img);
     let textNode = document.createTextNode(page.name);
-    navBarItem.append(textNode);
-    Navbar.registerEvent(navBarItem);
+    navbarItem.append(textNode);
+    img = document.createElement("img");
+    img.src = "../res/img/menu.svg";
+    img.className = "navbarItemMenu";
+    $(img).on("click", function (event) {
+      Eventhandler.onClickNavbarItemMenu(event);
+    });
+    navbarItem.append(img);
+    Navbar.registerEvent(navbarItem);
 
-    $("#newPage").before(navBarItem);
+    $("#newPage").before(navbarItem);
+  }
+
+  static select(pageId) {
+    if (pageId == "newPage") return;
+    $(".navbarItem")
+      .filter(function () {
+        return $(this).data("uuid") == pageId;
+      })
+      .addClass("active");
   }
 }
 
@@ -75,16 +88,18 @@ class Eventhandler {
 
   static onClickNavbarItem(event) {
     let navbarItem = $(event.target);
+    if (navbarItem.is("img")) return;
+    $(".navbarItem.active").removeClass("active");
     Navigation.next(navbarItem.data("uuid"));
-    // Page.load({
-    //   css_id: navbarItem.attr("id"),
-    //   id: navbarItem.data("uuid"),
-    //   url: navbarItem.data("url"),
-    // });
   }
 
   static onNavbarItemContextmenu(event) {
     Pagemenu.open($(event.target));
+  }
+
+  static onClickNavbarItemMenu(event) {
+    let navbarItem = $(event.target).parent();
+    Pagemenu.open(navbarItem);
   }
 
   static onMousedown(event) {
@@ -98,7 +113,7 @@ class Eventhandler {
       return;
     }
 
-    const targetElement = $("#navBar");
+    const targetElement = $("#navbar");
     Eventhandler.resizeData.startWidth = targetElement.outerWidth();
     Eventhandler.resizeData.startCursorScreenX = event.screenX;
     Eventhandler.resizeData.resizeTarget = targetElement;
