@@ -10,10 +10,11 @@
   <link rel="stylesheet" href="../res/css/style.css" type="text/css" />
   <link rel="stylesheet" href="../res/css/page.css" type="text/css" />
   <link rel="stylesheet" href="../res/css/navbar.css" type="text/css" />
-  <link rel="stylesheet" href="../res/css/menu/navbarmenu.css" type="text/css" />
-  <link rel="stylesheet" href="../res/css/menu/blockmenu.css" type="text/css" />
-  <link rel="stylesheet" href="../res/css/menu/searchmenu.css" type="text/css" />
-  <link rel="stylesheet" href="../res/css/menu/tablemenu.css" type="text/css" />
+  <link rel="stylesheet" href="../res/css/menu/navbarMenu.css" type="text/css" />
+  <link rel="stylesheet" href="../res/css/menu/blockMenu.css" type="text/css" />
+  <link rel="stylesheet" href="../res/css/menu/searchMenu.css" type="text/css" />
+  <link rel="stylesheet" href="../res/css/menu/tableMenu.css" type="text/css" />
+  <link rel="stylesheet" href="../res/css/menu/columnMenu.css" type="text/css" />
   <link rel="stylesheet" href="../res/css/table.css" type="text/css" />
   <link rel="stylesheet" href="../res/css/textline.css" type="text/css" />
 </head>
@@ -23,14 +24,14 @@
   <div id="pageContainer">
     <div id="navbar">
       <div id="settingsPage" class="navbarItem" data-uuid="settingsPage"><img src="../res/img/settings.svg"
-          class="navbarItemIcon">Settings
+          class="navbarItemIcon" draggable="false">Settings
       </div>
       <div id="navbarPages">
         <div id="navbarPagesTitle">Pages
           <hr>
         </div>
-        <div id="newPage" class="navbarItem" data-uuid="newPage"><img src="../res/img/new.svg"
-            class="navbarItemIcon">New page</div>
+        <div id="newPage" class="navbarItem" data-uuid="newPage"><img src="../res/img/new.svg" class="navbarItemIcon"
+            draggable="false">New page</div>
       </div>
     </div>
     <div id="resizeSeparator"></div>
@@ -52,7 +53,7 @@
   <div id="disabledPageContainer"></div>
 
   <!-- Popup menus -->
-  <div id="blockmenu">
+  <div id="blockMenu">
     <table>
       <tbody>
         <tr>
@@ -80,27 +81,74 @@
     </table>
   </div>
 
-  <div id="tablemenu">
+  <div id="tableMenu">
     <table>
       <tr id="deleteTable">
-        <td><img src="../res/img/trash.svg">Delete</td>
+        <td><img src="../res/img/trash.svg" draggable="false">Delete</td>
       </tr>
     </table>
   </div>
 
-  <!-- <div id="searchmenu">
+  <div id="columnMenu">
+    <table id="columnMenuForm">
+      <tbody>
+        <tr>
+          <td class="label">Type:</td>
+          <td>
+            <div id="columnTypeValue"><img src="../res/img/dark/text.svg" draggable="false">Text<img
+                src="../res/img/arrow_down.svg" draggable="false">
+            </div>
+            <div id="columnTypeMenu">
+              <table>
+                <tbody>
+                  <tr id="columnTypeText">
+                    <td class="columnTypeOption">
+                      <div><img src="../res/img/dark/text.svg" draggable="false">Text</div>
+                    </td>
+                  </tr>
+                  <tr id="columnTypeCheckbox">
+                    <td class="columnTypeOption">
+                      <div><img src="../res/img/dark/checkbox.svg" draggable="false">Checkbox</div>
+                    </td>
+                  </tr>
+                  <tr id="columnTypeNumber">
+                    <td class="columnTypeOption">
+                      <div><img src="../res/img/dark/rhombus.svg" draggable="false">Number</div>
+                    </td>
+                  </tr>
+                  <tr id="columnTypeRelation">
+                    <td class="columnTypeOption">
+                      <div><img src="../res/img/dark/relation.svg" draggable="false">Relation</div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- <div class="label">Relation:</div> -->
+    <!-- <div><input type="text" name="tableSearch"></div> -->
+    <div id="columnMenuButtonBar">
+      <button id="btnColumnMenuDelete">Delete</button>
+      <button id="btnColumnMenuSave">Save</button>
+    </div>
+  </div>
+
+  <div id="searchMenu">
     <b>Search:</b><input type="text">
     <table>
       <tbody>
       </tbody>
     </table>
-  </div> -->
+  </div>
 
-  <div id="navbarmenu">
+  <div id="navbarMenu">
     <table>
       <tbody>
         <tr id="deletePage">
-          <td><img src="../res/img/trash.svg">Delete</td>
+          <td><img src="../res/img/trash.svg" draggable="false">Delete</td>
         </tr>
       </tbody>
     </table>

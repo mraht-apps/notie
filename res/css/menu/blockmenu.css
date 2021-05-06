@@ -1,24 +1,24 @@
-#blockmenu {
+#blockMenu {
   background-color: #ffffff;
   border: 1px solid #999999;
   cursor: default;
   display: none;
   position: absolute;
   text-align: left;
-  z-index: 99999;
+  z-index: 9999;
   padding: 8px 4px 4px 4px;
   top: 200px;
   left: 200px;
 }
 
-#blockmenu table {
+#blockMenu table {
   cursor: pointer;
   border-collapse: collapse;
   border-spacing: 0;
   user-select: none;
 }
 
-#blockmenu tr td:first-child div {
+#blockMenu tr td:first-child div {
   border: 1px solid rgba(55, 53, 47, 0.2);
   padding: 6px;
 
@@ -27,13 +27,13 @@
   text-align: center;
 }
 
-#blockmenu th,
-#blockmenu td {
+#blockMenu th,
+#blockMenu td {
   padding: 6px;
   text-align: left;
 }
 
-#blockmenu .active {
+#blockMenu .active {
   background-color: rgba(55, 53, 47, 0.1);
 }
 

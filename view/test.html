@@ -1,9 +1,25 @@
 <html>
 
 <body>
-  <div style="display: grid; grid-template-columns: auto 1fr auto; vertical-align: middle; border: 1px solid;">
-    <img src="../res/img/settings.svg" style="width: 18px;">Text<img src="../res/img/settings.svg"
-      style="width: 18px; position:relative; right: 2px;"></span>
+  <div style="display: flex;"><img src="../res/img/light/text.svg" style="width: 18px;">Text<img
+      src="../res/img/arrow_down.svg" style="width: 18px;"></div>
+  <div style="z-index: 99999; border: 1px solid #e1e1e1;">
+    <table>
+      <tbody>
+        <tr>
+          <td><img src="../res/img/light/text.svg" style="width: 18px;"></td>
+          <td>Text</td>
+        </tr>
+        <tr>
+          <td><img src="../res/img/light/text.svg" style="width: 18px;"></td>
+          <td>Text</td>
+        </tr>
+        <tr>
+          <td><img src="../res/img/light/text.svg" style="width: 18px;"></td>
+          <td>Text</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </body>
 
@@ -21,7 +37,7 @@
         <img class="menuImg" src="../res/img/menu.svg">
       </div>
     </div>
-    <div class="tablemenu">
+    <div class="tableMenu">
       <table>
         <tbody>
           <tr id="deleteTable">
@@ -34,15 +50,15 @@
   <thead class="tableHead">
     <tr>
       <th data-type="text">
-        <div class="columnTitle"><img src="../res/img/text.svg"><input type="text" value="Column 1"></div>
+        <div class="columnTitle"><img src="../res/img/light/text.svg"><input type="text" value="Column 1"></div>
         <div class="columnResizeSeparator"></div>
       </th>
       <th data-type="checkbox">
-        <div class="columnTitle"><img src="../res/img/checkbox.svg"><input type="text"></div>
+        <div class="columnTitle"><img src="../res/img/light/checkbox.svg"><input type="text"></div>
         <div class="columnResizeSeparator"></div>
       </th>
       <th data-type="text">
-        <div class="columnTitle"><img src="../res/img/text.svg"><input type="text" value="Column 3"></div>
+        <div class="columnTitle"><img src="../res/img/light/text.svg"><input type="text" value="Column 3"></div>
         <div class="columnResizeSeparator"></div>
       </th>
       <th data-type="add">

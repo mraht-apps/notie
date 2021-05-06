@@ -155,14 +155,14 @@
   padding-left: 2px;
 }
 
-.newRow {
+#newRow {
   display: flex;
   justify-content: left;
   vertical-align: middle;
   align-items: center;
 }
 
-.newImg {
+#newImg {
   width: 14px;
   height: 14px;
   margin: 4px 4px 2px 4px;

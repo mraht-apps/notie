@@ -1,10 +1,10 @@
-class Blockmenu {
+class BlockMenu {
   static init() {
-    Blockmenu.registerEvents();
+    BlockMenu.registerEvents();
   }
 
   static registerEvents() {
-    $("#blockmenu").on("mouseout", function (event) {
+    $("#blockMenu").on("mouseout", function (event) {
       Eventhandler.onMouseout(event);
     });
 
@@ -18,28 +18,28 @@ class Blockmenu {
   }
 
   static isOpen() {
-    return $("#blockmenu").is(":visible");
+    return $("#blockMenu").is(":visible");
   }
 
   static open() {
-    Blockmenu.close();
+    BlockMenu.close();
     let { x, y } = General.getCursorPixelPosition();
-    $("#blockmenu").css({ top: y - 100 + "px", left: x + 10 + "px" });
-    $("#blockmenu").toggle(true);
+    $("#blockMenu").css({ top: y - 100 + "px", left: x + 10 + "px" });
+    $("#blockMenu").toggle(true);
     $(".clickable").eq(0).addClass("active");
   }
 
   static close(element) {
-    if (!Blockmenu.isOpen() || Blockmenu.clickedOnMenu(element)) return;
+    if (!BlockMenu.isOpen() || BlockMenu.clickedOnMenu(element)) return;
     $(".clickable").removeClass("active");
-    $("#blockmenu").toggle(false);
+    $("#blockMenu").toggle(false);
   }
 
   static clickedOnMenu(element) {
     if (
       element &&
-      (element.attr("id") == "blockmenu" ||
-        element.parents("#blockmenu").length > 0)
+      (element.attr("id") == "blockMenu" ||
+        element.parents("#blockMenu").length > 0)
     ) {
       return true;
     } else {
@@ -53,7 +53,7 @@ class Eventhandler {
     let row = $(".clickable.active").eq(0);
     let elementType = row.data("type");
     Page.addElement(elementType);
-    Blockmenu.close();
+    BlockMenu.close();
   }
 
   static onMouseout(event) {
@@ -70,4 +70,4 @@ class Eventhandler {
   }
 }
 
-module.exports = Blockmenu;
+module.exports = BlockMenu;

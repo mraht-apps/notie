@@ -1,6 +1,6 @@
-#tablemenu {
+#tableMenu {
   border: 1px solid rgb(236, 236, 236);
-  z-index: 99999;
+  z-index: 9999;
   position: absolute;
   right: 24px;
   width: 150px;
@@ -8,24 +8,24 @@
   display: none;
 }
 
-#tablemenu table {
+#tableMenu table {
   width: 100%;
 }
 
-#tablemenu table td {
+#tableMenu table td {
   display: flex;
   border: none;
   padding: 2px 6px 2px 4px;
   align-items: center;
 }
 
-#tablemenu tr:hover {
+#tableMenu tr:hover {
   background-color: rgb(236, 236, 236);
   border-radius: 4px;
   cursor: pointer;
 }
 
-#tablemenu img {
+#tableMenu img {
   width: 18px;
   margin-right: 4px;
 }

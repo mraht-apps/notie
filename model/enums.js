@@ -10,9 +10,37 @@ const ParentTypes = {
 };
 
 const ColumnTypes = {
-  1: "chk",
-  2: "txt",
-  3: "ref",
+  ADD: {
+    id: "add",
+  },
+  TXT: {
+    id: 1,
+    name: "txt",
+    cssId: "columnTypeText",
+    img: "../res/img/dark/text.svg",
+    descr: "Text",
+  },
+  CHK: {
+    id: 2,
+    name: "chk",
+    cssId: "columnTypeCheckbox",
+    img: "../res/img/dark/checkbox.svg",
+    descr: "Checkbox",
+  },
+  NMB: {
+    id: 3,
+    name: "nmb",
+    cssId: "columnTypeNumber",
+    img: "../res/img/dark/rhombus.svg",
+    descr: "Number",
+  },
+  REF: {
+    id: 4,
+    name: "ref",
+    cssId: "columnTypeRelation",
+    img: "../res/img/dark/relation.svg",
+    descr: "Relation",
+  },
 };
 
 const PageActions = {

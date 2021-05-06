@@ -1,21 +1,21 @@
-class Navbarmenu {
+class NavbarMenu {
   static init() {
-    Navbarmenu.registerEvents();
+    NavbarMenu.registerEvents();
   }
 
   static registerEvents() {
-    $("#navbarmenu table tbody tr").on("click", function (event) {
+    $("#navbarMenu table tbody tr").on("click", function (event) {
       Eventhandler.onClickMenuItem(event);
     });
   }
 
   static isOpen() {
-    return $("#navbarmenu").is(":visible");
+    return $("#navbarMenu").is(":visible");
   }
 
   static close(element) {
-    if (!Navbarmenu.isOpen() || Navbarmenu.clickedOnMenu(element)) return;
-    $("#navbarmenu").toggle(false);
+    if (!NavbarMenu.isOpen() || NavbarMenu.clickedOnMenu(element)) return;
+    $("#navbarMenu").toggle(false);
     $("#disabledPageContainer").toggle(false);
   }
 
@@ -32,13 +32,13 @@ class Navbarmenu {
       };
     }
 
-    Navbarmenu.close(btnNavbarMenu);
+    NavbarMenu.close(btnNavbarMenu);
     Eventhandler.selectedPage = btnNavbarMenu.parent();
-    $("#navbarmenu").css({
+    $("#navbarMenu").css({
       top: `${position.top}px`,
       left: `${position.left}px`,
     });
-    $("#navbarmenu").toggle(true);
+    $("#navbarMenu").toggle(true);
     $("#disabledPageContainer").toggle(true);
   }
 
@@ -69,8 +69,8 @@ class Eventhandler {
         break;
     }
 
-    Navbarmenu.close();
+    NavbarMenu.close();
   }
 }
 
-module.exports = Navbarmenu;
+module.exports = NavbarMenu;

@@ -1,9 +1,11 @@
+const Enums = require("../model/enums.js");
+
 const defaultTable = {
   id: "",
   caption: "",
   columns: [
-    { id: "", name: "Name", type: "text", width: "120px" },
-    { id: "", name: "Done", type: "checkbox", width: "20px" },
+    { id: "", name: "Name", type: Enums.ColumnTypes.TXT.id, width: "120px" },
+    { id: "", name: "Done", type: Enums.ColumnTypes.CHK.id, width: "20px" },
   ],
   rows: [
     {
@@ -39,7 +41,7 @@ class Table {
         let row = {};
         $(columns).each(function (index, column) {
           let cellValue = value[column.id];
-          if (column.type == "checkbox") {
+          if (column.type == Enums.ColumnTypes.CHK.id) {
             cellValue = cellValue == "true";
           }
           row[column.id] = cellValue;
@@ -103,16 +105,17 @@ class Table {
     tableMenuContainer.className = "tableMenuContainer";
     let menuImg = document.createElement("img");
     menuImg.src = "../res/img/menu.svg";
-    menuImg.id = "btnTableMenu"; 
+    menuImg.id = "btnTableMenu";
+    menuImg.draggable = false;
     tableMenuContainer.appendChild(menuImg);
-    Tablemenu.registerEvent(tableMenuContainer);
+    TableMenu.registerEvent(tableMenuContainer);
     captionContainer.appendChild(tableMenuContainer);
     caption.appendChild(captionContainer);
     table.insertBefore(caption, table.childNodes[0]);
   }
 
   static prepareGeneration(data) {
-    data.columns.push({ name: "New", type: "add" });
+    data.columns.push({ name: "New", type: Enums.ColumnTypes.ADD.id });
   }
 
   static generateTableBody(table, data) {
@@ -142,10 +145,11 @@ class Table {
     let td = document.createElement("td");
     td.colSpan = numberOfColumns;
     let div = document.createElement("div");
-    div.className = "newRow";
+    div.id = "newRow";
     let img = document.createElement("img");
     img.src = "../res/img/new.svg";
-    img.className = "newImg";
+    img.id = "newImg";
+    img.draggable = false;
     div.appendChild(img);
     let textNode = document.createTextNode("New");
     div.appendChild(textNode);
@@ -156,18 +160,17 @@ class Table {
   static generateTableCell(tr, columnIndex, column, row) {
     let exit = false;
     let columnValue = row && column.id ? row.attr(column.id) : "";
-    let columnType = column.type;
 
     let td = document.createElement("td");
-    if (columnType != "add") {
+    if (column.type != "add") {
       let input = null;
-      switch (columnType) {
-        case "checkbox":
+      switch (column.type) {
+        case Enums.ColumnTypes.CHK.id:
           input = document.createElement("input");
-          input.type = columnType;
+          input.type = "checkbox";
           input.checked = columnValue;
           break;
-        case "text":
+        case Enums.ColumnTypes.TXT.id:
           input = document.createElement("div");
           input.contentEditable = "true";
           $(input).html(columnValue);
@@ -203,7 +206,7 @@ class Table {
   static generateTableColumn(tr, index, column) {
     let th = document.createElement("th");
     $(th).data("type", column.type);
-    if (column.type != "add") {
+    if (column.type != Enums.ColumnTypes.ADD.id) {
       let columnWidth = column.width;
       th.style.width = !columnWidth ? "120px" : columnWidth;
 
@@ -217,9 +220,10 @@ class Table {
     let div = document.createElement("div");
     div.className = "columnTitle";
 
-    if (column.type == "add") {
+    if (column.type == Enums.ColumnTypes.ADD.id) {
       let img = document.createElement("img");
       img.src = "../res/img/new.svg";
+      img.draggable = false;
       div.appendChild(img);
       let textNode = document.createTextNode(column.name);
       div.appendChild(textNode);
@@ -229,14 +233,19 @@ class Table {
       });
     } else {
       let img = document.createElement("img");
+      img.id = "btnColumnMenu";
+      img.draggable = false;
       switch (column.type) {
-        case "checkbox":
-          img.src = "../res/img/checkbox.svg";
+        case Enums.ColumnTypes.CHK.id:
+          img.src = "../res/img/light/checkbox.svg";
           break;
-        case "text":
-          img.src = "../res/img/text.svg";
+        case Enums.ColumnTypes.TXT.id:
+          img.src = "../res/img/light/text.svg";
           break;
       }
+      $(img).on("click", function (event) {
+        Eventhandler.onClickBtnColumnMenu(event);
+      });
       div.append(img);
 
       let input = document.createElement("input");
@@ -358,7 +367,7 @@ class Table {
     });
 
     let htmlColumns = table.find("thead tr th").filter(function () {
-      return $(this).data("type") != "add";
+      return $(this).data("type") != Enums.ColumnTypes.ADD.id;
     });
     Table_DB.updateColumns(false, sqlStatements, tableId, htmlColumns);
 
@@ -366,9 +375,37 @@ class Table {
     htmlRows.splice(-1, 1);
     Table_DB.updateValues(true, sqlStatements, tableId, htmlColumns, htmlRows);
   }
+
+  static deleteColumn(tableContainer, columnId) {
+    try {
+      Table_DB.deleteColumn(true, [], tableContainer.data("uuid"), columnId);
+    } catch (e) {}
+
+    let table = $(tableContainer).find(".table").get(0);
+    let rows = table.rows;
+    let columnIndex = $(table)
+      .find("th")
+      .filter(function () {
+        return $(this).data("uuid") == columnId;
+      })
+      .index();
+
+    for (var i = 0; i < rows.length - 1; i++) {
+      rows[i].deleteCell(columnIndex);
+    }
+
+    let lastRowCell = $(rows[rows.length - 1]).children("td");
+    let colspan = lastRowCell.attr("colspan");
+    colspan = `${colspan - 1}`;
+    lastRowCell.attr("colspan", colspan);
+  }
 }
 
 class Eventhandler {
+  static onClickBtnColumnMenu(event) {
+    ColumnMenu.open($(event.target));
+  }
+
   static onKeydownTableCell(event) {
     var columnIndex = $(event.target).parent().index();
 
@@ -434,7 +471,7 @@ class Eventhandler {
   static onClickColumnAdd(event) {
     let column = {
       name: "Column",
-      type: "text",
+      type: Enums.ColumnTypes.TXT.id,
       width: "120px",
     };
     let table = $(event.target).parents("table");

@@ -1,0 +1,103 @@
+#columnMenu {
+  z-index: 9999;
+  width: 290px;
+  border: 1px solid rgb(236, 236, 236);
+  padding: 10px;
+  position: absolute;
+  background: white;
+  display: none;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 3px 6px 0px;
+}
+
+#columnMenu img {
+  width: 16px;
+}
+
+#columnMenuForm {
+  width: 100%;
+}
+
+#columnMenuForm .label {
+  font-weight: 500;
+  user-select: none;
+  width: 60px;
+}
+
+#columnMenuForm select,
+#columnMenuForm input {
+  width: 100%;
+  /* height: 24px; */
+}
+
+#columnTypeValue {
+  background: white;
+  align-items: center;
+  display: grid;
+  cursor: pointer;
+  grid-template-columns: auto 1fr auto;
+  padding: 4px;
+  user-select: none;
+  border: 1px solid #e1e1e1;
+  border-radius: 4px;
+}
+
+#columnTypeValue:hover {
+  background-color: rgb(236, 236, 236);
+  border-radius: 4px;
+}
+
+#columnTypeValue.active {
+  background-color: rgb(236, 236, 236);
+  border-radius: 4px;
+}
+
+#columnTypeValue img:not(:last-of-type) {
+  margin: 0px 8px 0px 5px;
+}
+
+#columnTypeMenu {
+  z-index: 99999;
+  border: 1px solid #e1e1e1;
+  background: white;
+  width: 200px;
+  position: fixed;
+  margin-top: 2px;
+  display: none;
+  user-select: none;
+}
+
+#columnTypeMenu table {
+  width: 100%;
+}
+
+#columnTypeMenu tr:hover {
+  background-color: rgb(236, 236, 236);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.columnTypeOption {
+  height: 26px;
+}
+
+.columnTypeOption div {
+  display: flex;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+
+.columnTypeOption img {
+  margin-right: 8px;
+}
+
+#columnMenuButtonBar {
+  width: 100%;
+  text-align: center;
+  align-items: center;
+  padding-top: 12px;
+}
+
+#columnMenuButtonBar button {
+  width: 80px;
+  cursor: pointer;
+}

@@ -10,7 +10,7 @@ class Table_DB {
   static getColumns(tables) {
     if (!tables || tables.length == 0) return;
 
-    let tableIds = tables.map(t => `'${t.id}'`).join(", ");
+    let tableIds = tables.map((t) => `'${t.id}'`).join(", ");
     return Database.all(
       `SELECT * FROM table_columns WHERE table_id IN (${tableIds}) ORDER BY position ASC;`
     );
@@ -46,10 +46,10 @@ class Table_DB {
       let sqlColumnName, sqlColumnType;
 
       switch (columnType) {
-        case "add":
+        case Enums.ColumnTypes.ADD.id:
           return;
-        case "checkbox":
-        case "text":
+        case Enums.ColumnTypes.CHK.id:
+        case Enums.ColumnTypes.TXT.id:
           sqlColumnName = columnId;
           sqlColumnType = "TEXT";
           break;
@@ -93,10 +93,10 @@ class Table_DB {
 
         let input = htmlRow.find("td").eq(columnIndex).children();
         switch (htmlColumn.data("type")) {
-          case "checkbox":
+          case Enums.ColumnTypes.CHK.id:
             sqlValues += `'${input.is(":checked")}'`;
             break;
-          case "text":
+          case Enums.ColumnTypes.TXT.id:
             sqlValues += `'${input.html()}'`;
             break;
         }
@@ -133,6 +133,18 @@ class Table_DB {
       `DELETE FROM tables WHERE id IN (${sqlIds});`,
       `DELETE FROM table_columns WHERE table_id IN (${sqlIds});`,
       `DELETE FROM page_elements WHERE id IN (${sqlIds});`
+    );
+
+    if (run) {
+      Database.run(sqlStatements);
+    }
+    return sqlStatements;
+  }
+
+  static deleteColumn(run = false, sqlStatements = [], tableId, columnId) {
+    sqlStatements.push(
+      `ALTER TABLE '${tableId}' DROP COLUMN '${columnId}';`,
+      `DELETE FROM table_columns WHERE id = '${columnId}';`
     );
 
     if (run) {

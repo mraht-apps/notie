@@ -1,22 +1,22 @@
-#searchmenu {
+#searchMenu {
   background-color: #ffffff;
   border: 1px solid #999999;
   cursor: default;
-  /* display: none; */
+  display: none;
   position: absolute;
   text-align: left;
-  z-index: 99999;
+  z-index: 9999;
   padding: 6px;
   margin-top: -400px;
   margin-left: 120px;
 }
 
-#searchmenu input {
+#searchMenu input {
   margin-bottom: 6px;
   margin-left: 8px;
 }
 
-#searchmenu table {
+#searchMenu table {
   width: 100%;
   border: 1px solid #999999;
   border-collapse: collapse;
@@ -24,15 +24,15 @@
   user-select: none;
 }
 
-#searchmenu td {
+#searchMenu td {
   padding: 4px;
 }
 
-#searchmenu tr:nth-child(even) {
+#searchMenu tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-#searchmenu tr:hover {
+#searchMenu tr:hover {
   cursor: pointer;
   background-color: rgb(228, 228, 228);
 }

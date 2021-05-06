@@ -4,7 +4,7 @@ class Document {
   }
 
   static registerEvents() {
-    $(document).on("contextmenu", function(event){
+    $(document).on("contextmenu", function (event) {
       Eventhandler.onClick(event);
     });
 
@@ -29,13 +29,15 @@ class Document {
 class Eventhandler {
   static onClick(event) {
     let element = $(event.target);
-    Blockmenu.close(element);
-    Tablemenu.close(element);
-    Navbarmenu.close(element);
+    BlockMenu.close(element);
+    TableMenu.close(element);
+    NavbarMenu.close(element);
+    ColumnMenu.close(element);
+    ColumnTypeMenu.close(element);
   }
 
   static onKeyup(event) {
-    if (!Blockmenu.isOpen() || Page.isDisabled()) return;
+    if (!BlockMenu.isOpen() || Page.isDisabled()) return;
 
     if ($(".clickable.active").length == 0) {
       $(".clickable").eq(0).addClass("active");

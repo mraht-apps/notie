@@ -50,12 +50,14 @@ class Navbar {
     let img = document.createElement("img");
     img.src = "../res/img/page.svg";
     img.className = "navbarItemIcon";
+    img.draggable = false;
     navbarItem.append(img);
     let textNode = document.createTextNode(page.name);
     navbarItem.append(textNode);
     img = document.createElement("img");
     img.src = "../res/img/menu.svg";
     img.id = "btnNavbarMenu";
+    img.draggable = false;
     $(img).on("click", function (event) {
       Eventhandler.onClickBtnNavbarMenu(event);
     });
@@ -94,11 +96,11 @@ class Eventhandler {
   }
 
   static onNavbarItemContextmenu(event) {
-    Navbarmenu.open($(event.target), { top: event.pageY, left: event.pageX });
+    NavbarMenu.open($(event.target), { top: event.pageY, left: event.pageX });
   }
 
   static onClickBtnNavbarMenu(event) {
-    Navbarmenu.open($(event.target));
+    NavbarMenu.open($(event.target));
   }
 
   static onMousedown(event) {

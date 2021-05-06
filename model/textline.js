@@ -124,11 +124,11 @@ class Eventhandler {
         }
         break;
       case "Enter":
-        if (Blockmenu.isOpen()) {
+        if (BlockMenu.isOpen()) {
           var row = $(".clickable.active").eq(0);
           var elementType = row.data("type");
           Page.addElement(elementType);
-          Blockmenu.close();
+          BlockMenu.close();
         } else {
           var newTextline = Textline.create();
           Textline.registerEvents();
@@ -138,17 +138,17 @@ class Eventhandler {
         event.preventDefault();
         break;
       case "/":
-        Blockmenu.open();
+        BlockMenu.open();
         break;
       default:
         textline.data("previousValue", textline.text());
         break;
     }
 
-    // OPT Optimize blockmenu opening (e.g. also on backspace)
+    // OPT Optimize blockMenu opening (e.g. also on backspace)
     let regex = /^[\w\s]+$/;
     if (event.key.match(regex) || event.key == "Escape") {
-      Blockmenu.close();
+      BlockMenu.close();
     }
   }
 }

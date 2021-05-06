@@ -1,10 +1,10 @@
-class Tablemenu {
+class TableMenu {
   static init() {
-    Tablemenu.registerEvents();
+    TableMenu.registerEvents();
   }
 
   static registerEvents() {
-    $("#tablemenu tr").on("click", function (event) {
+    $("#tableMenu tr").on("click", function (event) {
       Eventhandler.onClickMenuItem(event);
     });
   }
@@ -16,23 +16,23 @@ class Tablemenu {
   }
 
   static isOpen() {
-    return $("#tablemenu").is(":visible");
+    return $("#tableMenu").is(":visible");
   }
 
   static close(element) {
-    if (!Tablemenu.isOpen() || Tablemenu.clickedOnMenu(element)) return;
-    $("#tablemenu").toggle(false);
+    if (!TableMenu.isOpen() || TableMenu.clickedOnMenu(element)) return;
+    $("#tableMenu").toggle(false);
     $("#disabledPageContainer").toggle(false);
   }
 
   static open(element) {
-    Tablemenu.close(element);
+    TableMenu.close(element);
     let position = $(element).get(0).getBoundingClientRect();
-    $("#tablemenu").css({
+    $("#tableMenu").css({
       top: `${position.top + 28}px`,
       left: `${position.left - 120}px`,
     });
-    $("#tablemenu").toggle(true);
+    $("#tableMenu").toggle(true);
     $("#disabledPageContainer").toggle(true);
   }
 
@@ -40,7 +40,7 @@ class Tablemenu {
     if (
       element &&
       (element.attr("id") == "btnTableMenu" ||
-        element.parents("#tablemenu").length > 0)
+        element.parents("#tableMenu").length > 0)
     ) {
       return true;
     } else {
@@ -55,11 +55,11 @@ class Eventhandler {
   static onClick(event) {
     let element = $(event.target);
 
-    if (!Tablemenu.isOpen()) {
-      Tablemenu.open(element);
+    if (!TableMenu.isOpen()) {
+      TableMenu.open(element);
       Eventhandler.selectedTable = $(event.target).parents(".pageElement.table");
     } else {
-      Tablemenu.close(element);
+      TableMenu.close(element);
     }
   }
 
@@ -73,8 +73,8 @@ class Eventhandler {
         break;
     }
 
-    Tablemenu.close();
+    TableMenu.close();
   }
 }
 
-module.exports = Tablemenu;
+module.exports = TableMenu;

@@ -13,7 +13,7 @@ Version 1.0.0 (TBA)
   - Login screen to be able to open or create databases
   - Navigation with arrow keys between columns and rows
   - Page overflow auto to fit content by scrollbar whereas menu remains fixed
-  - 
+  - Table columns can be deleted
 
 *** Opt
   - ./. (first version)
