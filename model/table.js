@@ -396,15 +396,24 @@ class Eventhandler {
 
   static onKeydownTableCell(event) {
     var columnIndex = $(event.target).parent().index();
+    let tableRow = $(event.target).parents("tr");
 
     switch (event.key) {
       case "ArrowUp":
-        var input = $(event.target).parents("tr").prev().children().eq(columnIndex).children();
+        var input = tableRow.prev().children().eq(columnIndex).children();
+        if(input.length == 0) {
+          let lastRow = tableRow.parent().find("tr:last").prev();
+          input = lastRow.children().eq(columnIndex).children();
+        }
         General.focus(input, Enums.FocusActions.ALL, false);
         event.preventDefault();
         break;
       case "ArrowDown":
-        var input = $(event.target).parents("tr").next().children().eq(columnIndex).children();
+        var input = tableRow.next().children().eq(columnIndex).children();
+        if(input.attr("id") == "newRow" || input.length == 0) {
+          let firstRow = tableRow.parent().find("tr:first");
+          input = firstRow.children().eq(columnIndex).children();
+        }
         General.focus(input, Enums.FocusActions.ALL, false);
         event.preventDefault();
         break;
@@ -412,11 +421,8 @@ class Eventhandler {
         if (window.getSelection().baseOffset > 0) return;
         var input = $(event.target).parents("td").prev().children();
         if (input.length == 0) {
-          input = $(event.target)
-            .parents("tr")
-            .children()
-            .eq($(event.target).parents("tr").children().length - 2)
-            .children();
+          let lastTableCellIndex = tableRow.children().length - 2;
+          input = tableRow.children().eq(lastTableCellIndex).children();
         }
         General.focus(input, Enums.FocusActions.ALL);
         event.preventDefault();
@@ -425,7 +431,7 @@ class Eventhandler {
         if (window.getSelection().baseOffset < $(event.target).html().length) return;
         var input = $(event.target).parents("td").next().children();
         if (input.length == 0) {
-          input = $(event.target).parents("tr").children().first("td").children();
+          input = tableRow.children().first("td").children();
         }
         General.focus(input, Enums.FocusActions.ALL);
         event.preventDefault();
