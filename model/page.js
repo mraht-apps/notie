@@ -1,14 +1,29 @@
-const General = require("../utils/general");
-const Textline = require("./textline");
+const Navigation = require("../controller/navigation");
 
 class Page {
   static init() {
-    let startpage = { id: "" };
+    let startpage;
     let pageId = Settings.DATA.STARTPAGE;
-    if (pageId && pageId.length > 0) {
-      startpage = Page_DB.getById(pageId);
-      if (startpage) Navigation.next(startpage.id);
+
+    for (let i = 0; i < 2; i++) {
+      switch (i) {
+        case 0:
+          if (pageId && pageId.length > 0) {
+            let page = Page_DB.getById(pageId);
+            if (page && page.id) startpage = page.id;
+          }
+          break;
+        case 1:
+          let page = Page_DB.getFirst();
+          if (page && page.id) startpage = page.id;
+          break;
+        case 2:
+          startpage = "newPage";
+          break;
+      }
+      if (startpage) break;
     }
+    Navigation.next(startpage);
 
     $("#pageName").on("keydown", (event) => Eventhandler.onKeydownPageName(event));
     $("#pageName").on("keyup", (event) => Eventhandler.onKeyupPageName(event));
@@ -43,10 +58,10 @@ class Page {
 
     switch (page.id) {
       case "newPage":
-        Page.openNewPage();
+        Page.openUserPage();
         break;
       case "settingsPage":
-        Page.openSettingsPage(page);
+        Page.openSettingsPage();
         break;
       default:
         Page.openUserPage(page.id);
@@ -67,14 +82,19 @@ class Page {
     Navigation.next(page.id);
   }
 
-  static openSettingsPage(page) {
-    var page = File.readFile(Filepath.join(__dirname, "../view/settings.html"));
+  static openSettingsPage() {
+    let page = File.readFile(Filepath.join(__dirname, "../view/settings.html"));
     $("#content").html(page);
     $("#pageName").val("Settings");
     Settings.registerEvents();
   }
 
   static openUserPage(pageId) {
+    if (!pageId) {
+      Page.openNewPage();
+      return;
+    }
+
     let page = Page_DB.getById(pageId);
     let elements = Page_DB.getElements(pageId);
     let htmlElement = null;

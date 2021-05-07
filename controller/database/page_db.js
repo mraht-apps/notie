@@ -1,4 +1,8 @@
 class Page_DB {
+  static getFirst() {
+    return Database.get(`SELECT * FROM pages;`);
+  }
+
   static getById(id) {
     return Database.get(`SELECT * FROM pages WHERE id = '${id}';`);
   }

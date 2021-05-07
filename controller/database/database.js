@@ -30,6 +30,9 @@ class Database {
       result = Database.all("SELECT * FROM element_types;");
       console.log(result);
 
+      result = Database.all("SELECT * FROM parent_types;");
+      console.log(result);
+
       result = Database.all("SELECT * FROM pages;");
       console.log(result);
 
@@ -104,29 +107,22 @@ class Database {
   }
 
   static initElementTypes() {
-    let sql = "REPLACE INTO element_types VALUES ";
-    Object.keys(Enums.ElementTypes).forEach(function (key) {
-      let type = types[key];
-      sql += `('${Enums.ElementTypes[type]}', '${type}')`;
-      if (i < types.length - 1) {
-        sql += ", ";
-      }
-    });
-    sql += ";";
+    let values = Object.keys(Enums.ElementTypes)
+      .map(function (key) {
+        return `('${key}', '${Enums.ElementTypes[key]}')`;
+      })
+      .join(", ");
+    let sql = `REPLACE INTO element_types VALUES ${values};`;
     Database.run([sql]);
   }
 
   static initParentTypes() {
-    let sql = "REPLACE INTO parent_types VALUES ";
-    let parentTypes = Object.keys(Enums.ParentTypes);
-    parentTypes.forEach(function (key) {
-      let type = parentTypes[key];
-      sql += `('${Enums.ParentTypes[type]}', '${type}')`;
-      if (i < parentTypes.length - 1) {
-        sql += ", ";
-      }
-    });
-    sql += ";";
+    let values = Object.keys(Enums.ParentTypes)
+      .map(function (key) {
+        return `('${key}', '${Enums.ParentTypes[key]}')`;
+      })
+      .join(", ");
+    let sql = `REPLACE INTO parent_types VALUES ${values};`;
     Database.run([sql]);
   }
 

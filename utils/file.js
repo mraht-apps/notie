@@ -17,7 +17,7 @@ class File {
 
   static isDir(path) {
     try {
-      var stat = Filesystem.lstatSync(path);
+      let stat = Filesystem.lstatSync(path);
       return stat.isDirectory();
     } catch (e) {
       return false;

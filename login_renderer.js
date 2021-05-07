@@ -1,6 +1,7 @@
 window.$ = window.jQuery = require("jquery");
 const IPCRenderer = require("electron").ipcRenderer;
 
+const Enums = require("../model/enums.js");
 const General = require("../utils/general.js");
 const Settings = require("../controller/settings.js");
 const File = require("../utils/file.js");

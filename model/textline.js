@@ -83,24 +83,27 @@ class Eventhandler {
     // Ignore certain characters
     if (event.key == "Shift") return;
 
-    var textline = $(event.target);
+    let textline = $(event.target);
+    let prevElement = textline.prev();
+    let nextElement = textline.next();
+
     switch (event.key) {
       case "ArrowUp":
-        var prevElement = textline.prev();
         General.focus(prevElement);
         event.preventDefault();
         break;
       case "ArrowDown":
-        var nextElement = textline.next();
         General.focus(nextElement);
         event.preventDefault();
         break;
       case "Backspace":
-        var prevElement = textline.prev();
-        var selectedTextLength = General.getSelectedTextLength();
+        let selectedTextLength = General.getSelectedTextLength();
 
-        if (General.getCursorPosition(textline) == 0 && selectedTextLength == 0) {
-          var prevElementTextLength = prevElement.text().length;
+        if (
+          General.getCursorPosition(textline) == 0 &&
+          selectedTextLength == 0
+        ) {
+          let prevElementTextLength = prevElement.text().length;
           if (textline.text().length > 0 && selectedTextLength == 0) {
             prevElement.text(prevElement.text() + textline.text());
           }
@@ -115,12 +118,12 @@ class Eventhandler {
         break;
       case "Enter":
         if (BlockMenu.isOpen()) {
-          var row = $(".clickable.active").eq(0);
-          var elementType = row.data("type");
+          let row = $(".clickable.active").eq(0);
+          let elementType = row.data("type");
           Page.addElement(elementType);
           BlockMenu.close();
         } else {
-          var newTextline = Textline.create();
+          let newTextline = Textline.create();
           textline.after(newTextline);
           General.focus($(newTextline));
         }

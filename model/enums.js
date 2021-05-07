@@ -1,12 +1,13 @@
 const ElementTypes = {
-  table: 1,
-  textline: 2,
+  0: "none",
+  1: "table",
+  2: "textline",
 };
 
 const ParentTypes = {
-  none: 0,
-  page: 1,
-  table: 2,
+  0: "none",
+  1: "page",
+  2: "table",
 };
 
 const ColumnTypes = {

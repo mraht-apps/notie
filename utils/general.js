@@ -15,9 +15,9 @@ class General {
   }
 
   static getCursorPixelPosition() {
-    var selection = window.getSelection();
+    let selection = window.getSelection();
     let range = selection.getRangeAt(0).cloneRange();
-    var span = document.createElement("span");
+    let span = document.createElement("span");
     range.insertNode(span);
     let rect = span.getClientRects()[0];
     span.remove();

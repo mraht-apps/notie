@@ -29,7 +29,7 @@ class App {
   }
 
   static isDev() {
-    let start = process.env["npm_package_scripts_start"];
+    let start = process.env["npm_lifecycle_script"];
     if (!start) return false;
     let args = start.split("--");
     return args[1].split("=")[1] == "true";
@@ -42,11 +42,11 @@ class Main {
   }
 
   static createWindow() {
-    var height = 600;
-    var width = 800;
-    var x = 0;
-    var y = 0;
-    var maximize = false;
+    let height = 600;
+    let width = 800;
+    let x = 0;
+    let y = 0;
+    let maximize = false;
 
     if (!Settings.DATA.WINDOW) {
       maximize = true;

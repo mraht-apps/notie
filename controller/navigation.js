@@ -15,7 +15,7 @@ class Navigation {
   }
 
   static add(pageId) {
-    if (pageId == "newPage") return;
+    if (!pageId || pageId == "newPage") return;
     Navigation.stack.push(pageId);
   }
 
