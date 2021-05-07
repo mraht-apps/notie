@@ -1,6 +1,6 @@
 #tableMenu {
   border: 1px solid rgb(236, 236, 236);
-  z-index: 9999;
+  z-index: 999;
   position: absolute;
   right: 24px;
   width: 150px;

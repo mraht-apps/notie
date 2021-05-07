@@ -4,17 +4,9 @@ class BlockMenu {
   }
 
   static registerEvents() {
-    $("#blockMenu").on("mouseout", function (event) {
-      Eventhandler.onMouseout(event);
-    });
-
-    $(".clickable").on("click", function (event) {
-      Eventhandler.onClickMenuItem(event);
-    });
-
-    $(".clickable").on("mouseover", function (event) {
-      Eventhandler.onMouseoverMenuItem(event);
-    });
+    $("#blockMenu").on("mouseout", (event) => Eventhandler.onMouseout(event));
+    $(".clickable").on("click", (event) => Eventhandler.onClickMenuItem(event));
+    $(".clickable").on("mouseover", (event) => Eventhandler.onMouseoverMenuItem(event));
   }
 
   static isOpen() {
@@ -36,11 +28,7 @@ class BlockMenu {
   }
 
   static clickedOnMenu(element) {
-    if (
-      element &&
-      (element.attr("id") == "blockMenu" ||
-        element.parents("#blockMenu").length > 0)
-    ) {
+    if (element && (element.attr("id") == "blockMenu" || element.parents("#blockMenu").length > 0)) {
       return true;
     } else {
       return false;

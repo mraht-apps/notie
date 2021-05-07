@@ -4,25 +4,11 @@ class Document {
   }
 
   static registerEvents() {
-    $(document).on("contextmenu", function (event) {
-      Eventhandler.onClick(event);
-    });
-
-    $(document).on("click", function (event) {
-      Eventhandler.onClick(event);
-    });
-
-    $(document).on("keyup", function (event) {
-      Eventhandler.onKeyup(event);
-    });
-
-    $(document).on("mousemove", function (event) {
-      Eventhandler.onMousemove(event);
-    });
-
-    $(document).on("mouseup", function (event) {
-      Eventhandler.onMouseup(event);
-    });
+    $(document).on("contextmenu", (event) => Eventhandler.onClick(event));
+    $(document).on("click", (event) => Eventhandler.onClick(event));
+    $(document).on("keyup", (event) => Eventhandler.onKeyup(event));
+    $(document).on("mousemove", (event) => Eventhandler.onMousemove(event));
+    $(document).on("mouseup", (event) => Eventhandler.onMouseup(event));
   }
 }
 

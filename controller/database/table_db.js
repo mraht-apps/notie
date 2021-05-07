@@ -1,4 +1,16 @@
 class Table_DB {
+  static tablesBuffer = [];
+
+  static getByName(name) {
+    if (Table_DB.tablesBuffer.length == 0) {
+      Table_DB.tablesBuffer = Database.all(`SELECT * FROM tables ORDER BY name COLLATE NOCASE ASC;`);
+    }
+    let result = $(Table_DB.tablesBuffer).filter(function () {
+      return this.name.toLowerCase().includes(name.toLowerCase());
+    });
+    return result;
+  }
+
   static getByPageId(id) {
     return Database.all(
       `SELECT tbl.* FROM page_elements AS ps ` +
@@ -11,9 +23,7 @@ class Table_DB {
     if (!tables || tables.length == 0) return;
 
     let tableIds = tables.map((t) => `'${t.id}'`).join(", ");
-    return Database.all(
-      `SELECT * FROM table_columns WHERE table_id IN (${tableIds}) ORDER BY position ASC;`
-    );
+    return Database.all(`SELECT * FROM table_columns WHERE table_id IN (${tableIds}) ORDER BY position ASC;`);
   }
 
   static getValues(id) {
@@ -21,9 +31,7 @@ class Table_DB {
   }
 
   static update(run = false, sqlStatements = [], table) {
-    sqlStatements.push(
-      `REPLACE INTO tables VALUES ('${table.id}', '${table.name}');`
-    );
+    sqlStatements.push(`REPLACE INTO tables VALUES ('${table.id}', '${table.name}');`);
 
     if (run) {
       Database.run(sqlStatements);
@@ -67,8 +75,7 @@ class Table_DB {
     sqlStatements.push(
       `REPLACE INTO table_columns VALUES ${sqlTableStructure};`,
       `DROP TABLE IF EXISTS '${tableId}';`,
-      `CREATE TABLE IF NOT EXISTS '${tableId}' ` +
-        `(id TEXT NOT NULL, ${sqlColumns}, PRIMARY KEY (id) );`
+      `CREATE TABLE IF NOT EXISTS '${tableId}' ` + `(id TEXT NOT NULL, ${sqlColumns}, PRIMARY KEY (id) );`
     );
 
     if (run) {
@@ -77,13 +84,7 @@ class Table_DB {
     return sqlStatements;
   }
 
-  static updateValues(
-    run = false,
-    sqlStatements = [],
-    tableId,
-    htmlColumns,
-    htmlRows
-  ) {
+  static updateValues(run = false, sqlStatements = [], tableId, htmlColumns, htmlRows) {
     let sqlValues = "";
     htmlRows.each(function (rowIndex, htmlRow) {
       htmlRow = $(htmlRow);

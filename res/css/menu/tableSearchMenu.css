@@ -1,0 +1,38 @@
+#tableSearchMenu {
+  background-color: #ffffff;
+  border: 1px solid #999999;
+  cursor: default;
+  text-align: left;
+  position: fixed;
+  width: 200px;
+  z-index: 9999;
+  max-height: 140px;
+  overflow: auto;
+  display: none;
+}
+
+#tableSearchMenu table {
+  width: 100%;
+
+  border-collapse: collapse;
+  border-spacing: 0;
+  user-select: none;
+}
+
+#tableSearchMenu tr {
+  height: 28px;
+}
+
+#tableSearchMenu tr:not(#noTableFound):hover {
+  cursor: pointer;
+  background-color: rgb(228, 228, 228);
+}
+
+#noTableFound:hover {
+  cursor: default;
+  background-color: none;
+}
+
+#tableSearchMenu td {
+  padding: 4px;
+}

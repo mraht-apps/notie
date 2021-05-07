@@ -27,9 +27,7 @@ class Settings {
   }
 
   static registerEvents() {
-    $("#btnSavePassword").on("click", function (event) {
-      Eventhandler.onClickBtnSavePassword(event);
-    });
+    $("#btnSavePassword").on("click", (event) => Eventhandler.onClickBtnSavePassword(event));
   }
 
   static setDefault() {

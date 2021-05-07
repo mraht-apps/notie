@@ -1,65 +1,65 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
+    <!-- CSS Style -->
+    <link rel="stylesheet" href="../res/css/style.css" type="text/css" />
+    <link rel="stylesheet" href="../res/css/page.css" type="text/css" />
+    <link rel="stylesheet" href="../res/css/navbar.css" type="text/css" />
+    <link rel="stylesheet" href="../res/css/menu/navbarMenu.css" type="text/css" />
+    <link rel="stylesheet" href="../res/css/menu/blockMenu.css" type="text/css" />
+    <link rel="stylesheet" href="../res/css/menu/tableSearchMenu.css" type="text/css" />
+    <link rel="stylesheet" href="../res/css/menu/tableMenu.css" type="text/css" />
+    <link rel="stylesheet" href="../res/css/menu/columnMenu.css" type="text/css" />
+    <link rel="stylesheet" href="../res/css/table.css" type="text/css" />
+    <link rel="stylesheet" href="../res/css/textline.css" type="text/css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-  <!-- CSS Style -->
-  <link rel="stylesheet" href="../res/css/style.css" type="text/css" />
-  <link rel="stylesheet" href="../res/css/page.css" type="text/css" />
-  <link rel="stylesheet" href="../res/css/navbar.css" type="text/css" />
-  <link rel="stylesheet" href="../res/css/menu/navbarMenu.css" type="text/css" />
-  <link rel="stylesheet" href="../res/css/menu/blockMenu.css" type="text/css" />
-  <link rel="stylesheet" href="../res/css/menu/searchMenu.css" type="text/css" />
-  <link rel="stylesheet" href="../res/css/menu/tableMenu.css" type="text/css" />
-  <link rel="stylesheet" href="../res/css/menu/columnMenu.css" type="text/css" />
-  <link rel="stylesheet" href="../res/css/table.css" type="text/css" />
-  <link rel="stylesheet" href="../res/css/textline.css" type="text/css" />
-</head>
-
-<body>
-
-  <div id="pageContainer">
-    <div id="navbar">
-      <div id="settingsPage" class="navbarItem" data-uuid="settingsPage"><img src="../res/img/settings.svg"
-          class="navbarItemIcon" draggable="false">Settings
-      </div>
-      <div id="navbarPages">
-        <div id="navbarPagesTitle">Pages
-          <hr>
+  <body>
+    <div id="pageContainer">
+      <div id="navbar">
+        <div id="settingsPage" class="navbarItem" data-uuid="settingsPage">
+          <img src="../res/img/settings.svg" class="navbarItemIcon" draggable="false" />Settings
         </div>
-        <div id="newPage" class="navbarItem" data-uuid="newPage"><img src="../res/img/new.svg" class="navbarItemIcon"
-            draggable="false">New page</div>
+        <div id="navbarPages">
+          <div id="navbarPagesTitle">
+            Pages
+            <hr />
+          </div>
+          <div id="newPage" class="navbarItem" data-uuid="newPage">
+            <img src="../res/img/new.svg" class="navbarItemIcon" draggable="false" />New page
+          </div>
+        </div>
+      </div>
+      <div id="resizeSeparator"></div>
+      <div id="pageContent">
+        <div id="menuBar">
+          <button id="btnTest">Test</button>
+          <button id="btnLogout">Logout</button>
+          <button id="btnRestart">Restart</button>
+          <button disabled id="btnUpdateApp">Update Ready</button>
+          <hr />
+        </div>
+        <div id="pageNameContainer"><input id="pageName" type="text" /></div>
+        <div id="content">
+          <!-- External content -->
+        </div>
+        <div id="placeholder"></div>
       </div>
     </div>
-    <div id="resizeSeparator"></div>
-    <div id="pageContent">
-      <div id="menuBar">
-        <button id="btnTest">Test</button>
-        <button id="btnLogout">Logout</button>
-        <button id="btnRestart">Restart</button>
-        <button disabled id="btnUpdateApp">Update Ready</button>
-        <hr>
-      </div>
-      <div id="pageNameContainer"><input id="pageName" type="text"></div>
-      <div id="content">
-        <!-- External content -->
-      </div>
-      <div id="placeholder"></div>
-    </div>
-  </div>
-  <div id="disabledPageContainer"></div>
+    <div id="disabledPageContainer"></div>
 
-  <!-- Popup menus -->
-  <div id="blockMenu">
-    <table>
-      <tbody>
-        <tr>
-          <div class="sectionTitle">BASIC BLOCKS</div>
-        </tr>
-        <!-- <tr class="clickable" data-type="textline">
+    <!-- Popup menus -->
+    <div id="blockMenu">
+      <table>
+        <tbody>
+          <tr>
+            <div class="sectionTitle">BASIC BLOCKS</div>
+          </tr>
+          <!-- <tr class="clickable" data-type="textline">
               <td>
                 <div class="icon">Aa</div>
               </td>
@@ -68,40 +68,43 @@
                 <div class="description">Just start writing with plain text.</div>
               </td>
             </tr> -->
-        <tr class="clickable" data-type="table">
-          <td>
-            <div class="icon">Tbl</div>
-          </td>
-          <td>
-            <div>Table</div>
-            <div class="description">Create a table in this page.</div>
-          </td>
+          <tr class="clickable" data-type="table">
+            <td>
+              <div class="icon">Tbl</div>
+            </td>
+            <td>
+              <div>Table</div>
+              <div class="description">Create a table in this page.</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="tableMenu">
+      <table>
+        <tr id="deleteTable">
+          <td><img src="../res/img/trash.svg" draggable="false" />Delete</td>
         </tr>
-      </tbody>
-    </table>
-  </div>
+      </table>
+    </div>
 
-  <div id="tableMenu">
-    <table>
-      <tr id="deleteTable">
-        <td><img src="../res/img/trash.svg" draggable="false">Delete</td>
-      </tr>
-    </table>
-  </div>
-
-  <div id="columnMenu">
-    <table id="columnMenuForm">
-      <tbody>
-        <tr>
-          <td class="label">Type:</td>
-          <td>
-            <div id="columnTypeValue"><img src="../res/img/dark/text.svg" draggable="false">Text<img
-                src="../res/img/arrow_down.svg" draggable="false">
-            </div>
-            <div id="columnTypeMenu">
-              <table>
-                <tbody>
-                  <tr id="columnTypeText">
+    <div id="columnMenu">
+      <table id="columnMenuForm">
+        <tbody>
+          <tr>
+            <td class="label">Type:</td>
+            <td>
+              <div id="columnTypeValue">
+                <!-- <img src="../res/img/dark/text.svg" draggable="false" />Text<img
+                  src="../res/img/arrow_down.svg"
+                  draggable="false"
+                /> -->
+              </div>
+              <div id="columnTypeMenu">
+                <table>
+                  <tbody>
+                    <!-- <tr id="columnTypeText">
                     <td class="columnTypeOption">
                       <div><img src="../res/img/dark/text.svg" draggable="false">Text</div>
                     </td>
@@ -120,41 +123,50 @@
                     <td class="columnTypeOption">
                       <div><img src="../res/img/dark/relation.svg" draggable="false">Relation</div>
                     </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <!-- <div class="label">Relation:</div> -->
-    <!-- <div><input type="text" name="tableSearch"></div> -->
-    <div id="columnMenuButtonBar">
-      <button id="btnColumnMenuDelete">Delete</button>
-      <button id="btnColumnMenuSave">Save</button>
+                  </tr> -->
+                  </tbody>
+                </table>
+              </div>
+            </td>
+          </tr>
+          <tr id="numberFormat">
+            <td>Format:</td>
+          </tr>
+          <tr id="tableRelation">
+            <td class="label">Table:</td>
+            <td>
+              <input id="tableRelationValue" type="text" />
+              <div id="tableSearchMenu">
+                <table>
+                  <tbody>
+                    <tr id="noTableFound">
+                      <td>Nothing found.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- <div class="label">Relation:</div> -->
+      <!-- <div><input type="text" name="tableSearch"></div> -->
+      <div id="columnMenuButtonBar">
+        <button id="btnColumnMenuDelete">Delete</button>
+        <button id="btnColumnMenuSave">Save</button>
+      </div>
     </div>
-  </div>
 
-  <div id="searchMenu">
-    <b>Search:</b><input type="text">
-    <table>
-      <tbody>
-      </tbody>
-    </table>
-  </div>
+    <div id="navbarMenu">
+      <table>
+        <tbody>
+          <tr id="deletePage">
+            <td><img src="../res/img/trash.svg" draggable="false" />Delete</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-  <div id="navbarMenu">
-    <table>
-      <tbody>
-        <tr id="deletePage">
-          <td><img src="../res/img/trash.svg" draggable="false">Delete</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <script src="../main_renderer.js"></script>
-</body>
-
+    <script src="../main_renderer.js"></script>
+  </body>
 </html>

@@ -1,6 +1,7 @@
-class Page {
-  static DEFAULT_NAME = "Untitled";
+const General = require("../utils/general");
+const Textline = require("./textline");
 
+class Page {
   static init() {
     let startpage = { id: "" };
     let pageId = Settings.DATA.STARTPAGE;
@@ -9,6 +10,8 @@ class Page {
       if (startpage) Navigation.next(startpage.id);
     }
 
+    $("#pageName").on("keydown", (event) => Eventhandler.onKeydownPageName(event));
+    $("#pageName").on("keyup", (event) => Eventhandler.onKeyupPageName(event));
     Placeholder.init();
   }
 
@@ -18,7 +21,7 @@ class Page {
     }
 
     if (!page.name || page.name.length == 0) {
-      page.name = Page.DEFAULT_NAME;
+      page.name = "Untitled";
     }
 
     if (!page.parent || page.parent.length == 0) {
@@ -77,26 +80,23 @@ class Page {
     let htmlElement = null;
 
     if (!elements || elements.length == 0) {
-      htmlElement = Textline.create(null);
+      htmlElement = Textline.create();
       $("#content").append(htmlElement);
     } else {
       let htmlElements = Table.createByPageId(pageId);
       htmlElements.push(...Textline.createByPageId(pageId));
 
       $(elements).each(function (index, element) {
-        let htmlElement = $(htmlElements).filter(function(){
+        let htmlElement = $(htmlElements).filter(function () {
           return $(this).data("uuid") == element.id;
         });
-        if(!htmlElement) return;
+        if (!htmlElement) return;
         $("#content").append(htmlElement);
       });
     }
 
     $("#content").data("uuid", page.id);
     $("#pageName").val(page.name);
-    $("#pageName").on("keyup", function (event) {
-      Eventhandler.onKeyupPageName(event);
-    });
   }
 
   static saveCurrentContent() {
@@ -128,13 +128,7 @@ class Page {
         Textline.save(htmlChild);
       }
       let element = { id: htmlChild.data("uuid"), typeId: elementTypeId };
-      sql = Page_DB.buildUpdateElement(
-        sql,
-        htmlChildren.length,
-        index,
-        pageId,
-        element
-      );
+      sql = Page_DB.buildUpdateElement(sql, htmlChildren.length, index, pageId, element);
     });
     Page_DB.updateElement([sql]);
   }
@@ -168,6 +162,16 @@ class Page {
 }
 
 class Eventhandler {
+  static onKeydownPageName(event) {
+    switch (event.key) {
+      case "Enter":
+        let textline = Textline.create();
+        $("#content").prepend(textline);
+        General.focus(textline);
+        break;
+    }
+  }
+
   static onKeyupPageName(event) {
     let pageId = $("#content").data("uuid");
     let navbarItem = $(".navbarItem").filter(function () {

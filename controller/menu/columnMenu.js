@@ -7,17 +7,43 @@ class ColumnMenu {
   }
 
   static registerEvents() {
-    $("#columnTypeValue").on("click", function (event) {
-      Eventhandler.onClickColumnTypeValue(event);
-    });
+    $("#columnTypeValue").on("click", (event) => Eventhandler.onClickColumnTypeValue(event));
+    $("#btnColumnMenuDelete").on("click", (event) => Eventhandler.onClickBtnDelete(event));
+    $("#btnColumnMenuSave").on("click", (event) => Eventhandler.onClickBtnSave(event));
+  }
 
-    $("#btnColumnMenuDelete").on("click", function (event) {
-      Eventhandler.onClickBtnDelete(event);
-    });
+  static create(columnType) {
+    let selectedColumnType;
+    for (let element of Object.keys(Enums.ColumnTypes)) {
+      if (columnType == Enums.ColumnTypes[element].id) {
+        selectedColumnType = Enums.ColumnTypes[element];
+        break;
+      }
+    }
 
-    $("#btnColumnMenuSave").on("click", function (event) {
-      Eventhandler.onClickBtnSave(event);
-    });
+    $("#numberFormat").toggle(false);
+    $("#tableRelation").toggle(false);
+
+    let columnTypeValue = $("#columnTypeValue");
+    columnTypeValue.html(null);
+    $(columnTypeValue).data("type", selectedColumnType.id);
+
+    let img = document.createElement("img");
+    img.src = selectedColumnType.img;
+    img.draggable = false;
+    columnTypeValue.append(img);
+    let text = document.createTextNode(selectedColumnType.descr);
+    columnTypeValue.append(text);
+    img = document.createElement("img");
+    img.src = "../res/img/arrow_down.svg";
+    img.draggable = false;
+    columnTypeValue.append(img);
+
+    switch (columnType) {
+      case Enums.ColumnTypes.REL.id:
+        $("#tableRelation").toggle(true);
+        break;
+    }
   }
 
   static isOpen() {
@@ -37,6 +63,7 @@ class ColumnMenu {
     Eventhandler.selectedColumn = btnColumnMenu.parents("th");
 
     ColumnMenu.close(btnColumnMenu);
+    ColumnMenu.create(Eventhandler.selectedColumn.data("type"));
 
     let position = $(element).get(0).getBoundingClientRect();
     $("#columnMenu").css({
@@ -68,8 +95,7 @@ class Eventhandler {
   static onClickColumnTypeValue(event) {
     let element = $(event.target);
     if (!ColumnTypeMenu.isOpen()) {
-      let columnType = Eventhandler.selectedColumn.data("type");
-      ColumnTypeMenu.open(element, columnType);
+      ColumnTypeMenu.open(element, $("#columnTypeValue").data("type"));
     } else {
       ColumnTypeMenu.close();
     }

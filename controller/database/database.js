@@ -1,4 +1,5 @@
 const SQLite3 = require("better-sqlite3");
+const Table_DB = require("./table_db");
 
 class Database {
   db;
@@ -9,11 +10,7 @@ class Database {
       if (exists) {
         let encryptedData = File.readFile(Settings.ENC_DATABASE);
         encryptedData = Crypto.extractIV(encryptedData);
-        let bufferedData = Crypto.decrypt(
-          encryptedData,
-          Settings.CACHE.PASSWORD,
-          Crypto.IV
-        );
+        let bufferedData = Crypto.decrypt(encryptedData, Settings.CACHE.PASSWORD, Crypto.IV);
         let original = Buffer.from(bufferedData, "base64").toString();
 
         let dir = Filepath.parse(Settings.DEC_DATABASE).dir;
@@ -27,9 +24,7 @@ class Database {
       Database.openConnection();
       Database.firstRun(exists);
 
-      let result = Database.all(
-        "SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%';"
-      );
+      let result = Database.all("SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%';");
       console.log(result);
 
       result = Database.all("SELECT * FROM element_types;");
@@ -94,9 +89,7 @@ class Database {
         "type_id INTEGER NOT NULL REFERENCES element_types(id)," +
         "position INTEGER NOT NULL," +
         "PRIMARY KEY (page_id, id, type_id) );",
-      "CREATE TABLE IF NOT EXISTS 'tables' (" +
-        "id TEXT NOT NULL, name TEXT, " +
-        "PRIMARY KEY (id) );",
+      "CREATE TABLE IF NOT EXISTS 'tables' (" + "id TEXT NOT NULL, name TEXT, " + "PRIMARY KEY (id) );",
       "CREATE TABLE IF NOT EXISTS 'table_columns' (" +
         "table_id TEXT NOT NULL," +
         "id TEXT NOT NULL," +
@@ -105,38 +98,34 @@ class Database {
         "width TEXT NOT NULL," +
         "position INTEGER NOT NULL," +
         "PRIMARY KEY (table_id, id) );",
-      "CREATE TABLE IF NOT EXISTS textlines (" +
-        "id TEXT NOT NULL," +
-        "text TEXT," +
-        "PRIMARY KEY (id) );",
+      "CREATE TABLE IF NOT EXISTS textlines (" + "id TEXT NOT NULL," + "text TEXT," + "PRIMARY KEY (id) );",
     ];
     Database.run(sql);
   }
 
   static initElementTypes() {
     let sql = "REPLACE INTO element_types VALUES ";
-    let types = Object.keys(Enums.ElementTypes);
-    for (let i = 0; i < types.length; i++) {
-      let type = types[i];
+    Object.keys(Enums.ElementTypes).forEach(function (key) {
+      let type = types[key];
       sql += `('${Enums.ElementTypes[type]}', '${type}')`;
       if (i < types.length - 1) {
         sql += ", ";
       }
-    }
+    });
     sql += ";";
     Database.run([sql]);
   }
 
   static initParentTypes() {
     let sql = "REPLACE INTO parent_types VALUES ";
-    let types = Object.keys(Enums.ParentTypes);
-    for (let i = 0; i < types.length; i++) {
-      let type = types[i];
+    let parentTypes = Object.keys(Enums.ParentTypes);
+    parentTypes.forEach(function (key) {
+      let type = parentTypes[key];
       sql += `('${Enums.ParentTypes[type]}', '${type}')`;
-      if (i < types.length - 1) {
+      if (i < parentTypes.length - 1) {
         sql += ", ";
       }
-    }
+    });
     sql += ";";
     Database.run([sql]);
   }
@@ -153,9 +142,12 @@ class Database {
 
   static run(sqlArray) {
     if (!Database.db) return;
-    for (let sql of sqlArray) {
+    sqlArray.forEach(function (sql) {
+      if (sql.includes("REPLACE INTO tables") || sql.includes("DELETE FROM tables")) {
+        Table_DB.tablesBuffer = [];
+      }
       Database.db.prepare(sql).run();
-    }
+    });
   }
 
   static close() {

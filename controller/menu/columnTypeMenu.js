@@ -5,11 +5,11 @@ class ColumnTypeMenu {
 
     Object.keys(Enums.ColumnTypes).forEach(function (key) {
       let element = Enums.ColumnTypes[key];
-      if (element.id == Enums.ColumnTypes.ADD.id || element.id == columnType)
-        return;
+      if (element.id == Enums.ColumnTypes.ADD.id || element.id == columnType) return;
 
       let tr = document.createElement("tr");
-      tr.id = element.cssId;
+      $(tr).data("type", element.id);
+      $(tr).on("click", (event) => Eventhandler.onClickColumnType(event));
       let td = document.createElement("td");
       td.className = "columnTypeOption";
       let div = document.createElement("div");
@@ -30,8 +30,7 @@ class ColumnTypeMenu {
   }
 
   static close(element) {
-    if (!ColumnTypeMenu.isOpen() || ColumnTypeMenu.clickedOnMenu(element))
-      return;
+    if (!ColumnTypeMenu.isOpen() || ColumnTypeMenu.clickedOnMenu(element)) return;
     $("#columnTypeMenu").toggle(false);
   }
 
@@ -55,6 +54,12 @@ class ColumnTypeMenu {
   }
 }
 
-class Eventhandler {}
+class Eventhandler {
+  static onClickColumnType(event) {
+    let columnType = $(event.target).parents("tr").eq(0).data("type");
+    ColumnMenu.create(columnType);
+    ColumnTypeMenu.close();
+  }
+}
 
 module.exports = ColumnTypeMenu;

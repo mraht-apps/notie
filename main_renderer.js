@@ -18,7 +18,7 @@ const Settings = require("../controller/settings.js");
 const Document = require("../controller/document.js");
 const Navigation = require("../controller/navigation.js");
 
-const Searchmenu = require("../controller/menu/searchMenu.js");
+const Searchmenu = require("../controller/menu/tableSearchMenu.js");
 const NavbarMenu = require("../controller/menu/navbarMenu.js");
 const BlockMenu = require("../controller/menu/blockMenu.js");
 const TableMenu = require("../controller/menu/tableMenu.js");
@@ -50,21 +50,12 @@ class Renderer {
     Settings.DATA = settings.DATA;
 
     if (File.isDir(Settings.CACHE.DATABASE)) {
-      Settings.ENC_DATABASE = Filepath.join(
-        Settings.CACHE.DATABASE,
-        Settings.DEFAULT_ENC_DB_FILENAME
-      );
-      Settings.DEC_DATABASE = Filepath.join(
-        Settings.CACHE_FOLDER,
-        Settings.DEFAULT_DEC_DB_FILENAME
-      );
+      Settings.ENC_DATABASE = Filepath.join(Settings.CACHE.DATABASE, Settings.DEFAULT_ENC_DB_FILENAME);
+      Settings.DEC_DATABASE = Filepath.join(Settings.CACHE_FOLDER, Settings.DEFAULT_DEC_DB_FILENAME);
     } else {
       Settings.ENC_DATABASE = Settings.CACHE.DATABASE;
       Settings.DEC_DATABASE =
-        Filepath.join(
-          Settings.CACHE_FOLDER,
-          Filepath.parse(Settings.CACHE.DATABASE).name
-        ) + ".db";
+        Filepath.join(Settings.CACHE_FOLDER, Filepath.parse(Settings.CACHE.DATABASE).name) + ".db";
     }
 
     console.log("ENC_DATABASE: " + Settings.ENC_DATABASE);
@@ -82,64 +73,71 @@ class Renderer {
     BlockMenu.init();
     ColumnMenu.init();
     NavbarMenu.init();
+    Searchmenu.init();
     TableMenu.init();
-
-    // Searchmenu.init();
   }
 
   static registerEvents() {
-    ipcRenderer.on("update-downloaded", function (event, text) {
-      console.log("update-downloaded");
-      var container = document.getElementById("btnUpdateApp");
-      container.removeAttribute("disabled");
-    });
-    ipcRenderer.on("update-available", function (event, text) {
-      console.log("update-available");
-    });
-    ipcRenderer.on("error", function (event, text) {
-      console.log("error", text);
-    });
-    ipcRenderer.on("prog-made", function (event, text) {
-      console.log("prog-made");
-      console.log(text);
-    });
-    ipcRenderer.on("update-not-available", function (event, text) {
-      console.log("update-not-available");
-    });
+    ipcRenderer.on("error", (event, text) => Eventhandler.onError(event, text));
+    ipcRenderer.on("update-available", (event) => Eventhandler.onUpdateAvailable(event));
+    ipcRenderer.on("update-not-available", (event) => Eventhandler.onUpdateNotAvailable(event));
+    ipcRenderer.on("update-downloaded", (event) => Eventhandler.onUpdateDownloaded(event));
+    ipcRenderer.on("prog-made", (event, text) => Eventhandler.onProgMade(event, text));
 
-    $(window).on("beforeunload", function (event) {
-      try {
-        event.preventDefault();
+    $(window).on("beforeunload", (event) => Eventhandler.onBeforeUnloadWindow(event));
 
-        Page.saveCurrentContent();
-      } catch (e) {}
-
-      try {
-        Database.close();
-      } catch (e) {}
-
-      try {
-        Settings.save();
-      } catch (e) {}
-    });
-
-    $("#btnUpdateApp").on("click", function (event) {
-      ipcRenderer.send("quitAndInstall");
-    });
-
-    $("#btnTest").on("click", function (event) {});
-
-    $("#btnLogout").on("click", function (event) {
-      Eventhandler.onClickBtnLogout(event);
-    });
-
-    $("#btnRestart").on("click", function (event) {
-      Eventhandler.onClickBtnRestart(event);
-    });
+    $("#btnUpdateApp").on("click", (event) => Eventhandler.onClickBtnUpdateApp(event));
+    $("#btnTest").on("click", (event) => Eventhandler.onClickBtnTest(event));
+    $("#btnLogout").on("click", (event) => Eventhandler.onClickBtnLogout(event));
+    $("#btnRestart").on("click", (event) => Eventhandler.onClickBtnRestart(event));
   }
 }
 
 class Eventhandler {
+  static onError(event, text) {
+    console.log("error", text);
+  }
+
+  static onUpdateAvailable(event) {
+    console.log("update-available");
+  }
+
+  static onUpdateNotAvailable(event) {
+    console.log("update-not-available");
+  }
+
+  static onUpdateDownloaded(event) {
+    console.log("update-downloaded");
+    document.getElementById("btnUpdateApp").removeAttribute("disabled");
+  }
+
+  static onProgMade(event, text) {
+    console.log("prog-made");
+    console.log(text);
+  }
+
+  static onBeforeUnloadWindow(event) {
+    try {
+      event.preventDefault();
+
+      Page.saveCurrentContent();
+    } catch (e) {}
+
+    try {
+      Database.close();
+    } catch (e) {}
+
+    try {
+      Settings.save();
+    } catch (e) {}
+  }
+
+  static onClickBtnUpdateApp(event) {
+    ipcRenderer.send("quitAndInstall");
+  }
+
+  static onClickBtnTest(event) {}
+
   static onClickBtnLogout(event) {
     $(window).trigger("beforeunload");
     ipcRenderer.send("logout");

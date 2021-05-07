@@ -34,7 +34,25 @@ class General {
   }
 
   static deselectText() {
-    window.getSelection().empty();
+    if (window.getSelection()) window.getSelection().empty();
+  }
+
+  static focus(inputField, moveCursor = Enums.FocusActions.END, deselect = true) {
+    setTimeout(function () {
+      $(inputField).trigger("focus");
+      if ($(inputField).is("div[contenteditable='true']") || $(inputField).is("input:text")) {
+        switch (moveCursor) {
+          case Enums.FocusActions.ALL:
+            General.selectText();
+            break;
+          case Enums.FocusActions.END:
+            General.moveCursorToEnd(null);
+            break;
+        }
+      } else if(deselect) {
+        General.deselectText();
+      }
+    }, 0);
   }
 }
 

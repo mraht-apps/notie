@@ -3,7 +3,18 @@
   border-collapse: separate;
   border-spacing: 0;
   overflow: auto;
-  margin: 6px 0px 10px 0px;
+  margin: 4px 0px 10px 0px;
+}
+
+.table input[type="text"],
+.table div[contenteditable="true"],
+.table .textline {
+  outline: none;
+  border: none;
+  width: 100%;
+
+  background-color: transparent;
+  box-shadow: none;
 }
 
 .tableHead th,
@@ -60,6 +71,23 @@
   cursor: default;
 }
 
+.tableHead th:first-of-type .columnTitle {
+  padding-left: 2px;
+}
+
+.tableHead th:last-of-type .columnTitle {
+  padding-left: 4px;
+}
+
+.tableHead th input[type="text"],
+.tableBody td div[contenteditable="true"] {
+  padding-left: 6px;
+}
+
+.tableBody tr td:first-of-type {
+  padding-left: 2px;
+}
+
 .tableBody td {
   padding: 6px 6px 6px 8px;
 }
@@ -71,10 +99,46 @@
   color: rgba(55, 53, 47, 0.7);
 }
 
+.tableBody td input[type="checkbox"] {
+  margin-left: 1px;
+}
+
+.captionContainer {
+  display: flex;
+}
+
 .table caption input {
   text-align: left;
   font-size: 20px;
   font-weight: bold;
+}
+
+.tableTitleContainer {
+  width: 80%;
+  float: left;
+  text-align: left;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.tableMenuContainer {
+  width: 20%;
+  float: right;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.tableMenuContainer img {
+  width: 30px;
+  padding: 4px;
+}
+
+.tableMenuContainer img:hover {
+  background-color: rgb(236, 236, 236);
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .columnResizeSeparator {
@@ -112,14 +176,6 @@
   overflow: hidden;
 }
 
-.tableHead th:first-of-type .columnTitle {
-  padding-left: 2px;
-}
-
-.tableHead th:last-of-type .columnTitle {
-  padding-left: 4px;
-}
-
 .columnTitle:last-child {
   justify-content: left;
 }
@@ -144,17 +200,6 @@
   cursor: pointer;
 }
 
-
-
-.tableHead th input[type="text"],
-.tableBody td div[contenteditable="true"] {
-  padding-left: 6px;
-}
-
-.tableBody tr td:first-of-type {
-  padding-left: 2px;
-}
-
 #newRow {
   display: flex;
   justify-content: left;
@@ -166,51 +211,4 @@
   width: 14px;
   height: 14px;
   margin: 4px 4px 2px 4px;
-}
-
-.tableBody td input[type="checkbox"] {
-  margin-left: 1px;
-}
-
-.table input[type="text"],
-.table div[contenteditable="true"],
-.table .textline {
-  outline: none;
-  border: none;
-  width: 100%;
-
-  background-color: transparent;
-  box-shadow: none;
-}
-
-.captionContainer {
-  display: flex;
-}
-
-.tableTitleContainer {
-  width: 80%;
-  float: left;
-  text-align: left;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.tableMenuContainer {
-  width: 20%;
-  float: right;
-
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.tableMenuContainer img {
-  width: 30px;
-  padding: 4px;
-}
-
-.tableMenuContainer img:hover {
-  background-color: rgb(236, 236, 236);
-  border-radius: 4px;
-  cursor: pointer;
 }

@@ -1,4 +1,5 @@
 const Enums = require("../model/enums.js");
+const General = require("../utils/general.js");
 
 const defaultTable = {
   id: "",
@@ -139,9 +140,7 @@ class Table {
   static generateTableRowNew(table, data) {
     let numberOfColumns = data.columns.length + 1;
     let tr = table.insertRow();
-    $(tr).on("click", function (event) {
-      Eventhandler.onClickRowAdd(event);
-    });
+    $(tr).on("click", (event) => Eventhandler.onClickRowAdd(event));
     let td = document.createElement("td");
     td.colSpan = numberOfColumns;
     let div = document.createElement("div");
@@ -177,10 +176,7 @@ class Table {
           break;
       }
       td.appendChild(input);
-
-      $(td).on("keydown", function (event) {
-        Eventhandler.onKeydownTableCell(event);
-      });
+      $(td).on("keydown", (event) => Eventhandler.onKeydownTableCell(event));
     }
 
     let nextTd = $(tr).find("td").eq(columnIndex);
@@ -228,9 +224,7 @@ class Table {
       let textNode = document.createTextNode(column.name);
       div.appendChild(textNode);
 
-      $(th).on("click", function (event) {
-        Eventhandler.onClickColumnAdd(event);
-      });
+      $(th).on("click", (event) => Eventhandler.onClickColumnAdd(event));
     } else {
       let img = document.createElement("img");
       img.id = "btnColumnMenu";
@@ -243,9 +237,7 @@ class Table {
           img.src = "../res/img/light/text.svg";
           break;
       }
-      $(img).on("click", function (event) {
-        Eventhandler.onClickBtnColumnMenu(event);
-      });
+      $(img).on("click", (event) => Eventhandler.onClickBtnColumnMenu(event));
       div.append(img);
 
       let input = document.createElement("input");
@@ -325,13 +317,8 @@ class Table {
   }
 
   static registerEventsColumnSeparator(div) {
-    $(div).on("mousedown", function (event) {
-      Eventhandler.onMousedownColumnSeparator(event);
-    });
-
-    $(div).on("dblclick", function (event) {
-      Eventhandler.onDblclickColumnSeparator(event);
-    });
+    $(div).on("mousedown", (event) => Eventhandler.onMousedownColumnSeparator(event));
+    $(div).on("dblclick", (event) => Eventhandler.onDblclickColumnSeparator(event));
   }
 
   static setActiveRow(activeRow) {
@@ -356,9 +343,10 @@ class Table {
   static save(tableContainer) {
     let table = $(tableContainer).children("table");
     let tableId = $(tableContainer).data("uuid");
-    let tableName = table
-      .find("caption .captionContainer .tableTitleContainer input")
-      .val();
+    let tableName = table.find("caption .captionContainer .tableTitleContainer input").val();
+    if (tableName.trim() == "") {
+      tableName = "Untitled";
+    }
 
     let sqlStatements = [];
     Table_DB.update(false, sqlStatements, {
@@ -410,15 +398,14 @@ class Eventhandler {
     var columnIndex = $(event.target).parent().index();
 
     switch (event.key) {
+      case "ArrowUp":
+        var input = $(event.target).parents("tr").prev().children().eq(columnIndex).children();
+        General.focus(input, Enums.FocusActions.ALL, false);
+        event.preventDefault();
+        break;
       case "ArrowDown":
-        var input = $(event.target)
-          .parents("tr")
-          .next()
-          .children()
-          .eq(columnIndex)
-          .children()
-          .trigger("focus");
-        if (input.is("[contentEditable='true']")) General.selectText();
+        var input = $(event.target).parents("tr").next().children().eq(columnIndex).children();
+        General.focus(input, Enums.FocusActions.ALL, false);
         event.preventDefault();
         break;
       case "ArrowLeft":
@@ -431,38 +418,16 @@ class Eventhandler {
             .eq($(event.target).parents("tr").children().length - 2)
             .children();
         }
-        input.trigger("focus");
-        input.is("[contentEditable='true']")
-          ? General.selectText()
-          : General.deselectText();
+        General.focus(input, Enums.FocusActions.ALL);
         event.preventDefault();
         break;
       case "ArrowRight":
-        if (window.getSelection().baseOffset < $(event.target).html().length)
-          return;
+        if (window.getSelection().baseOffset < $(event.target).html().length) return;
         var input = $(event.target).parents("td").next().children();
         if (input.length == 0) {
-          input = $(event.target)
-            .parents("tr")
-            .children()
-            .first("td")
-            .children();
+          input = $(event.target).parents("tr").children().first("td").children();
         }
-        input.trigger("focus");
-        input.is("[contentEditable='true']")
-          ? General.selectText()
-          : General.deselectText();
-        event.preventDefault();
-        break;
-      case "ArrowUp":
-        var input = $(event.target)
-          .parents("tr")
-          .prev()
-          .children()
-          .eq(columnIndex)
-          .children()
-          .trigger("focus");
-        if (input.is("[contentEditable='true']")) General.selectText();
+        General.focus(input, Enums.FocusActions.ALL);
         event.preventDefault();
         break;
     }

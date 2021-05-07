@@ -45,7 +45,7 @@
 #pageNameContainer {
   grid-row: 2;
   padding-top: 0px;
-  padding-bottom: 14px;
+  padding-bottom: 10px;
 }
 
 #pageName {
@@ -81,7 +81,7 @@
   right: 0;
   bottom: 0;
   background: transparent;
-  z-index: 9998;
+  z-index: 99;
 }
 
 ::-webkit-scrollbar {

@@ -1,6 +1,6 @@
 #navbarMenu {
   border: 1px solid rgb(236, 236, 236);
-  z-index: 9999;
+  z-index: 999;
   position: absolute;
   width: 150px;
   background: white;

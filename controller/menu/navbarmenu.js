@@ -4,9 +4,7 @@ class NavbarMenu {
   }
 
   static registerEvents() {
-    $("#navbarMenu table tbody tr").on("click", function (event) {
-      Eventhandler.onClickMenuItem(event);
-    });
+    $("#navbarMenu table tbody tr").on("click", (event) => Eventhandler.onClickMenuItem(event));
   }
 
   static isOpen() {
@@ -43,11 +41,7 @@ class NavbarMenu {
   }
 
   static clickedOnMenu(element) {
-    if (
-      element &&
-      (element.attr("id") == "btnNavbarMenu" ||
-        element.children("#btnNavbarMenu").length > 0)
-    ) {
+    if (element && (element.attr("id") == "btnNavbarMenu" || element.children("#btnNavbarMenu").length > 0)) {
       return true;
     } else {
       return false;

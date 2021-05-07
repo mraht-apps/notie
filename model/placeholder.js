@@ -1,8 +1,6 @@
 class Placeholder {
   static init() {
-    $("#placeholder").on("click", function (event) {
-      Eventhandler.onClick(event);
-    });
+    $("#placeholder").on("click", (event) => Eventhandler.onClick(event));
   }
 }
 

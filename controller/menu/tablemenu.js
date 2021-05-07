@@ -4,15 +4,11 @@ class TableMenu {
   }
 
   static registerEvents() {
-    $("#tableMenu tr").on("click", function (event) {
-      Eventhandler.onClickMenuItem(event);
-    });
+    $("#tableMenu tr").on("click", (event) => Eventhandler.onClickMenuItem(event));
   }
 
   static registerEvent(tableMenuContainer) {
-    $(tableMenuContainer).on("click", function (event) {
-      Eventhandler.onClick(event);
-    });
+    $(tableMenuContainer).on("click", (event) => Eventhandler.onClick(event));
   }
 
   static isOpen() {
@@ -37,11 +33,7 @@ class TableMenu {
   }
 
   static clickedOnMenu(element) {
-    if (
-      element &&
-      (element.attr("id") == "btnTableMenu" ||
-        element.parents("#tableMenu").length > 0)
-    ) {
+    if (element && (element.attr("id") == "btnTableMenu" || element.parents("#tableMenu").length > 0)) {
       return true;
     } else {
       return false;

@@ -15,32 +15,14 @@ class Navbar {
   }
 
   static registerEvent(navbarItem) {
-    $(navbarItem).on("click", function (event) {
-      Eventhandler.onClickNavbarItem(event);
-    });
-
-    $(navbarItem).on("contextmenu", function (event) {
-      Eventhandler.onNavbarItemContextmenu(event);
-    });
+    $(navbarItem).on("click", (event) => Eventhandler.onClickNavbarItem(event));
+    $(navbarItem).on("contextmenu", (event) => Eventhandler.onNavbarItemContextmenu(event));
   }
 
   static registerResizeEvents() {
-    $(document.body).on(
-      "mousedown",
-      "#resizeSeparator",
-      null,
-      function (event) {
-        Eventhandler.onMousedown(event);
-      }
-    );
-
-    $(window).on("mousemove", function (event) {
-      Eventhandler.onMousemove(event);
-    });
-
-    $(window).on("mouseup", function (event) {
-      Eventhandler.onMouseup(event);
-    });
+    $(document.body).on("mousedown", "#resizeSeparator", null, (event) => Eventhandler.onMousedown(event));
+    $(window).on("mousemove", (event) => Eventhandler.onMousemove(event));
+    $(window).on("mouseup", (event) => Eventhandler.onMouseup(event));
   }
 
   static add(page) {
@@ -58,9 +40,7 @@ class Navbar {
     img.src = "../res/img/menu.svg";
     img.id = "btnNavbarMenu";
     img.draggable = false;
-    $(img).on("click", function (event) {
-      Eventhandler.onClickBtnNavbarMenu(event);
-    });
+    $(img).on("click", (event) => Eventhandler.onClickBtnNavbarMenu(event));
     navbarItem.append(img);
     Navbar.registerEvent(navbarItem);
 
@@ -120,15 +100,13 @@ class Eventhandler {
     Eventhandler.resizeData.resizeTarget = targetElement;
     Eventhandler.resizeData.parentElement = handleElement.parentElement;
     Eventhandler.resizeData.maxWidth =
-      $(handleElement.parentElement).innerWidth() -
-      Eventhandler.resizeData.handleWidth;
+      $(handleElement.parentElement).innerWidth() - Eventhandler.resizeData.handleWidth;
     Eventhandler.resizeData.tracking = true;
   }
 
   static onMousemove(event) {
     if (Eventhandler.resizeData.tracking) {
-      const cursorScreenXDelta =
-        event.screenX - Eventhandler.resizeData.startCursorScreenX;
+      const cursorScreenXDelta = event.screenX - Eventhandler.resizeData.startCursorScreenX;
       const newWidth = Math.min(
         Eventhandler.resizeData.startWidth + cursorScreenXDelta,
         Eventhandler.resizeData.maxWidth
@@ -139,8 +117,7 @@ class Eventhandler {
   }
 
   static onMouseup(event) {
-    if (Eventhandler.resizeData.tracking)
-      Eventhandler.resizeData.tracking = false;
+    if (Eventhandler.resizeData.tracking) Eventhandler.resizeData.tracking = false;
   }
 }
 

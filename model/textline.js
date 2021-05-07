@@ -1,3 +1,5 @@
+const General = require("../utils/general");
+
 const placeholderText = "Type '/' for commands";
 class Textline {
   static createByPageId(pageId) {
@@ -34,42 +36,33 @@ class Textline {
   }
 
   static registerEvents(htmlTextline) {
-    $(htmlTextline).on("keydown", function (event) {
-      Eventhandler.onKeydown(event);
-    });
-
-    $(htmlTextline).on("focus", function (event) {
-      Eventhandler.onFocus(event);
-    });
+    $(htmlTextline).on("keydown", (event) => Eventhandler.onKeydown(event));
+    $(htmlTextline).on("focus", (event) => Eventhandler.onFocus(event));
   }
 
   static appendBefore(element) {
     $(Eventhandler.activeTextline).before(element);
     $(Eventhandler.activeTextline).text("");
-    $(Eventhandler.activeTextline).trigger("focus");
+    General.focus($(Eventhandler.activeTextline));
   }
 
-  static focusNext(nextElement) {
-    if (!nextElement.is(".textline")) return;
-    nextElement.trigger("focus");
-    General.moveCursorToEnd(null);
-  }
-
-  static focusPrev(prevElement) {
-    if (!prevElement.is(".textline")) return;
-    prevElement.trigger("focus");
-    General.moveCursorToEnd(null);
+  static focusFirst() {
+    let textline = $(".textline:first");
+    General.focus(textline);
   }
 
   static focusLast() {
     let textline = $(".textline:last");
-    textline.trigger("focus");
-    General.moveCursorToEnd(null);
+    General.focus(textline);
   }
 
   static delete(textline) {
+    let isFirstTextline = textline.is(".textline:first");
+
     Textline_DB.delete(true, [], [textline.data("uuid")]);
     textline.remove();
+
+    if (isFirstTextline) General.focus($("#pageName"));
   }
 
   static save(textline) {
@@ -94,22 +87,19 @@ class Eventhandler {
     switch (event.key) {
       case "ArrowUp":
         var prevElement = textline.prev();
-        Textline.focusPrev(prevElement);
+        General.focus(prevElement);
         event.preventDefault();
         break;
       case "ArrowDown":
         var nextElement = textline.next();
-        Textline.focusNext(nextElement);
+        General.focus(nextElement);
         event.preventDefault();
         break;
       case "Backspace":
         var prevElement = textline.prev();
         var selectedTextLength = General.getSelectedTextLength();
 
-        if (
-          General.getCursorPosition(textline) == 0 &&
-          selectedTextLength == 0
-        ) {
+        if (General.getCursorPosition(textline) == 0 && selectedTextLength == 0) {
           var prevElementTextLength = prevElement.text().length;
           if (textline.text().length > 0 && selectedTextLength == 0) {
             prevElement.text(prevElement.text() + textline.text());
@@ -131,9 +121,8 @@ class Eventhandler {
           BlockMenu.close();
         } else {
           var newTextline = Textline.create();
-          Textline.registerEvents();
           textline.after(newTextline);
-          Textline.focusNext($(newTextline));
+          General.focus($(newTextline));
         }
         event.preventDefault();
         break;

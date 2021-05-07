@@ -16,28 +16,24 @@ const ColumnTypes = {
   TXT: {
     id: 1,
     name: "txt",
-    cssId: "columnTypeText",
     img: "../res/img/dark/text.svg",
     descr: "Text",
   },
   CHK: {
     id: 2,
     name: "chk",
-    cssId: "columnTypeCheckbox",
     img: "../res/img/dark/checkbox.svg",
     descr: "Checkbox",
   },
-  NMB: {
-    id: 3,
-    name: "nmb",
-    cssId: "columnTypeNumber",
-    img: "../res/img/dark/rhombus.svg",
-    descr: "Number",
-  },
-  REF: {
+  // NUM: {
+  //   id: 3,
+  //   name: "num",
+  //   img: "../res/img/dark/rhombus.svg",
+  //   descr: "Number",
+  // },
+  REL: {
     id: 4,
-    name: "ref",
-    cssId: "columnTypeRelation",
+    name: "rel",
     img: "../res/img/dark/relation.svg",
     descr: "Relation",
   },
@@ -51,10 +47,18 @@ const TableActions = {
   delete: "deleteTable",
 };
 
+const FocusActions = {
+  NONE: 0,
+  ALL: 1,
+  START: 2,
+  END: 3,
+};
+
 module.exports = {
   ElementTypes,
   ParentTypes,
   ColumnTypes,
   PageActions,
   TableActions,
+  FocusActions,
 };
