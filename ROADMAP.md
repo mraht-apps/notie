@@ -1,5 +1,5 @@
-Version 1.0.0
-=====================================================================
+# Version 1.0.0
+
 - Column type can be chosen
 - New column types: Relation, rollup
 - New column types: Number, formula, select, multi-select, date, url, mail, phone
@@ -7,10 +7,10 @@ Version 1.0.0
 - Table rows as pages: UUID per row/page, internal pagename is UUID
 - Customize app menubar
 - Page for images and licenses
-- 
+-
 
-Backlog
-=====================================================================
+# Backlog
+
 - Table filter
 - Table sorting
 - Creation of sub pages

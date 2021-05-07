@@ -43,13 +43,9 @@ class File {
   }
 
   static removeDir(dir) {
-    return Filesystem.rmSync(
-      dir,
-      { recursive: true, force: true },
-      function (error) {
-        if (error) throw error;
-      }
-    );
+    return Filesystem.rmSync(dir, { recursive: true, force: true }, function (error) {
+      if (error) throw error;
+    });
   }
 }
 

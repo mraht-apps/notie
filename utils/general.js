@@ -49,7 +49,7 @@ class General {
             General.moveCursorToEnd(null);
             break;
         }
-      } else if(deselect) {
+      } else if (deselect) {
         General.deselectText();
       }
     }, 0);

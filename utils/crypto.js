@@ -9,9 +9,7 @@ class Crypto {
     if (!pw || pw.length == 0) {
       throw new Error("Please supply a password!");
     } else if (!iv || iv.length == 0) {
-      throw new Error(
-        "IV hasn't been extracted: Possibly invalid encrypted file!"
-      );
+      throw new Error("IV hasn't been extracted: Possibly invalid encrypted file!");
     }
 
     const key = CryptoJS.enc.Utf8.parse(pw);

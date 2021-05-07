@@ -401,7 +401,7 @@ class Eventhandler {
     switch (event.key) {
       case "ArrowUp":
         var input = tableRow.prev().children().eq(columnIndex).children();
-        if(input.length == 0) {
+        if (input.length == 0) {
           let lastRow = tableRow.parent().find("tr:last").prev();
           input = lastRow.children().eq(columnIndex).children();
         }
@@ -410,7 +410,7 @@ class Eventhandler {
         break;
       case "ArrowDown":
         var input = tableRow.next().children().eq(columnIndex).children();
-        if(input.attr("id") == "newRow" || input.length == 0) {
+        if (input.attr("id") == "newRow" || input.length == 0) {
           let firstRow = tableRow.parent().find("tr:first");
           input = firstRow.children().eq(columnIndex).children();
         }

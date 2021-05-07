@@ -1,47 +1,56 @@
 <html>
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
     <!-- CSS Style -->
     <link rel="stylesheet" href="../res/css/style.css" type="text/css" />
     <link rel="stylesheet" href="../res/css/login.css" type="text/css" />
-</head>
+  </head>
 
-<body>
-
+  <body>
     <div id="loginContainer">
-        <!-- <h1>Login</h1> -->
-        <div class="tab">
-            <div class="tabItem firstTabItem"><button id="createDatabase">Create database</button></div>
-            <div class="tabItem"><button id="openDatabase">Open database</button></div>
+      <!-- <h1>Login</h1> -->
+      <div class="tab">
+        <div class="tabItem firstTabItem"><button id="createDatabase">Create database</button></div>
+        <div class="tabItem"><button id="openDatabase">Open database</button></div>
+      </div>
+      <div id="loginInput">
+        <div class="label firstLabel">Database folder:</div>
+        <div class="input">
+          <input type="text" id="database" /><button id="btnDatabasePicker">
+            <img src="../res/img/open_folder.svg" draggable="false" />
+          </button>
         </div>
-        <div id="loginInput">
-            <div class="label firstLabel">Database folder:</div>
-            <div class="input"><input type="text" id="database"><button id="btnDatabasePicker"><img
-                        src="../res/img/open_folder.svg" draggable="false"></button>
-            </div>
-            <div><input type="checkbox" id="rememberDatabase"><label for="rememberDatabase">Remember</label>
-            </div>
-            <div class="label">Password:</div>
-            <div class="input"><input type="password" name="password" title="Please enter at least 8 character!"
-                    id="password"><button id="btnPasswordVisibility" title="Hide/show password input"><img
-                        id="imgHideShowPassword" src="../res/img/show.svg" draggable="false"></button></div>
-            <div><input type="checkbox" id="rememberPassword" title="Save password in config file"><label
-                    for="rememberPassword" title="Save password in config file">Remember</label>
-            </div>
+        <div><input type="checkbox" id="rememberDatabase" /><label for="rememberDatabase">Remember</label></div>
+        <div class="label">Password:</div>
+        <div class="input">
+          <input type="password" name="password" title="Please enter at least 8 character!" id="password" /><button
+            id="btnPasswordVisibility"
+            title="Hide/show password input"
+          >
+            <img id="imgHideShowPassword" src="../res/img/show.svg" draggable="false" />
+          </button>
         </div>
+        <div>
+          <input type="checkbox" id="rememberPassword" title="Save password in config file" /><label
+            for="rememberPassword"
+            title="Save password in config file"
+            >Remember</label
+          >
+        </div>
+      </div>
 
-        <div id="loginMenu"><button id="btnExit" title="Exit the application"><img src="../res/img/power-off.svg"
-                    draggable="false">Exit</button><button id="btnLogin"
-                title="Open or create the chosen database with the entered password"><img src="../res/img/lock.svg"
-                    draggable="false">Enter</button></div>
-
+      <div id="loginMenu">
+        <button id="btnExit" title="Exit the application">
+          <img src="../res/img/power-off.svg" draggable="false" />Exit</button
+        ><button id="btnLogin" title="Open or create the chosen database with the entered password">
+          <img src="../res/img/lock.svg" draggable="false" />Enter
+        </button>
+      </div>
     </div>
 
     <script src="../login_renderer.js"></script>
-</body>
-
+  </body>
 </html>

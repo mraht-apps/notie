@@ -1,9 +1,6 @@
 class Textline_DB {
   static update(run = false, sqlStatements = [], textline) {
-    sqlStatements.push(
-      `REPLACE INTO textlines VALUES(` +
-        `'${textline.id}', '${textline.text}');`
-    );
+    sqlStatements.push(`REPLACE INTO textlines VALUES(` + `'${textline.id}', '${textline.text}');`);
 
     if (run) {
       Database.run(sqlStatements);

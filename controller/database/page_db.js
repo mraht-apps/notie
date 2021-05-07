@@ -16,9 +16,7 @@ class Page_DB {
   }
 
   static getElements(id) {
-    return Database.all(
-      `SELECT * FROM page_elements WHERE page_id = '${id}' ORDER BY position ASC;`
-    );
+    return Database.all(`SELECT * FROM page_elements WHERE page_id = '${id}' ORDER BY position ASC;`);
   }
 
   static getTextlines(id) {
