@@ -109,7 +109,8 @@ class Database {
   static initElementTypes() {
     let values = Object.keys(Enums.ElementTypes)
       .map(function (key) {
-        return `('${key}', '${Enums.ElementTypes[key]}')`;
+        let type = Enums.ElementTypes[key];
+        return `('${type.id}', '${type.name}')`;
       })
       .join(", ");
     let sql = `REPLACE INTO element_types VALUES ${values};`;

@@ -56,10 +56,10 @@ class Page_DB {
     let textlineIds = [];
     $(pageElements).each(function () {
       switch (this.type_id) {
-        case Enums.ElementTypes.table:
+        case Enums.ElementTypes.TABLE.id:
           tableIds.push(this.id);
           break;
-        case Enums.ElementTypes.textline:
+        case Enums.ElementTypes.TEXTLINE.id:
           textlineIds.push(this.id);
           break;
       }

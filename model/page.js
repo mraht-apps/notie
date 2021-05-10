@@ -139,15 +139,15 @@ class Page {
     let sql = "";
     htmlChildren.each(function (index, htmlChild) {
       htmlChild = $(htmlChild);
-      let elementTypeId;
+      let elementType;
       if (htmlChild.is(".table")) {
-        elementTypeId = Enums.ElementTypes.table;
+        elementType = Enums.ElementTypes.TABLE;
         Table.save(htmlChild);
       } else if (htmlChild.is(".textline")) {
-        elementTypeId = Enums.ElementTypes.textline;
+        elementType = Enums.ElementTypes.TEXTLINE;
         Textline.save(htmlChild);
       }
-      let element = { id: htmlChild.data("uuid"), typeId: elementTypeId };
+      let element = { id: htmlChild.data("uuid"), typeId: elementType.id };
       sql = Page_DB.buildUpdateElement(sql, htmlChildren.length, index, pageId, element);
     });
     Page_DB.updateElement([sql]);

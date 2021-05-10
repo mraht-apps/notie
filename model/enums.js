@@ -1,7 +1,7 @@
 const ElementTypes = {
-  0: "none",
-  1: "table",
-  2: "textline",
+  NONE: { id: 0, name: "none" },
+  TABLE: { id: 1, name: "table", label: "Table", descr: "Create a table in this page.", img: "../res/img/" },
+  TEXTLINE: { id: 2, name: "textline", label: "Textline", descr: "Just start writing with plain text.", img: "../res/img/" },
 };
 
 const ParentTypes = {

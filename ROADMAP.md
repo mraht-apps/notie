@@ -1,16 +1,13 @@
 # Version 1.0.0
-
 - Column type can be chosen
 - New column types: Relation, rollup
-- New column types: Number, formula, select, multi-select, date, url, mail, phone
-- Table rows and columns deletable
 - Table rows as pages: UUID per row/page, internal pagename is UUID
+- Table rows deletable
 - Customize app menubar
 - Page for images and licenses
 -
 
 # Backlog
-
 - Table filter
 - Table sorting
 - Creation of sub pages
@@ -21,3 +18,5 @@
 - New page element: Checkbox
 - Linked tables
 - Table views
+- New page elements: Header (h1-h4), Table of contents
+- New column types: Number, formula, select, multi-select, date, url, mail, phone

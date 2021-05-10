@@ -1,5 +1,7 @@
+// OPT Build blockmenu dynamically
 class BlockMenu {
   static init() {
+    BlockMenu.create();
     BlockMenu.registerEvents();
   }
 
@@ -7,6 +9,33 @@ class BlockMenu {
     $("#blockMenu").on("mouseout", (event) => Eventhandler.onMouseout(event));
     $(".clickable").on("click", (event) => Eventhandler.onClickMenuItem(event));
     $(".clickable").on("mouseover", (event) => Eventhandler.onMouseoverMenuItem(event));
+  }
+
+  static create() {
+    let tbody = $("#blockMenu table tbody");
+    for (let key of Object.keys(Enums.ElementTypes)) {
+      let element = Enums.ElementTypes[key];
+      if (element == Enums.ElementTypes.NONE) continue;
+      let tr = document.createElement("tr");
+      tr.className = "clickable";
+      $(tr).data("type", element.name);
+      let td = document.createElement("td");
+      let img = document.createElement("img");
+      td.append(img);
+      tr.append(td);
+      td = document.createElement("td");
+      let div = document.createElement("div");
+      let textNode = document.createTextNode(element.label);
+      div.append(textNode);
+      td.append(div);
+      div = document.createElement("div");
+      div.class = "description";
+      textNode = document.createTextNode(element.descr);
+      div.append(textNode);
+      td.append(div);
+      tr.append(td);
+      tbody.append(tr);
+    }
   }
 
   static isOpen() {
