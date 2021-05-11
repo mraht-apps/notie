@@ -384,6 +384,10 @@ class Table {
     colspan = `${colspan - 1}`;
     lastRowCell.attr("colspan", colspan);
   }
+
+  static duplicateColumn(tableContainer, column) {
+    // NEW Implement
+  }
 }
 
 class Eventhandler {

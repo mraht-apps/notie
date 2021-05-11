@@ -7,7 +7,9 @@ class ColumnMenu {
     $("#columnTypeValue").on("click", (event) => Eventhandler.onClickColumnTypeValue(event));
     $("#numberFormatValue").on("click", (event) => Eventhandler.onClickNumberFormatValue(event));
     $("#tableRelationValue").on("click", (event) => Eventhandler.onClickTableRelationValue(event));
+
     $("#deleteColumn").on("click", (event) => Eventhandler.onClickDeleteColumn(event));
+    $("#duplicateColumn").on("click", (event) => Eventhandler.onClickDuplicateColumn(event));
   }
 
   static setColumnType(id) {
@@ -130,8 +132,12 @@ class Eventhandler {
   }
 
   static onClickDeleteColumn(event) {
-    if (!this.selectedTable || !this.selectedColumn) return;
     Table.deleteColumn(this.selectedTable, this.selectedColumn.data("uuid"));
+    ColumnMenu.close();
+  }
+
+  static onClickDuplicateColumn(event) {
+    Table.duplicateColumn(this.selectedTable, this.selectedColumn);
     ColumnMenu.close();
   }
 }
