@@ -1,11 +1,11 @@
 class ColumnTypeMenu {
-  static create(columnType) {
+  static create(columnTypeId) {
     let table = $("#columnTypeMenu table");
     $(table).find("tbody tr").remove();
 
     Object.keys(Enums.ColumnTypes).forEach(function (key) {
       let element = Enums.ColumnTypes[key];
-      if (element.id == Enums.ColumnTypes.ADD.id || element.id == columnType) return;
+      if (element == Enums.ColumnTypes.ADD || element.id == columnTypeId) return;
 
       let tr = document.createElement("tr");
       $(tr).data("type", element.id);
@@ -34,8 +34,7 @@ class ColumnTypeMenu {
     $("#columnTypeMenu").toggle(false);
   }
 
-  static open(element, columnType) {
-    ColumnTypeMenu.close(element);
+  static open(columnType) {
     ColumnTypeMenu.create(columnType);
     $("#columnTypeMenu").toggle(true);
   }

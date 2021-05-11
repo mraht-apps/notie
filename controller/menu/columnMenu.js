@@ -5,28 +5,23 @@ class ColumnMenu {
 
   static registerEvents() {
     $("#columnTypeValue").on("click", (event) => Eventhandler.onClickColumnTypeValue(event));
+    $("#numberFormatValue").on("click", (event) => Eventhandler.onClickNumberFormatValue(event));
     $("#tableRelationValue").on("click", (event) => Eventhandler.onClickTableRelationValue(event));
     $("#deleteColumn").on("click", (event) => Eventhandler.onClickDeleteColumn(event));
   }
 
-  static setColumnType(columnType) {
-    let selectedColumnType;
-    for (let element of Object.keys(Enums.ColumnTypes)) {
-      if (columnType == Enums.ColumnTypes[element].id) {
-        selectedColumnType = Enums.ColumnTypes[element];
-        break;
-      }
-    }
-
+  static setColumnType(id) {
     let columnTypeValue = $("#columnTypeValue");
     columnTypeValue.html(null);
-    $(columnTypeValue).data("type", selectedColumnType.id);
+    $(columnTypeValue).data("type", id);
+
+    let columnType = Object.values(Enums.ColumnTypes).find((t) => t.id == id);
 
     let img = document.createElement("img");
-    img.src = selectedColumnType.img;
+    img.src = columnType.img;
     img.draggable = false;
     columnTypeValue.append(img);
-    let text = document.createTextNode(selectedColumnType.descr);
+    let text = document.createTextNode(columnType.descr);
     columnTypeValue.append(text);
     img = document.createElement("img");
     img.src = "../res/img/arrow_down.svg";
@@ -37,23 +32,28 @@ class ColumnMenu {
     $("#tableRelation").toggle(false);
 
     switch (columnType) {
-      case Enums.ColumnTypes.REL.id:
+      case Enums.ColumnTypes.REL:
         $(tableRelationValue).find("span").text(null);
         $("#tableRelation").toggle(true);
         break;
-      case Enums.ColumnTypes.NUM.id:
+      case Enums.ColumnTypes.NUM:
+        ColumnMenu.setNumberFormat(Enums.NumberFormats.NUMBER.id);
         $("#numberFormat").toggle(true);
         break;
     }
   }
 
+  static setNumberFormat(id) {
+    let numberFormat = Object.values(Enums.NumberFormats).find((f) => f.id == id);
+    $("#numberFormatValue span").text(numberFormat.descr);
+    $("#numberFormatValue").data("format", id);
+  }
+
   static setTableRelation(tableRelation) {
     $("#tableRelationValue").removeClass("error");
-    let span = $(tableRelationValue).find("span");
-    span.text(tableRelation.name);
+    $("#tableRelationValue span").text(tableRelation.name);
 
     let columnType = $("#columnTypeValue").data("type");
-
     console.log(`Type: ${columnType}, Table: ${tableRelation.id}`);
   }
 
@@ -104,16 +104,22 @@ class Eventhandler {
   static selectedColumn;
 
   static onClickColumnTypeValue(event) {
-    let element = $(event.target);
     if (!ColumnTypeMenu.isOpen()) {
-      ColumnTypeMenu.open(element, $("#columnTypeValue").data("type"));
+      ColumnTypeMenu.open($("#columnTypeValue").data("type"));
     } else {
       ColumnTypeMenu.close();
     }
   }
 
+  static onClickNumberFormatValue(event) {
+    if (!NumberFormatMenu.isOpen()) {
+      NumberFormatMenu.open($("#numberFormatValue").data("format"));
+    } else {
+      NumberFormatMenu.close();
+    }
+  }
+
   static onClickTableRelationValue(event) {
-    let element = $(event.target);
     if (!TableSearchMenu.isOpen()) {
       TableSearchMenu.open();
     } else {

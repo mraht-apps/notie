@@ -1,0 +1,33 @@
+#numberFormatMenu {
+  z-index: 9999;
+  border: 1px solid #e1e1e1;
+  background: white;
+  width: 212px;
+  position: fixed;
+  display: none;
+  user-select: none;
+}
+
+#numberFormatMenu table {
+  width: 100%;
+}
+
+#numberFormatMenu tr:hover {
+  background-color: rgb(236, 236, 236);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.numberFormatOption {
+  height: 26px;
+}
+
+.numberFormatOption div {
+  display: flex;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+.numberFormatOption img {
+  margin-right: 8px;
+}

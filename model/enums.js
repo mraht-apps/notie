@@ -61,11 +61,17 @@ const FocusActions = {
   END: 3,
 };
 
+const NumberFormats = {
+  NUMBER: { id: 1, descr: "Number", pattern: "^[0-9]*(.[0-9]+?)$" },
+  NUMBER_WITH_COMMA: { id: 2, descr: "Number with commas", pattern: "^[0-9]*(,[0-9]+?)$" },
+};
+
 module.exports = {
-  ElementTypes,
-  ParentTypes,
   ColumnTypes,
-  PageActions,
-  TableActions,
+  ElementTypes,
   FocusActions,
+  NumberFormats,
+  PageActions,
+  ParentTypes,
+  TableActions,
 };

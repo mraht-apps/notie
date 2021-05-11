@@ -83,8 +83,8 @@ class Database {
       "CREATE TABLE IF NOT EXISTS pages (" +
         "id TEXT NOT NULL," +
         "name TEXT," +
-        // "parent TEXT," +
-        // "parent_type_id INTEGER REFERENCES parent_types(id)," +
+        "parent TEXT," +
+        "parent_type_id INTEGER REFERENCES parent_types(id)," +
         "PRIMARY KEY (id) );",
       "CREATE TABLE IF NOT EXISTS page_elements (" +
         "page_id TEXT NOT NULL REFERENCES pages(id)," +
@@ -101,6 +101,7 @@ class Database {
         "width TEXT NOT NULL," +
         "position INTEGER NOT NULL," +
         "relation TEXT," +
+        "format TEXT," +
         "PRIMARY KEY (table_id, id) );",
       "CREATE TABLE IF NOT EXISTS textlines (" + "id TEXT NOT NULL," + "text TEXT," + "PRIMARY KEY (id) );",
     ];

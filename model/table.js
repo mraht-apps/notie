@@ -202,6 +202,7 @@ class Table {
   static generateTableColumn(tr, index, column) {
     let th = document.createElement("th");
     $(th).data("type", column.type);
+
     if (column.type != Enums.ColumnTypes.ADD.id) {
       let columnWidth = column.width;
       th.style.width = !columnWidth ? "120px" : columnWidth;
@@ -400,7 +401,7 @@ class Eventhandler {
 
     let input;
     switch (event.key) {
-      case "ArrowUp": 
+      case "ArrowUp":
         input = tableRow.prev().children().eq(columnIndex).children();
         if (input.length == 0) {
           let lastRow = tableRow.parent().find("tr:last").prev();

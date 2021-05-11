@@ -20,10 +20,11 @@
 #columnMenuForm .label {
   font-weight: 500;
   user-select: none;
-  width: 44px;
+  width: 52px;
 }
 
 #columnTypeValue,
+#numberFormatValue,
 #tableRelationValue {
   background: white;
   align-items: center;
@@ -40,10 +41,12 @@
   grid-template-columns: auto 1fr auto;
 }
 
+#numberFormatValue,
 #tableRelationValue {
   grid-template-columns: 1fr auto;
 }
 
+#numberFormatValue span,
 #tableRelationValue span {
   padding-left: 3px;
 }
@@ -54,12 +57,14 @@
 }
 
 #columnTypeValue:hover,
+#numberFormatValue:hover,
 #tableRelationValue:hover {
   background-color: rgb(236, 236, 236);
   border-radius: 4px;
 }
 
 #columnTypeValue.active,
+#numberFormatValue.active,
 #tableRelationValue.active {
   background-color: rgb(236, 236, 236);
   border-radius: 4px;
@@ -69,45 +74,10 @@
   margin: 0px 8px 0px 3px;
 }
 
-#columnTypeMenu {
-  z-index: 9999;
-  border: 1px solid #e1e1e1;
-  background: white;
-  width: 200px;
-  position: fixed;
-  display: none;
-  user-select: none;
-}
-
-#columnTypeMenu table {
-  width: 100%;
-}
-
-#columnTypeMenu tr:hover {
-  background-color: rgb(236, 236, 236);
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.columnTypeOption {
-  height: 26px;
-}
-
-.columnTypeOption div {
-  display: flex;
-  vertical-align: middle;
-  margin-left: 4px; /* dsadsa */
-}
-
-.columnTypeOption img {
-  margin-right: 8px;
-}
-
 #columnMenuActionBar {
   width: 100%;
   display: flex;
   justify-content: center;
-  /* padding-top: 12px; */
 }
 
 #columnMenuActionBar img {

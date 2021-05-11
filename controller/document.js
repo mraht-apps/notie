@@ -20,6 +20,7 @@ class Eventhandler {
     NavbarMenu.close(element);
     ColumnMenu.close(element);
     ColumnTypeMenu.close(element);
+    NumberFormatMenu.close(element);
     TableSearchMenu.close(element);
   }
 
