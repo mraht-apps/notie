@@ -169,7 +169,7 @@ class Table {
           input.type = "checkbox";
           input.checked = columnValue;
           break;
-        case Enums.ColumnTypes.TXT.id:
+        default:
           input = document.createElement("div");
           input.contentEditable = "true";
           $(input).html(columnValue);
@@ -177,6 +177,7 @@ class Table {
       }
       td.appendChild(input);
       $(td).on("keydown", (event) => Eventhandler.onKeydownTableCell(event));
+      $(td).on("keypress", (event) => Eventhandler.onKeypressTableCell(event));
     }
 
     let nextTd = $(tr).find("td").eq(columnIndex);
@@ -201,6 +202,7 @@ class Table {
 
   static generateTableColumn(tr, index, column) {
     let th = document.createElement("th");
+    let columnType = Object.values(Enums.ColumnTypes).find((t) => t.id == column.type);
     $(th).data("type", column.type);
 
     if (column.type != Enums.ColumnTypes.ADD.id) {
@@ -212,6 +214,7 @@ class Table {
       } else {
         $(th).data("uuid", column.id);
       }
+      $(th).data("format", column.format);
     }
 
     let div = document.createElement("div");
@@ -230,14 +233,7 @@ class Table {
       let img = document.createElement("img");
       img.id = "btnColumnMenu";
       img.draggable = false;
-      switch (column.type) {
-        case Enums.ColumnTypes.CHK.id:
-          img.src = "../res/img/light/checkbox.svg";
-          break;
-        case Enums.ColumnTypes.TXT.id:
-          img.src = "../res/img/light/text.svg";
-          break;
-      }
+      img.src = columnType.img_light;
       $(img).on("click", (event) => Eventhandler.onClickBtnColumnMenu(event));
       div.append(img);
 
@@ -438,6 +434,20 @@ class Eventhandler {
         General.focus(input, Enums.FocusActions.ALL);
         event.preventDefault();
         break;
+    }
+  }
+
+  static onKeypressTableCell(event) {
+    let columnIndex = $(event.target).parent().index();
+    let column = $(event.target).parents("table").find("th").eq(columnIndex);
+    let pattern = column.data("pattern");
+
+    if (pattern && pattern.length > 0) {
+      console.log(column);
+      console.log($(event.target).html());
+      if (!new RegExp(pattern).match($(event.target).html())) {
+        event.preventDefault();
+      }
     }
   }
 

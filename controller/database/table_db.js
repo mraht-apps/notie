@@ -50,21 +50,20 @@ class Table_DB {
       let columnName = column.find(".columnTitle > input").val();
       let columnType = column.data("type");
       let columnWidth = column.css("width");
+      let relation = column.data("relation") ? column.data("relation") : null;
+      let format = column.data("format") ? column.data("format") : null;
 
       let sqlColumnName, sqlColumnType;
 
       switch (columnType) {
         case Enums.ColumnTypes.ADD.id:
           return;
-        case Enums.ColumnTypes.CHK.id:
-        case Enums.ColumnTypes.TXT.id:
+        default:
           sqlColumnName = columnId;
           sqlColumnType = "TEXT";
           break;
-        default:
-          return;
       }
-      sqlTableStructure += `('${tableId}', '${columnId}', '${columnName}', '${columnType}', '${columnWidth}', ${index})`;
+      sqlTableStructure += `('${tableId}', '${columnId}', '${columnName}', '${columnType}', '${columnWidth}', ${index}, ${relation}, ${format})`;
 
       sqlColumns += `'${sqlColumnName}' ${sqlColumnType}`;
       if (index < htmlColumns.length - 1) {
@@ -93,11 +92,12 @@ class Table_DB {
         htmlColumn = $(htmlColumn);
 
         let input = htmlRow.find("td").eq(columnIndex).children();
+
         switch (htmlColumn.data("type")) {
           case Enums.ColumnTypes.CHK.id:
             sqlValues += `'${input.is(":checked")}'`;
             break;
-          case Enums.ColumnTypes.TXT.id:
+          default:
             sqlValues += `'${input.html()}'`;
             break;
         }

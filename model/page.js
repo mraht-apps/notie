@@ -84,6 +84,7 @@ class Page {
 
   static openSettingsPage() {
     let page = File.readFile(Filepath.join(__dirname, "../view/settings.html"));
+    $("#placeholder").toggle(false);
     $("#content").html(page);
     $("#pageName").val("Settings");
     Settings.registerEvents();
@@ -115,6 +116,7 @@ class Page {
       });
     }
 
+    $("#placeholder").toggle(true);
     $("#content").data("uuid", page.id);
     $("#pageName").val(page.name);
   }

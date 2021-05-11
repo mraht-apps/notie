@@ -79,9 +79,12 @@
   padding-left: 4px;
 }
 
-.tableHead th input[type="text"],
-.tableBody td div[contenteditable="true"] {
+.tableHead th input[type="text"] {
   padding-left: 6px;
+}
+
+.tableBody td div[contenteditable="true"] {
+  padding-left: 3px;
 }
 
 .tableBody tr td:first-of-type {

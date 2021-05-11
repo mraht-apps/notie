@@ -46,15 +46,17 @@ class ColumnMenu {
   static setNumberFormat(id) {
     let numberFormat = Object.values(Enums.NumberFormats).find((f) => f.id == id);
     $("#numberFormatValue span").text(numberFormat.descr);
-    $("#numberFormatValue").data("format", id);
+    $("#numberFormatValue").data("format", numberFormat.id);
+
+    Eventhandler.selectedColumn.data("type", Enums.ColumnTypes.NUM.id);
+    Eventhandler.selectedColumn.data("format", numberFormat.id);
+    Eventhandler.selectedColumn.find("#btnColumnMenu").attr("src", Enums.ColumnTypes.NUM.img_light);
   }
 
   static setTableRelation(tableRelation) {
     $("#tableRelationValue").removeClass("error");
     $("#tableRelationValue span").text(tableRelation.name);
-
-    let columnType = $("#columnTypeValue").data("type");
-    console.log(`Type: ${columnType}, Table: ${tableRelation.id}`);
+    Eventhandler.selectedColumn.data("relation", tableRelation.id);
   }
 
   static isOpen() {

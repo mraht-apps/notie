@@ -24,24 +24,28 @@ const ColumnTypes = {
     id: 1,
     name: "txt",
     img: "../res/img/dark/text.svg",
+    img_light: "../res/img/light/text.svg",
     descr: "Text",
   },
   CHK: {
     id: 2,
     name: "chk",
     img: "../res/img/dark/checkbox.svg",
+    img_light: "../res/img/light/checkbox.svg",
     descr: "Checkbox",
   },
   NUM: {
     id: 3,
     name: "num",
     img: "../res/img/dark/rhombus.svg",
+    img_light: "../res/img/light/rhombus.svg",
     descr: "Number",
   },
   REL: {
     id: 4,
     name: "rel",
     img: "../res/img/dark/relation.svg",
+    img_light: "../res/img/light/relation.svg",
     descr: "Relation",
   },
 };
