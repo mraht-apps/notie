@@ -6,7 +6,7 @@
 - Table rows deletable
 - Customize app menubar
 - Page for images and licenses
--
+- Localization
 
 # Backlog
 - Table filtering
