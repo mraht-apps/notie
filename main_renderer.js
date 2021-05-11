@@ -24,6 +24,7 @@ const BlockMenu = require("../controller/menu/blockMenu.js");
 const TableMenu = require("../controller/menu/tableMenu.js");
 const ColumnMenu = require("../controller/menu/columnMenu.js");
 const ColumnTypeMenu = require("../controller/menu/columnTypeMenu.js");
+const TableSearchMenu = require("../controller/menu/tableSearchMenu.js");
 
 // Database
 const Database = require("../controller/database/database.js");

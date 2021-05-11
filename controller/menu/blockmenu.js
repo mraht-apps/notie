@@ -20,11 +20,14 @@ class BlockMenu {
       tr.className = "clickable";
       $(tr).data("type", element.name);
       let td = document.createElement("td");
+      let div = document.createElement("div");
       let img = document.createElement("img");
-      td.append(img);
+      img.src = element.img;
+      div.append(img);
+      td.append(div);
       tr.append(td);
       td = document.createElement("td");
-      let div = document.createElement("div");
+      div = document.createElement("div");
       let textNode = document.createTextNode(element.label);
       div.append(textNode);
       td.append(div);

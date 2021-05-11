@@ -1,6 +1,3 @@
-const Table = require("../../model/table");
-const ColumnTypeMenu = require("./columnTypeMenu");
-
 class ColumnMenu {
   static init() {
     ColumnMenu.registerEvents();
@@ -8,11 +5,11 @@ class ColumnMenu {
 
   static registerEvents() {
     $("#columnTypeValue").on("click", (event) => Eventhandler.onClickColumnTypeValue(event));
-    $("#btnColumnMenuDelete").on("click", (event) => Eventhandler.onClickBtnDelete(event));
-    $("#btnColumnMenuSave").on("click", (event) => Eventhandler.onClickBtnSave(event));
+    $("#tableRelationValue").on("click", (event) => Eventhandler.onClickTableRelationValue(event));
+    $("#deleteColumn").on("click", (event) => Eventhandler.onClickDeleteColumn(event));
   }
 
-  static create(columnType) {
+  static setColumnType(columnType) {
     let selectedColumnType;
     for (let element of Object.keys(Enums.ColumnTypes)) {
       if (columnType == Enums.ColumnTypes[element].id) {
@@ -20,9 +17,6 @@ class ColumnMenu {
         break;
       }
     }
-
-    $("#numberFormat").toggle(false);
-    $("#tableRelation").toggle(false);
 
     let columnTypeValue = $("#columnTypeValue");
     columnTypeValue.html(null);
@@ -39,11 +33,28 @@ class ColumnMenu {
     img.draggable = false;
     columnTypeValue.append(img);
 
+    $("#numberFormat").toggle(false);
+    $("#tableRelation").toggle(false);
+
     switch (columnType) {
       case Enums.ColumnTypes.REL.id:
+        $(tableRelationValue).find("span").text(null);
         $("#tableRelation").toggle(true);
         break;
+      case Enums.ColumnTypes.NUM.id:
+        $("#numberFormat").toggle(true);
+        break;
     }
+  }
+
+  static setTableRelation(tableRelation) {
+    $("#tableRelationValue").removeClass("error");
+    let span = $(tableRelationValue).find("span");
+    span.text(tableRelation.name);
+
+    let columnType = $("#columnTypeValue").data("type");
+
+    console.log(`Type: ${columnType}, Table: ${tableRelation.id}`);
   }
 
   static isOpen() {
@@ -63,7 +74,7 @@ class ColumnMenu {
     Eventhandler.selectedColumn = btnColumnMenu.parents("th");
 
     ColumnMenu.close(btnColumnMenu);
-    ColumnMenu.create(Eventhandler.selectedColumn.data("type"));
+    ColumnMenu.setColumnType(Eventhandler.selectedColumn.data("type"));
 
     let position = $(element).get(0).getBoundingClientRect();
     $("#columnMenu").css({
@@ -101,15 +112,18 @@ class Eventhandler {
     }
   }
 
-  static onClickBtnDelete(event) {
-    if (!this.selectedTable || !this.selectedColumn) return;
-    Table.deleteColumn(this.selectedTable, this.selectedColumn.data("uuid"));
-    ColumnMenu.close();
+  static onClickTableRelationValue(event) {
+    let element = $(event.target);
+    if (!TableSearchMenu.isOpen()) {
+      TableSearchMenu.open();
+    } else {
+      TableSearchMenu.close();
+    }
   }
 
-  static onClickBtnSave(event) {
+  static onClickDeleteColumn(event) {
     if (!this.selectedTable || !this.selectedColumn) return;
-
+    Table.deleteColumn(this.selectedTable, this.selectedColumn.data("uuid"));
     ColumnMenu.close();
   }
 }

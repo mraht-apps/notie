@@ -1,6 +1,6 @@
 #tableSearchMenu {
   background-color: #ffffff;
-  border: 1px solid #999999;
+  border: 1px solid #e1e1e1;
   cursor: default;
   text-align: left;
   position: fixed;
@@ -9,6 +9,7 @@
   max-height: 140px;
   overflow: auto;
   display: none;
+  padding: 4px;
 }
 
 #tableSearchMenu table {
@@ -26,6 +27,20 @@
 #tableSearchMenu tr:not(#noTableFound):hover {
   cursor: pointer;
   background-color: rgb(228, 228, 228);
+}
+
+#tableSearchValue {
+  margin-left: 8px;
+  width: 140px;
+}
+
+#tableSearchFilter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
+  padding-bottom: 4px;
+  width: 100%;
 }
 
 #noTableFound:hover {

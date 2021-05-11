@@ -11,6 +11,10 @@
   left: 200px;
 }
 
+#blockMenu img {
+  width: 46px;
+}
+
 #blockMenu table {
   cursor: pointer;
   border-collapse: collapse;
@@ -20,8 +24,6 @@
 
 #blockMenu tr td:first-child div {
   border: 1px solid rgba(55, 53, 47, 0.2);
-  padding: 6px;
-
   color: rgba(55, 53, 47, 0.6);
   font-size: 26px;
   text-align: center;
@@ -29,8 +31,14 @@
 
 #blockMenu th,
 #blockMenu td {
-  padding: 6px;
+  padding: 4px;
   text-align: left;
+}
+
+#blockMenu td div {
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 #blockMenu .active {

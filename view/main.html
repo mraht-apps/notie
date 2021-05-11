@@ -70,7 +70,7 @@
             </tr> -->
           <!-- <tr class="clickable" data-type="table">
             <td>
-              <div class="icon">Tbl</div>
+              <div><img src="../res/img/table.png" /></div>
             </td>
             <td>
               <div>Table</div>
@@ -130,13 +130,15 @@
             </td>
           </tr>
           <tr id="numberFormat">
-            <td>Format:</td>
+            <td class="label">Format:</td>
+            <td></td>
           </tr>
           <tr id="tableRelation">
             <td class="label">Table:</td>
             <td>
-              <input id="tableRelationValue" type="text" />
+              <div id="tableRelationValue"><span></span><img src="../res/img/arrow_down.svg" draggable="false" /></div>
               <div id="tableSearchMenu">
+                <div id="tableSearchFilter"><b>Filter:</b><input id="tableSearchValue" type="text" /></div>
                 <table>
                   <tbody>
                     <tr id="noTableFound">
@@ -149,11 +151,12 @@
           </tr>
         </tbody>
       </table>
+      <hr />
       <!-- <div class="label">Relation:</div> -->
       <!-- <div><input type="text" name="tableSearch"></div> -->
-      <div id="columnMenuButtonBar">
-        <button id="btnColumnMenuDelete">Delete</button>
-        <button id="btnColumnMenuSave">Save</button>
+      <div id="columnMenuActionBar">
+        <img id="deleteColumn" src="../res/img/trash.svg" draggable="false" title="Delete column" />
+        <img id="duplicateColumn" src="../res/img/duplicate.svg" draggable="false" title="Duplicate column" />
       </div>
     </div>
 

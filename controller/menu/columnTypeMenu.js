@@ -57,7 +57,7 @@ class ColumnTypeMenu {
 class Eventhandler {
   static onClickColumnType(event) {
     let columnType = $(event.target).parents("tr").eq(0).data("type");
-    ColumnMenu.create(columnType);
+    ColumnMenu.setColumnType(columnType);
     ColumnTypeMenu.close();
   }
 }

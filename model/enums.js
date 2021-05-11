@@ -1,7 +1,13 @@
 const ElementTypes = {
   NONE: { id: 0, name: "none" },
-  TABLE: { id: 1, name: "table", label: "Table", descr: "Create a table in this page.", img: "../res/img/" },
-  TEXTLINE: { id: 2, name: "textline", label: "Textline", descr: "Just start writing with plain text.", img: "../res/img/" },
+  TABLE: { id: 1, name: "table", label: "Table", descr: "Create a table in this page.", img: "../res/img/table.png" },
+  TEXTLINE: {
+    id: 2,
+    name: "textline",
+    label: "Textline",
+    descr: "Just start writing with plain text.",
+    img: "../res/img/text.png",
+  },
 };
 
 const ParentTypes = {
@@ -26,12 +32,12 @@ const ColumnTypes = {
     img: "../res/img/dark/checkbox.svg",
     descr: "Checkbox",
   },
-  // NUM: {
-  //   id: 3,
-  //   name: "num",
-  //   img: "../res/img/dark/rhombus.svg",
-  //   descr: "Number",
-  // },
+  NUM: {
+    id: 3,
+    name: "num",
+    img: "../res/img/dark/rhombus.svg",
+    descr: "Number",
+  },
   REL: {
     id: 4,
     name: "rel",

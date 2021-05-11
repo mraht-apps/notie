@@ -100,6 +100,7 @@ class Database {
         "type INTEGER NOT NULL, " +
         "width TEXT NOT NULL," +
         "position INTEGER NOT NULL," +
+        "relation TEXT," +
         "PRIMARY KEY (table_id, id) );",
       "CREATE TABLE IF NOT EXISTS textlines (" + "id TEXT NOT NULL," + "text TEXT," + "PRIMARY KEY (id) );",
     ];

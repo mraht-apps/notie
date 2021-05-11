@@ -2,7 +2,7 @@
   z-index: 999;
   width: 290px;
   border: 1px solid rgb(236, 236, 236);
-  padding: 10px;
+  padding: 8px;
   position: absolute;
   background: white;
   display: none;
@@ -20,39 +20,53 @@
 #columnMenuForm .label {
   font-weight: 500;
   user-select: none;
-  width: 60px;
+  width: 44px;
 }
 
-#columnMenuForm select,
-#columnMenuForm input {
-  width: 100%;
-  /* height: 24px; */
-}
-
-#columnTypeValue {
+#columnTypeValue,
+#tableRelationValue {
   background: white;
   align-items: center;
   display: grid;
   cursor: pointer;
-  grid-template-columns: auto 1fr auto;
   padding: 4px;
   user-select: none;
   border: 1px solid #e1e1e1;
   border-radius: 4px;
+  height: 29px;
 }
 
-#columnTypeValue:hover {
+#columnTypeValue {
+  grid-template-columns: auto 1fr auto;
+}
+
+#tableRelationValue {
+  grid-template-columns: 1fr auto;
+}
+
+#tableRelationValue span {
+  padding-left: 3px;
+}
+
+#tableRelationValue.error {
+  border: 1px solid red;
+  box-shadow: 0 0 1px red;
+}
+
+#columnTypeValue:hover,
+#tableRelationValue:hover {
   background-color: rgb(236, 236, 236);
   border-radius: 4px;
 }
 
-#columnTypeValue.active {
+#columnTypeValue.active,
+#tableRelationValue.active {
   background-color: rgb(236, 236, 236);
   border-radius: 4px;
 }
 
 #columnTypeValue img:not(:last-of-type) {
-  margin: 0px 8px 0px 5px;
+  margin: 0px 8px 0px 3px;
 }
 
 #columnTypeMenu {
@@ -61,7 +75,6 @@
   background: white;
   width: 200px;
   position: fixed;
-  margin-top: 2px;
   display: none;
   user-select: none;
 }
@@ -83,21 +96,30 @@
 .columnTypeOption div {
   display: flex;
   vertical-align: middle;
-  margin-left: 6px;
+  margin-left: 4px; /* dsadsa */
 }
 
 .columnTypeOption img {
   margin-right: 8px;
 }
 
-#columnMenuButtonBar {
+#columnMenuActionBar {
   width: 100%;
-  text-align: center;
-  align-items: center;
-  padding-top: 12px;
+  display: flex;
+  justify-content: center;
+  /* padding-top: 12px; */
 }
 
-#columnMenuButtonBar button {
-  width: 80px;
+#columnMenuActionBar img {
+  width: 28px;
+  cursor: pointer;
+  padding: 4px;
+  margin: 0px 2px 0px 2px;
+  border: 1px solid #e1e1e1;
+  border-radius: 4px;
+}
+
+#columnMenuActionBar img:hover {
+  background-color: rgb(236, 236, 236);
   cursor: pointer;
 }
