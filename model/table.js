@@ -150,8 +150,8 @@ class Table {
     img.id = "newImg";
     img.draggable = false;
     div.appendChild(img);
-    let textNode = document.createTextNode("New");
-    div.appendChild(textNode);
+    let text = document.createElement("New");
+    div.appendChild(text);
     td.appendChild(div);
     tr.append(td);
   }
@@ -162,22 +162,24 @@ class Table {
 
     let td = document.createElement("td");
     if (column.type != "add") {
-      let input = null;
+      let input = document.createElement("div");
       switch (column.type) {
         case Enums.ColumnTypes.CHK.id:
-          input = document.createElement("input");
-          input.type = "checkbox";
-          input.checked = columnValue;
+          let checkboxInput = document.createElement("input");
+          checkboxInput.type = "checkbox";
+          checkboxInput.className = "inputCheckbox";
+          checkboxInput.checked = columnValue;
+          input.append(checkboxInput);
           break;
         default:
-          input = document.createElement("div");
           input.contentEditable = "true";
           $(input).html(columnValue);
           break;
       }
       td.appendChild(input);
       $(td).on("keydown", (event) => Eventhandler.onKeydownTableCell(event));
-      $(td).on("keypress", (event) => Eventhandler.onKeypressTableCell(event));
+      $(td).on("keypress", (event) => Eventhandler.onKeypressTextInput(event));
+      $(td).on("focusout", (event) => Eventhandler.onFocusoutTextInput(event));
     }
 
     let nextTd = $(tr).find("td").eq(columnIndex);
@@ -441,17 +443,30 @@ class Eventhandler {
     }
   }
 
-  static onKeypressTableCell(event) {
-    let columnIndex = $(event.target).parent().index();
+  static onKeypressTextInput(event) {
+    let columnIndex = $(event.target).parents("td").index();
     let column = $(event.target).parents("table").find("th").eq(columnIndex);
-    let pattern = column.data("pattern");
+    let numberFormatId = column.data("format");
+    let numberFormat = Object.values(Enums.NumberFormats).find((f) => f.id == numberFormatId);
 
-    if (pattern && pattern.length > 0) {
-      console.log(column);
-      console.log($(event.target).html());
-      if (!new RegExp(pattern).match($(event.target).html())) {
-        event.preventDefault();
-      }
+    if (numberFormat && !numberFormat.keyPattern.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  static onFocusoutTextInput(event) {
+    let columnIndex = $(event.target).parents("td").index();
+    let column = $(event.target).parents("table").find("th").eq(columnIndex);
+    let numberFormatId = column.data("format");
+    let numberFormat = Object.values(Enums.NumberFormats).find((f) => f.id == numberFormatId);
+
+    if (numberFormat) {
+      let value = $(event.target).html();
+      value = numberFormat.pattern.exec(value);
+      value = value.filter(function (val) {
+        return val != null && val.trim() != "";
+      });
+      $(event.target).html(value[0]);
     }
   }
 

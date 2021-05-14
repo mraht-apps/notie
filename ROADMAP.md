@@ -1,10 +1,11 @@
 # Version 1.0.0
 - Column type can be changed
 - New column types: number, relation, rollup
+- Checkbox as div contenteditable
 - Column can be duplicated
+- Customize app menubar
 - Table rows as pages: UUID per row/page, internal pagename is UUID
 - Table rows deletable
-- Customize app menubar
 - Page for images and licenses
 - Localization
 
@@ -20,3 +21,6 @@
 - Table views
 - New page elements: checkbox, header (h1-h4), table of contents
 - New column types: formula, select, multi-select, date, url, mail, phone
+- Windows as Tabs
+
+Regex: https://regex101.com, https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html

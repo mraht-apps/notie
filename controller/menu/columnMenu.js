@@ -32,11 +32,21 @@ class ColumnMenu {
 
     $("#numberFormat").toggle(false);
     $("#tableRelation").toggle(false);
+    Eventhandler.selectedColumn.data("format", null);
+    Eventhandler.selectedColumn.data("relation", null);
 
+    // OPT Encapsulate source code
     switch (columnType) {
+      case Enums.ColumnTypes.CHK:
+        Eventhandler.selectedColumn.data("type", Enums.ColumnTypes.CHK.id);
+        Eventhandler.selectedColumn.find("#btnColumnMenu").attr("src", Enums.ColumnTypes.CHK.img_light);
       case Enums.ColumnTypes.REL:
         $(tableRelationValue).find("span").text(null);
         $("#tableRelation").toggle(true);
+        break;
+      case Enums.ColumnTypes.TXT:
+        Eventhandler.selectedColumn.data("type", Enums.ColumnTypes.TXT.id);
+        Eventhandler.selectedColumn.find("#btnColumnMenu").attr("src", Enums.ColumnTypes.TXT.img_light);
         break;
       case Enums.ColumnTypes.NUM:
         ColumnMenu.setNumberFormat(Enums.NumberFormats.NUMBER.id);
