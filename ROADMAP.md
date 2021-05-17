@@ -22,5 +22,6 @@
 - New page elements: checkbox, header (h1-h4), table of contents
 - New column types: formula, select, multi-select, date, url, mail, phone
 - Windows as Tabs
+- Hyperlinks (in- and external)
 
 Regex: https://regex101.com, https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html

@@ -12,12 +12,22 @@ class ColumnMenu {
     $("#duplicateColumn").on("click", (event) => Eventhandler.onClickDuplicateColumn(event));
   }
 
-  static setColumnType(id) {
+  static initColumnType() {
+    let id = Eventhandler.selectedColumn.data("type");
+    let formatId = Eventhandler.selectedColumn.data("format");
+    let format = Object.values(Enums.NumberFormats).find((t) => t.id == formatId);
+    let relationId = Eventhandler.selectedColumn.data("relation");
+    let relation = Table_DB.get(relationId);
+
+    ColumnMenu.setColumnType(id, format, relation);
+  }
+
+  static setColumnType(id, format, relation) {
+    let columnType = Object.values(Enums.ColumnTypes).find((t) => t.id == id);
+
     let columnTypeValue = $("#columnTypeValue");
     columnTypeValue.html(null);
-    $(columnTypeValue).data("type", id);
-
-    let columnType = Object.values(Enums.ColumnTypes).find((t) => t.id == id);
+    $(columnTypeValue).data("type", columnType.id);
 
     let img = document.createElement("img");
     img.src = columnType.img;
@@ -30,45 +40,73 @@ class ColumnMenu {
     img.draggable = false;
     columnTypeValue.append(img);
 
+    if (columnType) {
+      Eventhandler.selectedColumn.data("type", columnType.id);
+      Eventhandler.selectedColumn.find("#btnColumnMenu").attr("src", columnType.img_light);
+    }
+
+    ColumnMenu.setFormat(columnType, format);
+    ColumnMenu.setRelation(columnType, relation);
+
+    ColumnMenu.setCellData(columnType);
+  }
+
+  static setFormat(columnType, format = Enums.NumberFormats.NUMBER) {
     $("#numberFormat").toggle(false);
-    $("#tableRelation").toggle(false);
     Eventhandler.selectedColumn.data("format", null);
+
+    if (columnType.id != Enums.ColumnTypes.NUM.id) return;
+    ColumnMenu.setNumberFormat(format);
+    $("#numberFormat").toggle(true);
+  }
+
+  static setRelation(columnType, relation = null) {
+    $("#tableRelation").toggle(false);
     Eventhandler.selectedColumn.data("relation", null);
 
-    // OPT Encapsulate source code
-    switch (columnType) {
-      case Enums.ColumnTypes.CHK:
-        Eventhandler.selectedColumn.data("type", Enums.ColumnTypes.CHK.id);
-        Eventhandler.selectedColumn.find("#btnColumnMenu").attr("src", Enums.ColumnTypes.CHK.img_light);
-      case Enums.ColumnTypes.REL:
-        $(tableRelationValue).find("span").text(null);
-        $("#tableRelation").toggle(true);
-        break;
-      case Enums.ColumnTypes.TXT:
-        Eventhandler.selectedColumn.data("type", Enums.ColumnTypes.TXT.id);
-        Eventhandler.selectedColumn.find("#btnColumnMenu").attr("src", Enums.ColumnTypes.TXT.img_light);
-        break;
-      case Enums.ColumnTypes.NUM:
-        ColumnMenu.setNumberFormat(Enums.NumberFormats.NUMBER.id);
-        $("#numberFormat").toggle(true);
-        break;
-    }
+    if (columnType.id != Enums.ColumnTypes.REL.id) return;
+    ColumnMenu.setTableRelation(relation);
+    $("#tableRelation").toggle(true);
   }
 
-  static setNumberFormat(id) {
-    let numberFormat = Object.values(Enums.NumberFormats).find((f) => f.id == id);
-    $("#numberFormatValue span").text(numberFormat.descr);
-    $("#numberFormatValue").data("format", numberFormat.id);
-
-    Eventhandler.selectedColumn.data("type", Enums.ColumnTypes.NUM.id);
-    Eventhandler.selectedColumn.data("format", numberFormat.id);
-    Eventhandler.selectedColumn.find("#btnColumnMenu").attr("src", Enums.ColumnTypes.NUM.img_light);
+  static setNumberFormat(format) {
+    $("#numberFormatValue span").text(format.descr);
+    $("#numberFormatValue").data("format", format.id);
+    Eventhandler.selectedColumn.data("format", format.id);
   }
 
-  static setTableRelation(tableRelation) {
+  static setTableRelation(tableRelation = { id: null, name: null }) {
     $("#tableRelationValue").removeClass("error");
     $("#tableRelationValue span").text(tableRelation.name);
     Eventhandler.selectedColumn.data("relation", tableRelation.id);
+  }
+
+  static setCellData(columnType) {
+    let columnIndex = Eventhandler.selectedColumn.index();
+    let cells = [];
+    $(Eventhandler.selectedTable)
+      .find("tbody tr")
+      .each(function (index, row) {
+        cells.push($(row).find("td").eq(columnIndex));
+      });
+    $(cells).each((index, cell) => {
+      // OPT Encapsulate source code
+      let input = $(cell).find("div");
+      switch (columnType) {
+        case Enums.ColumnTypes.CHK:
+          if (input.children("input").length == 0) {
+            let checkboxInput = document.createElement("input");
+            checkboxInput.type = "checkbox";
+            checkboxInput.className = "inputCheckbox";
+            input.append(checkboxInput);
+            input.prop("contentEditable", "false");
+          }
+          break;
+        default:
+          input.children("input").remove();
+          input.prop("contentEditable", "true");
+      }
+    });
   }
 
   static isOpen() {
@@ -88,7 +126,7 @@ class ColumnMenu {
     Eventhandler.selectedColumn = btnColumnMenu.parents("th");
 
     ColumnMenu.close(btnColumnMenu);
-    ColumnMenu.setColumnType(Eventhandler.selectedColumn.data("type"));
+    ColumnMenu.initColumnType();
 
     let position = $(element).get(0).getBoundingClientRect();
     $("#columnMenu").css({
@@ -135,7 +173,7 @@ class Eventhandler {
 
   static onClickTableRelationValue(event) {
     if (!TableSearchMenu.isOpen()) {
-      TableSearchMenu.open();
+      TableSearchMenu.open(Eventhandler.selectedTable);
     } else {
       TableSearchMenu.close();
     }

@@ -1,4 +1,6 @@
 class TableSearchMenu {
+  static table;
+
   static init() {
     TableSearchMenu.registerEvents();
   }
@@ -18,7 +20,9 @@ class TableSearchMenu {
     $("#tableSearchMenu").toggle(false);
   }
 
-  static open() {
+  static open(table) {
+    TableSearchMenu.table = table;
+
     $("#tableSearchMenu").toggle(true);
     $("#tableSearchValue").text("");
     $("#tableSearchValue").trigger("focus");
@@ -27,7 +31,11 @@ class TableSearchMenu {
   }
 
   static getResult(name = "") {
-    return Table_DB.getByName(name);
+    let result = Table_DB.getByName(name);
+    result = $(result).filter(function () {
+      return this.id != $(TableSearchMenu.table).data("uuid");
+    });
+    return result;
   }
 
   static showResult(result) {

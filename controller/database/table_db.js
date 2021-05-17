@@ -1,6 +1,16 @@
 class Table_DB {
   static tablesBuffer = [];
 
+  static get(id) {
+    if (Table_DB.tablesBuffer.length == 0) {
+      Table_DB.tablesBuffer = Database.all(`SELECT * FROM tables ORDER BY name COLLATE NOCASE ASC;`);
+    }
+    let result = $(Table_DB.tablesBuffer).filter(function () {
+      return this.id == id;
+    });
+    return result;
+  }
+
   static getByName(name) {
     if (Table_DB.tablesBuffer.length == 0) {
       Table_DB.tablesBuffer = Database.all(`SELECT * FROM tables ORDER BY name COLLATE NOCASE ASC;`);

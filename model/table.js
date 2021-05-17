@@ -177,9 +177,10 @@ class Table {
           break;
       }
       td.appendChild(input);
-      $(td).on("keydown", (event) => Eventhandler.onKeydownTableCell(event));
-      $(td).on("keypress", (event) => Eventhandler.onKeypressTextInput(event));
-      $(td).on("focusout", (event) => Eventhandler.onFocusoutTextInput(event));
+      $(input).on("keydown", (event) => Eventhandler.onKeydownTableCell(event));
+      $(input).on("keypress", (event) => Eventhandler.onKeypressTextInput(event));
+      $(input).on("focus", (event) => Eventhandler.onFocusTextInput(event));
+      $(input).on("focusout", (event) => Eventhandler.onFocusoutTextInput(event));
     }
 
     let nextTd = $(tr).find("td").eq(columnIndex);
@@ -389,6 +390,7 @@ class Table {
 
   static duplicateColumn(tableContainer, column) {
     // NEW Implement
+    tableContainer.find(".table").append(column);
   }
 }
 
@@ -454,19 +456,31 @@ class Eventhandler {
     }
   }
 
+  static onFocusTextInput(event) {
+    let columnIndex = $(event.target).parents("td").index();
+    let column = $(event.target).parents("table").find("th").eq(columnIndex);
+    let relation = column.data("relation");
+    if(!relation || relation == "") return;
+    console.log(relation);
+  }
+
   static onFocusoutTextInput(event) {
     let columnIndex = $(event.target).parents("td").index();
     let column = $(event.target).parents("table").find("th").eq(columnIndex);
     let numberFormatId = column.data("format");
     let numberFormat = Object.values(Enums.NumberFormats).find((f) => f.id == numberFormatId);
 
+    let value = $(event.target).html();
     if (numberFormat) {
-      let value = $(event.target).html();
       value = numberFormat.pattern.exec(value);
-      value = value.filter(function (val) {
-        return val != null && val.trim() != "";
-      });
-      $(event.target).html(value[0]);
+      if (!value || value == "") {
+        $(event.target).html(null);
+      } else {
+        value = value.filter(function (val) {
+          return val != null && val.trim() != "";
+        });
+        $(event.target).html(value[0]);
+      }
     }
   }
 
