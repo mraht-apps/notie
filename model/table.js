@@ -217,7 +217,8 @@ class Table {
       } else {
         $(th).data("uuid", column.id);
       }
-      $(th).data("format", column.format);
+      if (column.format) $(th).data("format", column.format);
+      if (column.relation) $(th).data("relation", column.relation);
     }
 
     let div = document.createElement("div");
@@ -390,7 +391,7 @@ class Table {
 
   static duplicateColumn(tableContainer, column) {
     // NEW Implement
-    tableContainer.find(".table").append(column);
+    $(column).after(column);
   }
 }
 
@@ -460,7 +461,7 @@ class Eventhandler {
     let columnIndex = $(event.target).parents("td").index();
     let column = $(event.target).parents("table").find("th").eq(columnIndex);
     let relation = column.data("relation");
-    if(!relation || relation == "") return;
+    if (!relation || relation == "") return;
     console.log(relation);
   }
 

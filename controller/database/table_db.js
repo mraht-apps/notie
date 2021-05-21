@@ -8,7 +8,7 @@ class Table_DB {
     let result = $(Table_DB.tablesBuffer).filter(function () {
       return this.id == id;
     });
-    return result;
+    return result.get(0);
   }
 
   static getByName(name) {
@@ -60,7 +60,7 @@ class Table_DB {
       let columnName = column.find(".columnTitle > input").val();
       let columnType = column.data("type");
       let columnWidth = column.css("width");
-      let relation = column.data("relation") ? column.data("relation") : null;
+      let relation = column.data("relation") ? `'${column.data("relation")}'` : null;
       let format = column.data("format") ? column.data("format") : null;
 
       let sqlColumnName, sqlColumnType;

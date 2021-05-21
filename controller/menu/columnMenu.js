@@ -70,15 +70,17 @@ class ColumnMenu {
   }
 
   static setNumberFormat(format) {
+    if(!format) return;
     $("#numberFormatValue span").text(format.descr);
     $("#numberFormatValue").data("format", format.id);
     Eventhandler.selectedColumn.data("format", format.id);
   }
 
-  static setTableRelation(tableRelation = { id: null, name: null }) {
+  static setTableRelation(relation = { id: null, name: null }) {
+    if(!relation) return;
     $("#tableRelationValue").removeClass("error");
-    $("#tableRelationValue span").text(tableRelation.name);
-    Eventhandler.selectedColumn.data("relation", tableRelation.id);
+    $("#tableRelationValue span").text(relation.name);
+    Eventhandler.selectedColumn.data("relation", relation.id);
   }
 
   static setCellData(columnType) {
