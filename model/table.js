@@ -1,29 +1,6 @@
 const Enums = require("../model/enums.js");
 const General = require("../utils/general.js");
 
-const defaultTable = {
-  id: "",
-  caption: "",
-  columns: [
-    { id: "", name: "Name", type: Enums.ColumnTypes.TXT.id, width: "120px" },
-    { id: "", name: "Done", type: Enums.ColumnTypes.CHK.id, width: "20px" },
-  ],
-  rows: [
-    {
-      Name: "",
-      Done: false,
-    },
-    {
-      Name: "",
-      Done: false,
-    },
-    {
-      Name: "",
-      Done: false,
-    },
-  ],
-};
-
 class Table {
   static createByPageId(pageId) {
     let htmlElements = [];
@@ -64,7 +41,28 @@ class Table {
 
   static create(table) {
     if (!table) {
-      table = defaultTable;
+      table = {
+        id: "",
+        caption: "",
+        columns: [
+          { id: "", name: "Name", type: Enums.ColumnTypes.TXT.id, width: "120px" },
+          { id: "", name: "Done", type: Enums.ColumnTypes.CHK.id, width: "20px" },
+        ],
+        rows: [
+          {
+            Name: "",
+            Done: false,
+          },
+          {
+            Name: "",
+            Done: false,
+          },
+          {
+            Name: "",
+            Done: false,
+          },
+        ],
+      };
     }
 
     let htmlTable = document.createElement("table");

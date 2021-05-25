@@ -105,7 +105,7 @@ class Table_DB {
 
         switch (htmlColumn.data("type")) {
           case Enums.ColumnTypes.CHK.id:
-            sqlValues += `'${input.is(":checked")}'`;
+            sqlValues += `'${input.find("input").is(":checked")}'`;
             break;
           default:
             sqlValues += `'${input.html()}'`;
