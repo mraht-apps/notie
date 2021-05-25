@@ -391,7 +391,7 @@ class Table {
 
   static duplicateColumn(tableContainer, column) {
     // NEW Implement
-    $(column).after(column);
+    // $(column).after(column);
   }
 }
 
@@ -462,7 +462,8 @@ class Eventhandler {
     let column = $(event.target).parents("table").find("th").eq(columnIndex);
     let relation = column.data("relation");
     if (!relation || relation == "") return;
-    console.log(relation);
+    let values = Table_DB.getValues(relation);
+    console.log(values);
   }
 
   static onFocusoutTextInput(event) {

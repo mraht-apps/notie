@@ -9,8 +9,7 @@ class Page_DB {
 
   static add(run = false, sqlStatements = [], page) {
     sqlStatements.push(
-      `REPLACE INTO pages VALUES('${page.id}', '${page.name}');`
-      // `REPLACE INTO pages VALUES('${page.id}', '${page.name}', '${page.parent}', '${page.parent_type}');`
+      `REPLACE INTO pages VALUES('${page.id}', '${page.name}', '${page.parent}', '${page.parent_type}');`
     );
 
     if (run) {
