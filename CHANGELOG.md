@@ -14,6 +14,9 @@
 - Navigation with arrow keys between columns and rows
 - Page overflow auto to fit content by scrollbar whereas menu remains fixed
 - Table columns can be deleted
+- Column type can be changed
+- New column types: number
+- Checkbox as div contenteditable
 
 *** Opt
 - ./. (first version)

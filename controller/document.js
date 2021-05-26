@@ -42,6 +42,7 @@ class Eventhandler {
     TableSearchMenu.close(element);
   }
 
+  // FIX If blockmenu is open arrows aren't selecing entries anymore #4
   static onKeyup(event) {
     if (!BlockMenu.isOpen() || Page.isDisabled()) return;
 

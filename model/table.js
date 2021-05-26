@@ -388,7 +388,7 @@ class Table {
   }
 
   static duplicateColumn(tableContainer, column) {
-    // NEW Implement
+    // NEW Implement #1
     // $(column).after(column);
   }
 }
@@ -461,6 +461,7 @@ class Eventhandler {
     let relation = column.data("relation");
     if (!relation || relation == "") return;
     let values = Table_DB.getValues(relation);
+    // NEW Relation: Open menu to select value to relate to #5
     console.log(values);
   }
 

@@ -50,6 +50,7 @@ class NumberFormatMenu {
 
 class Eventhandler {
   static onClickNumberFormat(event) {
+    // FIX Number format with comma as decimal separator not chooseable #3
     let numberFormatId = $(event.target).parents("tr").eq(0).data("format");
     ColumnMenu.setNumberFormat(numberFormatId);
     NumberFormatMenu.close();
