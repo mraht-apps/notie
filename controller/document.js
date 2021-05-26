@@ -9,10 +9,28 @@ class Document {
     $(document).on("keyup", (event) => Eventhandler.onKeyup(event));
     $(document).on("mousemove", (event) => Eventhandler.onMousemove(event));
     $(document).on("mouseup", (event) => Eventhandler.onMouseup(event));
+    $(document).on("paste", (event) => Eventhandler.onPaste(event));
   }
 }
 
 class Eventhandler {
+  static onPaste(event) {
+    var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+    console.log(JSON.stringify(items));
+    if (items.length == 0) return;
+    for (index in items) {
+      var item = items[index];
+      if (item.kind === "file") {
+        var blob = item.getAsFile();
+        var reader = new FileReader();
+        reader.onload = function (event) {
+          console.log(event.target.result);
+        }; // data url!
+        reader.readAsDataURL(blob);
+      }
+    }
+  }
+
   static onClick(event) {
     let element = $(event.target);
     BlockMenu.close(element);

@@ -18,7 +18,7 @@ const Settings = require("../controller/settings.js");
 const Document = require("../controller/document.js");
 const Navigation = require("../controller/navigation.js");
 
-const Searchmenu = require("../controller/menu/tableSearchMenu.js");
+const SearchMenu = require("../controller/menu/tableSearchMenu.js");
 const NavbarMenu = require("../controller/menu/navbarMenu.js");
 const BlockMenu = require("../controller/menu/blockMenu.js");
 const TableMenu = require("../controller/menu/tableMenu.js");
@@ -29,12 +29,14 @@ const TableSearchMenu = require("../controller/menu/tableSearchMenu.js");
 
 // Database
 const Database = require("../controller/database/database.js");
+const Image_DB = require("../controller/database/image_db.js");
 const Page_DB = require("../controller/database/page_db.js");
 const Table_DB = require("../controller/database/table_db.js");
 const Textline_DB = require("../controller/database/textline_db.js");
 
 // Model
 const Enums = require("../model/enums.js");
+const Image = require("../model/image.js");
 const Navbar = require("../model/navbar.js");
 const Page = require("../model/page.js");
 const Textline = require("../model/textline.js");
@@ -75,7 +77,7 @@ class Renderer {
     BlockMenu.init();
     ColumnMenu.init();
     NavbarMenu.init();
-    Searchmenu.init();
+    SearchMenu.init();
     TableMenu.init();
   }
 
