@@ -1,3 +1,4 @@
+const { MenuItem } = require("electron");
 const Enums = require("../model/enums.js");
 const General = require("../utils/general.js");
 
@@ -102,10 +103,23 @@ class Table {
 
     let tableMenuContainer = document.createElement("div");
     tableMenuContainer.className = "tableMenuContainer";
+    let sortImg = document.createElement("img");
+    sortImg.src = "../res/img/sort.svg";
+    sortImg.id = "btnSortTable";
+    sortImg.draggable = false;
+    sortImg.title = "Sort table data";
+    tableMenuContainer.appendChild(sortImg);
+    let filterImg = document.createElement("img");
+    filterImg.src = "../res/img/filter.svg";
+    filterImg.id = "btnFilterTable";
+    filterImg.draggable = false;
+    filterImg.title = "Filter table data";
+    tableMenuContainer.appendChild(filterImg);
     let menuImg = document.createElement("img");
     menuImg.src = "../res/img/menu.svg";
     menuImg.id = "btnTableMenu";
     menuImg.draggable = false;
+    menuImg.title = "Open table menu";
     tableMenuContainer.appendChild(menuImg);
     TableMenu.registerEvent(tableMenuContainer);
     captionContainer.appendChild(tableMenuContainer);
