@@ -91,11 +91,11 @@ class Eventhandler {
       case "ArrowUp":
         General.focus(prevElement);
         event.preventDefault();
-        break;
+        return;
       case "ArrowDown":
         General.focus(nextElement);
         event.preventDefault();
-        break;
+        return;
       case "Backspace":
         let selectedTextLength = General.getSelectedTextLength();
 
@@ -115,7 +115,7 @@ class Eventhandler {
           }
           event.preventDefault();
         }
-        break;
+        return;
       case "Enter":
         if (BlockMenu.isOpen()) {
           let row = $(".clickable.active").eq(0);
@@ -128,16 +128,15 @@ class Eventhandler {
           General.focus($(newTextline));
         }
         event.preventDefault();
-        break;
+        return;
       case "/":
         BlockMenu.open();
-        break;
+        return;
       default:
         textline.data("previousValue", textline.text());
         break;
     }
 
-    // OPT Optimize blockMenu opening (e.g. also on backspace)
     let regex = /^[\w\s]+$/;
     if (event.key.match(regex) || event.key == "Escape") {
       BlockMenu.close();

@@ -441,6 +441,16 @@ class Eventhandler {
         General.focus(input, Enums.FocusActions.ALL);
         event.preventDefault();
         break;
+      case "Enter":
+        let table = $(event.target).parents("table");
+        input = tableRow.next().children().eq(columnIndex).children();
+        if (input.attr("id") == "newRow" || input.length == 0) {
+          Table.addRowByNewRow(table);
+          input = tableRow.next().children().eq(columnIndex).children();
+        }
+        General.focus(input, Enums.FocusActions.ALL, false);
+        event.preventDefault();
+        break;
     }
   }
 
