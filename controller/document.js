@@ -27,7 +27,6 @@ class Eventhandler {
     textline.prop("contentEditable", false);
     textline.removeClass("textline");
     textline.addClass("image");
-    // document.querySelector("#test").src = `../cache/img/${uuid}.png`;
     event.preventDefault();
   }
 
