@@ -288,10 +288,11 @@ class Table {
     });
   }
 
-  static addColumn(table, column) {
+  static addColumn(table, column, index = -1) {
     let thead = $(table).children("thead");
     let headerRow = thead.children("tr");
-    let columnIndex = thead.children("th").length - 1;
+    let columnIndex = index;
+    if (index == -1) columnIndex = thead.children("th").length - 1;
     Table.generateTableColumn(headerRow, columnIndex, column);
     Table.addRowCellByNewColumn(table, column);
   }
@@ -387,9 +388,20 @@ class Table {
     lastRowCell.attr("colspan", colspan);
   }
 
-  static duplicateColumn(tableContainer, column) {
-    // NEW Implement #1
-    // $(column).after(column);
+  static duplicateColumn(tableContainer, htmlColumn) {
+    let columnIndex = htmlColumn.index();
+    let table = tableContainer.children("table");
+    let column = {
+      id: Crypto.generateUUID(6),
+      table_id: tableContainer.data("uuid"),
+      name: htmlColumn.find(".columnTitle input").val(),
+      type: htmlColumn.data("type"),
+      position: columnIndex + 1,
+      width: htmlColumn.css("width"),
+      format: htmlColumn.data("format"),
+      relation: htmlColumn.data("relation"),
+    };
+    Table.addColumn(table, column, columnIndex);
   }
 }
 
