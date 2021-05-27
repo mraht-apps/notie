@@ -5,6 +5,7 @@
 // selectively enable features needed in the rendering
 // process.
 window.$ = window.jQuery = require("jquery");
+const electron = require("electron");
 const ipcRenderer = require("electron").ipcRenderer;
 const Filepath = require("path");
 

@@ -15,20 +15,20 @@ class Document {
 
 class Eventhandler {
   static onPaste(event) {
-    var items = (event.clipboardData || event.originalEvent.clipboardData).items;
-    console.log(JSON.stringify(items));
-    if (items.length == 0) return;
-    for (index in items) {
-      var item = items[index];
-      if (item.kind === "file") {
-        var blob = item.getAsFile();
-        var reader = new FileReader();
-        reader.onload = function (event) {
-          console.log(event.target.result);
-        }; // data url!
-        reader.readAsDataURL(blob);
-      }
-    }
+    const clipboard = electron.clipboard;
+    let nativeImage = clipboard.readImage("clipboard").toPNG();
+    if (!nativeImage || nativeImage.length == 0) return;
+    let uuid = Crypto.generateUUID(8);
+    File.writeFile(`./cache/img/${uuid}.png`, nativeImage);
+    let image = document.createElement("img");
+    image.src = `../cache/img/${uuid}.png`;
+    let textline = $(event.target) || $(event.target).parent(".textline");
+    textline.append(image);
+    textline.prop("contentEditable", false);
+    textline.removeClass("textline");
+    textline.addClass("image");
+    // document.querySelector("#test").src = `../cache/img/${uuid}.png`;
+    event.preventDefault();
   }
 
   static onClick(event) {
