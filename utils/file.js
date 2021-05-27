@@ -24,9 +24,19 @@ class File {
     }
   }
 
-  static readFile(file) {
-    return Filesystem.readFileSync(file, "binary", function (error) {
+  static readFile(path) {
+    return Filesystem.readFileSync(path, "binary", function (error) {
       if (error) throw error;
+    });
+  }
+
+  static readFileByUrl(file) {
+    return new Promise((resolve, reject) => {
+      let reader = new FileReader();
+      reader.onload = (event) => {
+        resolve(event.target.result);
+      };
+      return reader.readAsDataURL(file);
     });
   }
 
