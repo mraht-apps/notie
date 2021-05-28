@@ -37,12 +37,13 @@ const Textline_DB = require("../controller/database/textline_db.js");
 
 // Model
 const Enums = require("../model/enums.js");
+const Blockelement = require("../model/blockelement.js");
 const Image = require("../model/image.js");
 const Navbar = require("../model/navbar.js");
 const Page = require("../model/page.js");
 const Textline = require("../model/textline.js");
 const Placeholder = require("../model/placeholder.js");
-const Table = require("../model/table.js");
+const Table = require("../model/table_new.js");
 
 class Renderer {
   static init() {

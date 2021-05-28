@@ -1,23 +1,23 @@
 const Enums = require("../model/enums.js");
 const General = require("../utils/general.js");
 
-class Table {
+class Table extends Blockelement {
   static createByPageId(pageId) {
     let htmlElements = [];
     let tables = Table_DB.getByPageId(pageId);
     let tableColumns = Table_DB.getColumns(tables);
 
-    $(tables).each(function (index, table) {
-      let columns = $(tableColumns).filter(function () {
-        return this.table_id == table.id;
+    tables.forEach((table) => {
+      let columns = tableColumns.filter((column) => {
+        return column.table_id == table.id;
       });
 
       let values = Table_DB.getValues(table.id);
 
       let rows = [];
-      $(values).each(function (index, value) {
+      values.forEach((value) => {
         let row = {};
-        $(columns).each(function (index, column) {
+        columns.forEach((column) => {
           let cellValue = value[column.id];
           if (column.type == Enums.ColumnTypes.CHK.id) {
             cellValue = cellValue == "true";
@@ -27,7 +27,7 @@ class Table {
         rows.push(row);
       });
 
-      let htmlElement = Table.create({
+      let htmlElement = new Table({
         id: table.id,
         caption: table.name,
         columns: columns,
@@ -39,30 +39,17 @@ class Table {
     return htmlElements;
   }
 
-  static create(jsonData) {
-    let jsonData = this.initData(jsonData);
+  constructor(jsonData) {
+    super(jsonData.id, "table");
 
-    let htmlTable = document.createElement("table");
-    htmlTable.className = "table";
-    Table.createCaption(htmlTable, jsonData.caption);
+    this.initData(jsonData);
+    this.prepare();
+    this.create();
 
-    Table.prepare(jsonData);
-    Table.generateTableBody(htmlTable, jsonData);
-    Table.generateTableHead(htmlTable, jsonData);
-
-    let htmlElement = document.createElement("div");
-    htmlElement.className = "pageElement table";
-    if (!jsonData.id || jsonData.id.length == 0) {
-      $(htmlElement).data("uuid", Crypto.generateUUID(6));
-    } else {
-      $(htmlElement).data("uuid", jsonData.id);
-    }
-    htmlElement.append(htmlTable);
-
-    return htmlElement;
+    this.container.append(this.htmlElement);
   }
 
-  static initData(jsonData) {
+  initData(jsonData) {
     if (!jsonData) {
       jsonData = {
         id: "",
@@ -72,25 +59,30 @@ class Table {
           { id: "", name: "Done", type: Enums.ColumnTypes.CHK.id, width: "20px" },
         ],
         rows: [
-          {
-            Name: "",
-            Done: false,
-          },
-          {
-            Name: "",
-            Done: false,
-          },
-          {
-            Name: "",
-            Done: false,
-          },
+          { Name: "", Done: false },
+          { Name: "", Done: false },
+          { Name: "", Done: false },
         ],
       };
     }
-    return jsonData;
+    this.elementData = jsonData;
   }
 
-  static createCaption(table, captionText) {
+  prepare() {
+    this.elementData.columns.push({ name: "New", type: Enums.ColumnTypes.ADD.id });
+  }
+
+  create() {
+    if (!this.elementData) return;
+    this.htmlElement = document.createElement("table");
+    this.htmlElement.className = "table";
+
+    this.createCaption();
+    this.createTableBody();
+    this.createTableHead();
+  }
+
+  createCaption() {
     let caption = document.createElement("caption");
 
     let captionContainer = document.createElement("div");
@@ -100,7 +92,7 @@ class Table {
     tableTitleContainer.className = "tableTitleContainer";
     let captionInput = document.createElement("input");
     captionInput.type = "text";
-    captionInput.value = captionText;
+    captionInput.value = this.elementData.caption;
     captionInput.placeholder = "Untitled";
     tableTitleContainer.appendChild(captionInput);
     captionContainer.appendChild(tableTitleContainer);
@@ -128,57 +120,33 @@ class Table {
     TableMenu.registerEvent(tableMenuContainer);
     captionContainer.appendChild(tableMenuContainer);
     caption.appendChild(captionContainer);
-    table.insertBefore(caption, table.childNodes[0]);
+    this.htmlElement.insertBefore(caption, this.htmlElement.childNodes[0]);
   }
 
-  static prepare(data) {
-    data.columns.push({ name: "New", type: Enums.ColumnTypes.ADD.id });
+  createTableBody() {
+    if (this.htmlElement.querySelector("tbody")) this.htmlElement.querySelector("tbody").clear();
+    this.createRows();
+    this.createRowNewRow();
+    this.htmlElement.querySelector("tbody").classList.add("tableBody");
   }
 
-  static generateTableBody(table, data) {
-    $(data.rows).each(function () {
-      Table.generateTableRow(table, data, $(this));
+  createRows() {
+    this.elementData.rows.forEach((row) => {
+      this.createRow(row);
     });
-    Table.generateTableRowNew(table, data);
-    $(table).children("tbody").addClass("tableBody");
   }
 
-  static generateTableRow(table, data, row) {
-    let tr = table.insertRow();
-    $(tr).data("uuid", Crypto.generateUUID(6));
+  createRow(row) {
+    let tr = this.htmlElement.insertRow();
+    tr.dataset.uuid = Crypto.generateUUID(6);
 
-    $(data.columns).each(function (columnIndex, column) {
-      let exit = Table.generateTableCell(tr, columnIndex, column, row);
+    this.elementData.columns.forEach((columnIndex, column) => {
+      let exit = this.createTableCell(tr, columnIndex, column, row);
       if (exit) return false;
     });
   }
 
-  static resetTableBody(table) {
-    table.find("tbody").clear();
-    // TODO fill data from table
-    Table.generateTableBody(table, data);
-  }
-
-  static generateTableRowNew(table, data) {
-    let numberOfColumns = data.columns.length + 1;
-    let tr = table.insertRow();
-    $(tr).on("click", (event) => Eventhandler.onClickRowAdd(event));
-    let td = document.createElement("td");
-    td.colSpan = numberOfColumns;
-    let div = document.createElement("div");
-    div.id = "newRow";
-    let img = document.createElement("img");
-    img.src = "../res/img/new.svg";
-    img.id = "newImg";
-    img.draggable = false;
-    div.appendChild(img);
-    let text = document.createElement("New");
-    div.appendChild(text);
-    td.appendChild(div);
-    tr.append(td);
-  }
-
-  static generateTableCell(tr, columnIndex, column, row) {
+  createTableCell(tr, columnIndex, column, row) {
     let exit = false;
     let columnValue = row && column.id ? row.attr(column.id) : "";
 
@@ -215,17 +183,36 @@ class Table {
     return exit;
   }
 
-  static generateTableHead(htmlTable, table) {
-    let thead = htmlTable.createTHead();
+  createRowNewRow() {
+    let numberOfColumns = this.elementData.columns.length + 1;
+    let tr = this.htmlElement.insertRow();
+    $(tr).on("click", (event) => Eventhandler.onClickRowAdd(event));
+    let td = document.createElement("td");
+    td.colSpan = numberOfColumns;
+    let div = document.createElement("div");
+    div.id = "newRow";
+    let img = document.createElement("img");
+    img.src = "../res/img/new.svg";
+    img.id = "newImg";
+    img.draggable = false;
+    div.appendChild(img);
+    let text = document.createElement("New");
+    div.appendChild(text);
+    td.appendChild(div);
+    tr.append(td);
+  }
+
+  createTableHead() {
+    let thead = this.htmlElement.createTHead();
     thead.className = "tableHead";
     let tr = thead.insertRow();
 
-    $(table.columns).each(function (index, column) {
-      Table.generateTableColumn(tr, index, column);
+    this.elementData.columns.forEach((column, index) => {
+      this.createTableColumn(tr, index, column);
     });
   }
 
-  static generateTableColumn(tr, index, column) {
+  createTableColumn(tr, index, column) {
     let th = document.createElement("th");
     let columnType = Object.values(Enums.ColumnTypes).find((t) => t.id == column.type);
     $(th).data("type", column.type);
@@ -271,7 +258,7 @@ class Table {
 
       div = document.createElement("div");
       div.className = "columnResizeSeparator";
-      Table.registerEventsColumnSeparator(div);
+      this.registerEventsColumnSeparator(div);
     }
 
     th.appendChild(div);
@@ -284,19 +271,19 @@ class Table {
     }
   }
 
-  static addRow(table) {
-    Table.addRowByNewRow(table);
+  addRow() {
+    this.addRowByNewRow();
   }
 
-  static addRowByNewRow(table) {
-    let tableRows = $(table).find("tbody > tr");
+  addRowByNewRow() {
+    let tableRows = $(this.htmlElement).find("tbody > tr");
     let addNewTableRow = tableRows.eq(tableRows.length - 1);
 
     let tr = document.createElement("tr");
     addNewTableRow.before(tr);
 
     let columns = [];
-    $(table)
+    $(this.htmlElement)
       .find("thead > tr > th")
       .each(function () {
         let column = $(this);
@@ -308,28 +295,28 @@ class Table {
       });
 
     $(columns).each(function (columnIndex, column) {
-      Table.generateTableCell(tr, columnIndex, column, null);
+      this.createTableCell(tr, columnIndex, column, null);
     });
   }
 
-  static addColumn(table, column, index = -1) {
-    let thead = $(table).children("thead");
+  addColumn(column, index = -1) {
+    let thead = $(this.htmlElement).children("thead");
     let headerRow = thead.children("tr");
     let columnIndex = index;
     if (index == -1) columnIndex = thead.children("th").length - 1;
-    Table.generateTableColumn(headerRow, columnIndex, column);
-    Table.addRowCellByNewColumn(table, column);
+    this.createTableColumn(headerRow, columnIndex, column);
+    this.addCellByNewColumn(column);
   }
 
-  static addRowCellByNewColumn(table, column) {
-    let tbody = $(table).children("tbody");
+  addCellByNewColumn(column) {
+    let tbody = $(this.htmlElement).children("tbody");
     let tableRows = tbody.children("tr");
     let tableColumns = tableRows.eq(0).children("td");
 
     for (let i = 0; i < tableRows.length - 1; i++) {
       let tr = $(tableRows[i]);
       let columnIndex = tableColumns.length - 1;
-      Table.generateTableCell(tr, columnIndex, column, null);
+      this.generateTableCell(tr, columnIndex, column, null);
     }
 
     let numberOfColumns = tableColumns.length + 1;
@@ -340,12 +327,12 @@ class Table {
       .attr("colspan", numberOfColumns);
   }
 
-  static registerEventsColumnSeparator(div) {
+  registerEventsColumnSeparator(div) {
     $(div).on("mousedown", (event) => Eventhandler.onMousedownColumnSeparator(event));
     $(div).on("dblclick", (event) => Eventhandler.onDblclickColumnSeparator(event));
   }
 
-  static setActiveRow(activeRow) {
+  setActiveRow(activeRow) {
     let currentlyActiveRow = $("#activeRow");
     if (activeRow.is(currentlyActiveRow)) return;
 
@@ -359,15 +346,14 @@ class Table {
     Eventhandler[method](event);
   }
 
-  static delete(tableContainer) {
-    Table_DB.delete(true, [], [tableContainer.data("uuid")]);
-    tableContainer.remove();
+  delete() {
+    Table_DB.delete(true, [], [this.container.data("uuid")]);
+    this.container.remove();
   }
 
-  static save(tableContainer) {
-    let table = $(tableContainer).children("table");
-    let tableId = $(tableContainer).data("uuid");
-    let tableName = table.find("caption .captionContainer .tableTitleContainer input").val();
+  save() {
+    let tableId = $(this.container).data("uuid");
+    let tableName = this.htmlElement.find("caption .captionContainer .tableTitleContainer input").val();
     if (tableName.trim() == "") {
       tableName = "Untitled";
     }
@@ -388,14 +374,13 @@ class Table {
     Table_DB.updateValues(true, sqlStatements, tableId, htmlColumns, htmlRows);
   }
 
-  static deleteColumn(tableContainer, columnId) {
+  deleteColumn(columnId) {
     try {
-      Table_DB.deleteColumn(true, [], tableContainer.data("uuid"), columnId);
+      Table_DB.deleteColumn(true, [], this.container.data("uuid"), columnId);
     } catch (e) {}
 
-    let table = $(tableContainer).find(".table").get(0);
-    let rows = table.rows;
-    let columnIndex = $(table)
+    let rows = this.htmlElement.rows;
+    let columnIndex = $(this.htmlElement)
       .find("th")
       .filter(function () {
         return $(this).data("uuid") == columnId;
@@ -412,12 +397,11 @@ class Table {
     lastRowCell.attr("colspan", colspan);
   }
 
-  static duplicateColumn(tableContainer, htmlColumn) {
+  duplicateColumn(htmlColumn) {
     let columnIndex = htmlColumn.index();
-    let table = tableContainer.children("table");
     let column = {
       id: Crypto.generateUUID(6),
-      table_id: tableContainer.data("uuid"),
+      table_id: this.container.data("uuid"),
       name: htmlColumn.find(".columnTitle input").val(),
       type: htmlColumn.data("type"),
       position: columnIndex + 1,
@@ -425,7 +409,7 @@ class Table {
       format: htmlColumn.data("format"),
       relation: htmlColumn.data("relation"),
     };
-    Table.addColumn(table, column, columnIndex);
+    this.addColumn(column, columnIndex);
   }
 }
 
@@ -481,7 +465,7 @@ class Eventhandler {
         let table = $(event.target).parents("table");
         input = tableRow.next().children().eq(columnIndex).children();
         if (input.attr("id") == "newRow" || input.length == 0) {
-          Table.addRowByNewRow(table);
+          table.addRowByNewRow();
           input = tableRow.next().children().eq(columnIndex).children();
         }
         General.focus(input, Enums.FocusActions.ALL, false);
@@ -538,12 +522,12 @@ class Eventhandler {
       width: "120px",
     };
     let table = $(event.target).parents("table");
-    Table.addColumn(table, column);
+    table.addColumn(column);
   }
 
   static onClickRowAdd(event) {
     let table = $(event.target).parents("table");
-    Table.addRow(table);
+    table.addRow();
   }
 
   static pageX;

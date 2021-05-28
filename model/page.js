@@ -97,27 +97,27 @@ class Page {
     }
 
     let page = Page_DB.getById(pageId);
-    let elements = Page_DB.getElements(pageId);
+    let pageElements = Page_DB.getElements(pageId);
     let htmlElement = null;
 
-    if (!elements || elements.length == 0) {
+    if (!pageElements || pageElements.length == 0) {
       htmlElement = Textline.create();
       $("#content").append(htmlElement);
     } else {
-      let htmlElements = Table.createByPageId(pageId);
-      htmlElements.push(...Textline.createByPageId(pageId));
+      let blockElements = Table.createByPageId(pageId);
+      blockElements.push(...Textline.createByPageId(pageId));
 
-      $(elements).each(function (index, element) {
-        let htmlElement = $(htmlElements).filter(function () {
-          return $(this).data("uuid") == element.id;
+      pageElements.forEach((pageElement) => {
+        let htmlElement = blockElements.filter((blockElement) => {
+          if (blockElement.container) return blockElement.container.dataset.uuid == pageElement.id;
         });
         if (!htmlElement) return;
-        $("#content").append(htmlElement);
+        document.querySelector("#content").append(htmlElement);
       });
     }
 
     $("#placeholder").toggle(true);
-    $("#content").data("uuid", page.id);
+    document.querySelector("#content").dataset.uuid = page.id;
     $("#pageName").val(page.name);
   }
 
