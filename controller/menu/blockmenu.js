@@ -6,19 +6,21 @@ class BlockMenu {
   }
 
   static registerEvents() {
-    $("#blockMenu").on("mouseout", (event) => Eventhandler.onMouseout(event));
-    $(".clickable").on("click", (event) => Eventhandler.onClickMenuItem(event));
-    $(".clickable").on("mouseover", (event) => Eventhandler.onMouseoverMenuItem(event));
+    document.querySelector("#blockMenu").addEventListener("mouseout", (event) => Eventhandler.onMouseout(event));
+    document.querySelector(".clickable").addEventListener("click", (event) => Eventhandler.onClickMenuItem(event));
+    document
+      .querySelector(".clickable")
+      .addEventListener("mouseover", (event) => Eventhandler.onMouseoverMenuItem(event));
   }
 
   static create() {
-    let tbody = $("#blockMenu table tbody");
+    let tbody = document.querySelector("#blockMenu table tbody");
     for (let key of Object.keys(Enums.ElementTypes)) {
       let element = Enums.ElementTypes[key];
       if (element == Enums.ElementTypes.NONE) continue;
       let tr = document.createElement("tr");
       tr.className = "clickable";
-      $(tr).data("type", element.name);
+      document.querySelector(tr).dataset.type = element.name;
       let td = document.createElement("td");
       let div = document.createElement("div");
       let img = document.createElement("img");
@@ -42,25 +44,26 @@ class BlockMenu {
   }
 
   static isOpen() {
-    return $("#blockMenu").is(":visible");
+    return document.querySelector("#blockMenu").style.display != "none";
   }
 
   static open() {
     BlockMenu.close();
     let { x, y } = General.getCursorPixelPosition();
-    $("#blockMenu").css({ top: y - 100 + "px", left: x + 10 + "px" });
-    $("#blockMenu").toggle(true);
-    $(".clickable").eq(0).addClass("active");
+    document.querySelector("#blockMenu").style.top = `${y - 100}px`;
+    document.querySelector("#blockMenu").style.left = `${x + 10}px`;
+    document.querySelector("#blockMenu").toggle(true);
+    document.querySelector(".clickable").classList.add("active");
   }
 
   static close(element) {
     if (!BlockMenu.isOpen() || BlockMenu.clickedOnMenu(element)) return;
-    $(".clickable").removeClass("active");
-    $("#blockMenu").toggle(false);
+    document.querySelector(".clickable").classList.remove("active");
+    document.querySelector("#blockMenu").toggle(false);
   }
 
   static clickedOnMenu(element) {
-    if (element && (element.attr("id") == "blockMenu" || element.parents("#blockMenu").length > 0)) {
+    if (element && (element.id == "blockMenu" || element.parentNode)) {
       return true;
     } else {
       return false;
@@ -70,23 +73,23 @@ class BlockMenu {
 
 class Eventhandler {
   static onClickMenuItem(event) {
-    let row = $(".clickable.active").eq(0);
-    let elementType = row.data("type");
+    let row = document.querySelector(".clickable.active")[0];
+    let elementType = row.dataset.type;
     Page.addElement(elementType);
     BlockMenu.close();
   }
 
   static onMouseout(event) {
-    $(".clickable.active").removeClass("active");
+    document.querySelector(".clickable.active").classList.remove("active");
   }
 
   static onMouseoverMenuItem(event) {
-    $(".clickable.active").removeClass("active");
-    let row = $(event.target);
-    if (!$(event.target).is("tr")) {
-      row = $(event.target).parents().filter(".clickable").eq(0);
+    document.querySelector(".clickable.active").classList.remove("active");
+    let row = document.querySelector(event.target);
+    if (!document.querySelector(event.target).is("tr")) {
+      row = event.target.closest(".clickable");
     }
-    row.addClass("active");
+    row.classList.add("active");
   }
 }
 

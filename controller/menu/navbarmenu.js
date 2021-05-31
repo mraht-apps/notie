@@ -4,23 +4,25 @@ class NavbarMenu {
   }
 
   static registerEvents() {
-    $("#navbarMenu table tbody tr").on("click", (event) => Eventhandler.onClickMenuItem(event));
+    document
+      .querySelector("#navbarMenu table tbody tr")
+      .addEventListener("click", (event) => Eventhandler.onClickMenuItem(event));
   }
 
   static isOpen() {
-    return $("#navbarMenu").is(":visible");
+    return document.querySelector("#navbarMenu").style.display != "none";
   }
 
   static close(element) {
     if (!NavbarMenu.isOpen() || NavbarMenu.clickedOnMenu(element)) return;
-    $("#navbarMenu").toggle(false);
-    $("#disabledPageContainer").toggle(false);
+    document.querySelector("#navbarMenu").toggle(false);
+    document.querySelector("#disabledPageContainer").toggle(false);
   }
 
   static open(element, position) {
     let btnNavbarMenu = element;
-    if (btnNavbarMenu.attr("id") != "btnNavbarMenu") {
-      btnNavbarMenu = element.find("#btnNavbarMenu");
+    if (btnNavbarMenu.id != "btnNavbarMenu") {
+      btnNavbarMenu = element.querySelector("#btnNavbarMenu");
     }
 
     if (!position) {
@@ -31,17 +33,17 @@ class NavbarMenu {
     }
 
     NavbarMenu.close(btnNavbarMenu);
-    Eventhandler.selectedPage = btnNavbarMenu.parent();
-    $("#navbarMenu").css({
+    Eventhandler.selectedPage = btnNavbarMenu.parentElement;
+    document.querySelector("#navbarMenu").css({
       top: `${position.top}px`,
       left: `${position.left}px`,
     });
-    $("#navbarMenu").toggle(true);
-    $("#disabledPageContainer").toggle(true);
+    document.querySelector("#navbarMenu").toggle(true);
+    document.querySelector("#disabledPageContainer").toggle(true);
   }
 
   static clickedOnMenu(element) {
-    if (element && (element.attr("id") == "btnNavbarMenu" || element.children("#btnNavbarMenu").length > 0)) {
+    if (element && (element.id == "btnNavbarMenu" || element.children("#btnNavbarMenu").length > 0)) {
       return true;
     } else {
       return false;
@@ -54,11 +56,11 @@ class Eventhandler {
 
   static onClickMenuItem(event) {
     if (!Eventhandler.selectedPage) return;
-    let action = $(event.target).parents("tr").attr("id");
+    let action = General.getParents(event.target, "tr").id;
 
     switch (action) {
       case Enums.PageActions["delete"]:
-        Page.delete(Eventhandler.selectedPage.data("uuid"));
+        Page.delete(Eventhandler.selectedPage.dataset.uuid);
         Eventhandler.selectedPage.remove();
         break;
     }

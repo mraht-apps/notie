@@ -4,12 +4,12 @@ class Document {
   }
 
   static registerEvents() {
-    $(document).on("contextmenu", (event) => Eventhandler.onClick(event));
-    $(document).on("click", (event) => Eventhandler.onClick(event));
-    $(document).on("keyup", (event) => Eventhandler.onKeyup(event));
-    $(document).on("mousemove", (event) => Eventhandler.onMousemove(event));
-    $(document).on("mouseup", (event) => Eventhandler.onMouseup(event));
-    $(document).on("paste", (event) => Eventhandler.onPaste(event));
+    document.oncontextmenu = (event) => Eventhandler.onClick(event);
+    document.onclick = (event) => Eventhandler.onClick(event);
+    document.onkeyup = (event) => Eventhandler.onKeyup(event);
+    document.onmousemove = (event) => Eventhandler.onMousemove(event);
+    document.onmouseup = (event) => Eventhandler.onMouseup(event);
+    document.onpaste = (event) => Eventhandler.onPaste(event);
   }
 }
 
@@ -22,16 +22,16 @@ class Eventhandler {
     File.writeFile(`./cache/img/${uuid}.png`, nativeImage);
     let image = document.createElement("img");
     image.src = `../cache/img/${uuid}.png`;
-    let textline = $(event.target) || $(event.target).parent(".textline");
+    let textline = event.target || event.target.closest(".textline");
     textline.append(image);
-    textline.prop("contentEditable", false);
-    textline.removeClass("textline");
-    textline.addClass("image");
+    textline.css.contentEditable = false;
+    textline.classList.remove("textline");
+    textline.classList.add("image");
     event.preventDefault();
   }
 
   static onClick(event) {
-    let element = $(event.target);
+    let element = event.target;
     BlockMenu.close(element);
     TableMenu.close(element);
     NavbarMenu.close(element);
@@ -41,37 +41,37 @@ class Eventhandler {
     TableSearchMenu.close(element);
   }
 
-  // 
+  //
   static onKeyup(event) {
     if (!BlockMenu.isOpen() || Page.isDisabled()) return;
 
-    if ($(".clickable.active").length == 0) {
-      $(".clickable").eq(0).addClass("active");
+    if (document.querySelectorAll(".clickable.active").length == 0) {
+      document.querySelector(".clickable").classList.add("active");
     } else {
-      let currentActiveRow = $(".clickable.active").eq(0);
+      let currentActiveRow = document.querySelector(".clickable.active");
       let newActiveRow;
       switch (event.key) {
         case "ArrowDown":
-          newActiveRow = currentActiveRow.next();
+          newActiveRow = currentActiveRow.nextSibling;
           break;
         case "ArrowUp":
-          newActiveRow = currentActiveRow.prev();
+          newActiveRow = currentActiveRow.previousElementSibling;
           break;
       }
 
-      if (newActiveRow && newActiveRow.hasClass("clickable")) {
-        newActiveRow.addClass("active");
-        currentActiveRow.removeClass("active");
+      if (newActiveRow && newActiveRow.classList.contains("clickable")) {
+        newActiveRow.classList.add("active");
+        currentActiveRow.classList.remove("active");
       }
     }
   }
 
   static onMousemove(event) {
-    Table.trigger("onMousemove", event);
+    Table.fireEvent("onmousemove", event);
   }
 
   static onMouseup(event) {
-    Table.trigger("onMouseup", event);
+    Table.fireEvent("onmouseup", event);
   }
 }
 

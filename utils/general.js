@@ -39,8 +39,11 @@ class General {
 
   static focus(inputField, moveCursor = Enums.FocusActions.END, deselect = true) {
     setTimeout(function () {
-      $(inputField).trigger("focus");
-      if ($(inputField).is("div[contenteditable='true']") || $(inputField).is("input:text")) {
+      document.querySelector(inputField).fireEvent("onfocus");
+      if (
+        document.querySelector(inputField).is("div[contenteditable='true']") ||
+        document.querySelector(inputField).is("input:text")
+      ) {
         switch (moveCursor) {
           case Enums.FocusActions.ALL:
             General.selectText();
@@ -53,6 +56,10 @@ class General {
         General.deselectText();
       }
     }, 0);
+  }
+
+  static getParents(node, selector) {
+    return $(node).parents(selector).get();
   }
 }
 

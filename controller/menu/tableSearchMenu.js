@@ -6,59 +6,58 @@ class TableSearchMenu {
   }
 
   static registerEvents() {
-    let input = $("#tableSearchValue");
-    input.on("focus", (event) => Eventhandler.onFocus(event));
-    input.on("input", (event) => Eventhandler.onInput(event));
+    let input = document.querySelector("#tableSearchValue");
+    input.addEventListener("focus", (event) => Eventhandler.onFocus(event));
+    input.addEventListener("input", (event) => Eventhandler.onInput(event));
   }
 
   static isOpen() {
-    return $("#tableSearchMenu").is(":visible");
+    return document.querySelector("#tableSearchMenu").style.display != "none";
   }
 
   static close(element) {
     if (!TableSearchMenu.isOpen() || TableSearchMenu.clickedOnMenu(element)) return;
-    $("#tableSearchMenu").toggle(false);
+    document.querySelector("#tableSearchMenu").toggle(false);
   }
 
   static open(table) {
     TableSearchMenu.table = table;
 
-    $("#tableSearchMenu").toggle(true);
-    $("#tableSearchValue").text("");
-    $("#tableSearchValue").trigger("focus");
+    document.querySelector("#tableSearchMenu").toggle(true);
+    document.querySelector("#tableSearchValue").textContent = "";
+    document.querySelector("#tableSearchValue").fireEvent("onfocus");
     let result = TableSearchMenu.getResult();
     TableSearchMenu.showResult(result);
   }
 
   static getResult(name = "") {
     let result = Table_DB.getByName(name);
-    result = $(result).filter(function () {
-      return this.id != $(TableSearchMenu.table).data("uuid");
+    result = document.querySelector(result).filter(function () {
+      return this.id != document.querySelector(TableSearchMenu.table).dataset.uuid;
     });
     return result;
   }
 
   static showResult(result) {
-    let tbody = $("#tableSearchMenu table tbody");
-    tbody
-      .children()
+    let tbody = document.querySelector("#tableSearchMenu table tbody");
+    tbody.children
       .filter(function () {
         return this.id != "noTableFound";
       })
       .remove();
 
     if (result.length == 0) {
-      $("#noTableFound").toggle(true);
+      document.querySelector("#noTableFound").toggle(true);
       return;
     } else {
-      $("#noTableFound").toggle(false);
-      $(result).each(function () {
+      document.querySelector("#noTableFound").toggle(false);
+      document.querySelector(result).each(function () {
         let tr = document.createElement("tr");
         let td = document.createElement("td");
         td.textContent = this.name;
-        $(td).data("uuid", this.id);
+        document.querySelector(td).dataset.uuid = this.id;
         tr.append(td);
-        $(tr).on("click", (event) => Eventhandler.onClickTableResult(event));
+        document.querySelector(tr).addEventListener("click", (event) => Eventhandler.onClickTableResult(event));
         tbody.append(tr);
       });
     }
@@ -67,10 +66,10 @@ class TableSearchMenu {
   static clickedOnMenu(element) {
     if (
       element &&
-      (element.attr("id") == "tableRelationValue" ||
-        element.parents("#tableRelationValue").length > 0 ||
-        element.attr("id") == "tableSearchMenu" ||
-        element.parents("#tableSearchMenu").length > 0)
+      (element.id == "tableRelationValue" ||
+        General.getParents(element, "#tableRelationValue").length > 0 ||
+        element.id == "tableSearchMenu" ||
+        General.getParents(element, "#tableSearchMenu").length > 0)
     ) {
       return true;
     } else {
@@ -81,20 +80,20 @@ class TableSearchMenu {
 
 class Eventhandler {
   static onFocus(event) {
-    let input = $(event.target);
-    let result = TableSearchMenu.getResult(input.val());
+    let input = document.querySelector(event.target);
+    let result = TableSearchMenu.getResult(input.value);
     TableSearchMenu.showResult(result);
   }
 
   static onInput(event) {
-    let input = $(event.target);
-    let result = TableSearchMenu.getResult(input.val());
+    let input = document.querySelector(event.target);
+    let result = TableSearchMenu.getResult(input.value);
     TableSearchMenu.showResult(result);
   }
 
   static onClickTableResult(event) {
-    let row = $(event.target);
-    ColumnMenu.setTableRelation({ id: row.data("uuid"), name: row.text() });
+    let row = document.querySelector(event.target);
+    ColumnMenu.setTableRelation({ id: row.dataset.uuid, name: row.textContent });
     TableSearchMenu.close();
   }
 }

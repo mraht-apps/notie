@@ -1,7 +1,7 @@
 class Navbar {
   static init() {
-    Navbar.registerEvent($("#settingsPage"));
-    Navbar.registerEvent($("#newPage"));
+    Navbar.registerEvent(document.querySelector("#settingsPage"));
+    Navbar.registerEvent(document.querySelector("#newPage"));
 
     Navbar.build();
     Navbar.registerResizeEvents();
@@ -9,20 +9,20 @@ class Navbar {
 
   static build() {
     let pages = Database.all("SELECT * FROM pages;");
-    $(pages).each(function () {
+    document.querySelector(pages).each(function () {
       Navbar.add(this);
     });
   }
 
   static registerEvent(navbarItem) {
-    $(navbarItem).on("click", (event) => Eventhandler.onClickNavbarItem(event));
-    $(navbarItem).on("contextmenu", (event) => Eventhandler.onNavbarItemContextmenu(event));
+    document.querySelector(navbarItem).addEventListener("click", (event) => Eventhandler.onClickNavbarItem(event));
+    document.querySelector(navbarItem).addEventListener("contextmenu", (event) => Eventhandler.onNavbarItemContextmenu(event));
   }
 
   static registerResizeEvents() {
-    $(document.body).on("mousedown", "#resizeSeparator", null, (event) => Eventhandler.onMousedown(event));
-    $(window).on("mousemove", (event) => Eventhandler.onMousemove(event));
-    $(window).on("mouseup", (event) => Eventhandler.onMouseup(event));
+    document.querySelector(document.body).addEventListener("mousedown", "#resizeSeparator", null, (event) => Eventhandler.onMousedown(event));
+    document.querySelector(window).addEventListener("mousemove", (event) => Eventhandler.onMousemove(event));
+    document.querySelector(window).addEventListener("mouseup", (event) => Eventhandler.onMouseup(event));
   }
 
   static add(page) {
@@ -40,20 +40,20 @@ class Navbar {
     img.src = "../res/img/menu.svg";
     img.id = "btnNavbarMenu";
     img.draggable = false;
-    $(img).on("click", (event) => Eventhandler.onClickBtnNavbarMenu(event));
+    document.querySelector(img).addEventListener("click", (event) => Eventhandler.onClickBtnNavbarMenu(event));
     navbarItem.append(img);
     Navbar.registerEvent(navbarItem);
 
-    $("#newPage").before(navbarItem);
+    document.querySelector("#newPage").before(navbarItem);
   }
 
   static select(pageId) {
     if (pageId == "newPage") return;
-    $(".navbarItem")
+    document.querySelector(".navbarItem")
       .filter(function () {
-        return $(this).data("uuid") == pageId;
+        return document.querySelector(this).dataset.uuid") == pageId;
       })
-      .addClass("active");
+      .classList.add("active");
   }
 }
 
@@ -69,18 +69,18 @@ class Eventhandler {
   };
 
   static onClickNavbarItem(event) {
-    let navbarItem = $(event.target);
+    let navbarItem = document.querySelector(event.target);
     if (navbarItem.is("img")) return;
-    $(".navbarItem.active").removeClass("active");
-    Navigation.next(navbarItem.data("uuid"));
+    document.querySelector(".navbarItem.active").classList.remove("active");
+    Navigation.next(navbarItem.dataset.uuid"));
   }
 
   static onNavbarItemContextmenu(event) {
-    NavbarMenu.open($(event.target), { top: event.pageY, left: event.pageX });
+    NavbarMenu.open(document.querySelector(event.target), { top: event.pageY, left: event.pageX });
   }
 
   static onClickBtnNavbarMenu(event) {
-    NavbarMenu.open($(event.target));
+    NavbarMenu.open(document.querySelector(event.target));
   }
 
   static onMousedown(event) {
@@ -94,13 +94,13 @@ class Eventhandler {
       return;
     }
 
-    const targetElement = $("#navbar");
+    const targetElement = document.querySelector("#navbar");
     Eventhandler.resizeData.startWidth = targetElement.outerWidth();
     Eventhandler.resizeData.startCursorScreenX = event.screenX;
     Eventhandler.resizeData.resizeTarget = targetElement;
     Eventhandler.resizeData.parentElement = handleElement.parentElement;
     Eventhandler.resizeData.maxWidth =
-      $(handleElement.parentElement).innerWidth() - Eventhandler.resizeData.handleWidth;
+      document.querySelector(handleElement.parentElement).innerWidth() - Eventhandler.resizeData.handleWidth;
     Eventhandler.resizeData.tracking = true;
   }
 
@@ -112,7 +112,7 @@ class Eventhandler {
         Eventhandler.resizeData.maxWidth
       );
 
-      $(Eventhandler.resizeData.resizeTarget).outerWidth(newWidth);
+      document.querySelector(Eventhandler.resizeData.resizeTarget).outerWidth(newWidth);
     }
   }
 

@@ -41,7 +41,7 @@ const Blockelement = require("../model/blockelement.js");
 const Image = require("../model/image.js");
 const Navbar = require("../model/navbar.js");
 const Page = require("../model/page.js");
-const Textline = require("../model/textline.js");
+const Textline = require("../model/textline_new.js");
 const Placeholder = require("../model/placeholder.js");
 const Table = require("../model/table_new.js");
 
@@ -84,18 +84,18 @@ class Renderer {
   }
 
   static registerEvents() {
-    ipcRenderer.on("error", (event, text) => Eventhandler.onError(event, text));
-    ipcRenderer.on("update-available", (event) => Eventhandler.onUpdateAvailable(event));
-    ipcRenderer.on("update-not-available", (event) => Eventhandler.onUpdateNotAvailable(event));
-    ipcRenderer.on("update-downloaded", (event) => Eventhandler.onUpdateDownloaded(event));
-    ipcRenderer.on("prog-made", (event, text) => Eventhandler.onProgMade(event, text));
+    ipcRenderer.onerror = (event, text) => Eventhandler.onError(event, text);
+    ipcRenderer.onupdateAvailable = (event) => Eventhandler.onUpdateAvailable(event);
+    ipcRenderer.onupdateNotAvailable = (event) => Eventhandler.onUpdateNotAvailable(event);
+    ipcRenderer.onUpdateDownloaded = (event) => Eventhandler.onUpdateDownloaded(event);
+    ipcRenderer.onProgMade = (event, text) => Eventhandler.onProgMade(event, text);
 
-    $(window).on("beforeunload", (event) => Eventhandler.onBeforeUnloadWindow(event));
+    document.querySelector(window).onbeforeunload = (event) => Eventhandler.onBeforeUnloadWindow(event);
 
-    $("#btnUpdateApp").on("click", (event) => Eventhandler.onClickBtnUpdateApp(event));
-    $("#btnTest").on("click", (event) => Eventhandler.onClickBtnTest(event));
-    $("#btnLogout").on("click", (event) => Eventhandler.onClickBtnLogout(event));
-    $("#btnRestart").on("click", (event) => Eventhandler.onClickBtnRestart(event));
+    document.querySelector("#btnUpdateApp").onclick = (event) => Eventhandler.onClickBtnUpdateApp(event);
+    document.querySelector("#btnTest").addEventListener("click", (event) => Eventhandler.onClickBtnTest(event));
+    document.querySelector("#btnLogout").addEventListener("click", (event) => Eventhandler.onClickBtnLogout(event));
+    document.querySelector("#btnRestart").addEventListener("click", (event) => Eventhandler.onClickBtnRestart(event));
   }
 }
 
@@ -145,12 +145,12 @@ class Eventhandler {
   static onClickBtnTest(event) {}
 
   static onClickBtnLogout(event) {
-    $(window).trigger("beforeunload");
+    document.querySelector(window).fireEvent("onbeforeunload");
     ipcRenderer.send("logout");
   }
 
   static onClickBtnRestart(event) {
-    $(window).trigger("beforeunload");
+    document.querySelector(window).fireEvent("onbeforeunload");
     ipcRenderer.send("exit", true);
   }
 }

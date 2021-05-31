@@ -13,19 +13,19 @@ class App {
   static init() {
     // This method will be called when Electron has finished initialization and is ready
     // to create browser windows. Some APIs can only be used after this event occurs.
-    app.on("ready", () => Eventhandler.onReady());
-    app.on("activate", () => Eventhandler.onActivate());
-    app.on("window-all-closed", () => Eventhandler.onWindowAllClosed());
+    app.addEventListener("ready", () => Eventhandler.onReady());
+    app.addEventListener("activate", () => Eventhandler.onActivate());
+    app.addEventListener("window-all-closed", () => Eventhandler.onWindowAllClosed());
 
-    ipcMain.on("determineWindowData", (event) => Eventhandler.onDetermineWindowData(event));
-    ipcMain.on("getSettings", (event) => Eventhandler.onGetSettings(event));
-    ipcMain.on("databaseFilePicker", (event) => Eventhandler.onDatabaseFilePicker(event));
-    ipcMain.on("databaseFolderPicker", (event) => Eventhandler.onDatabaseFolderPicker(event));
-    ipcMain.on("openDatabase", (event, databaseData) => Eventhandler.onOpenDatabase(event, databaseData));
-    ipcMain.on("setAppVersion", (event) => Eventhandler.onSetAppVersion(event));
+    ipcMain.addEventListener("determineWindowData", (event) => Eventhandler.onDetermineWindowData(event));
+    ipcMain.addEventListener("getSettings", (event) => Eventhandler.onGetSettings(event));
+    ipcMain.addEventListener("databaseFilePicker", (event) => Eventhandler.onDatabaseFilePicker(event));
+    ipcMain.addEventListener("databaseFolderPicker", (event) => Eventhandler.onDatabaseFolderPicker(event));
+    ipcMain.addEventListener("openDatabase", (event, databaseData) => Eventhandler.onOpenDatabase(event, databaseData));
+    ipcMain.addEventListener("setAppVersion", (event) => Eventhandler.onSetAppVersion(event));
 
-    ipcMain.on("logout", (event) => Eventhandler.onLogout(event));
-    ipcMain.on("exit", (event, restart) => Eventhandler.onExit(event, restart));
+    ipcMain.addEventListener("logout", (event) => Eventhandler.onLogout(event));
+    ipcMain.addEventListener("exit", (event, restart) => Eventhandler.onExit(event, restart));
   }
 
   static isDev() {
@@ -83,7 +83,7 @@ class Main {
       autoUpdater.addListener("download-progress", (info) => mainWindow.webContents.send("prog-made", info));
       autoUpdater.addListener("update-downloaded", (info) => mainWindow.webContents.send("update-downloaded"));
       autoUpdater.addListener("error", (error) => mainWindow.webContents.send("error", error.toString()));
-      ipcMain.on("quitAndInstall", (event, arg) => autoUpdater.quitAndInstall());
+      ipcMain.addEventListener("quitAndInstall", (event, arg) => autoUpdater.quitAndInstall());
     }
 
     return mainWindow;

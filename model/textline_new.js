@@ -41,39 +41,39 @@ class Textline extends Blockelement {
   }
 
   registerEvents() {
-    $(this.htmlElement).on("keydown", (event) => Eventhandler.onKeydown(event));
-    $(this.htmlElement).on("focus", (event) => Eventhandler.onFocus(event));
+    this.htmlElement.onkeydown = (event) => Eventhandler.onKeydown(event);
+    this.htmlElement.onfocus = (event) => Eventhandler.onFocus(event);
   }
 
   static appendBefore(element) {
-    $(Eventhandler.activeTextline).before(element);
-    $(Eventhandler.activeTextline).text("");
-    General.focus($(Eventhandler.activeTextline));
+    Eventhandler.activeTextline.insertBefore(element);
+    Eventhandler.activeTextline.textContent = "";
+    General.focus(document.querySelector(Eventhandler.activeTextline));
   }
 
   static focusFirst() {
-    let textline = $(".textline:first");
+    let textline = document.querySelector(".textline:first");
     General.focus(textline);
   }
 
   static focusLast() {
-    let textline = $(".textline:last");
+    let textline = document.querySelector(".textline:last");
     General.focus(textline);
   }
 
-  static delete(textline) {
-    let isFirstTextline = textline.is(".textline:first");
+  delete() {
+    let isFirstTextline = typeof this.htmlElement == ".textline:first";
 
-    Textline_DB.delete(true, [], [textline.data("uuid")]);
-    textline.remove();
+    Textline_DB.delete(true, [], [this.htmlElement.dataset.uuid]);
+    this.htmlElement.remove();
 
-    if (isFirstTextline) General.focus($("#pageName"));
+    if (isFirstTextline) General.focus(document.querySelector("#pageName"));
   }
 
-  static save(textline) {
+  save() {
     Textline_DB.update(true, [], {
-      id: textline.data("uuid"),
-      text: textline.text(),
+      id: this.htmlElement.dataset.uuid,
+      text: this.htmlElement.textContent,
     });
   }
 }
@@ -81,16 +81,16 @@ class Eventhandler {
   activeTextline;
 
   static onFocus(event) {
-    Eventhandler.activeTextline = $(event.target);
+    Eventhandler.activeTextline = event.target;
   }
 
   static onKeydown(event) {
     // Ignore certain characters
     if (event.key == "Shift") return;
 
-    let textline = $(event.target);
-    let prevElement = textline.prev();
-    let nextElement = textline.next();
+    let textline = event.target;
+    let prevElement = textline.previousElementSibling;
+    let nextElement = textline.nextSibling;
 
     switch (event.key) {
       case "ArrowUp":
@@ -105,14 +105,14 @@ class Eventhandler {
         let selectedTextLength = General.getSelectedTextLength();
 
         if (General.getCursorPosition(textline) == 0 && selectedTextLength == 0) {
-          let prevElementTextLength = prevElement.text().length;
-          if (textline.text().length > 0 && selectedTextLength == 0) {
-            prevElement.text(prevElement.text() + textline.text());
+          let prevElementTextLength = prevElement.textContent.length;
+          if (textline.textContent.length > 0 && selectedTextLength == 0) {
+            prevElement.textContent = prevElement.textContent + textline.textContent;
           }
 
-          Textline.delete(textline);
+          textline.delete();
 
-          if (prevElement.is(".textline")) {
+          if (typeof prevElement == ".textline") {
             General.moveCursorTo(prevElement, prevElementTextLength);
           }
           event.preventDefault();
@@ -120,14 +120,14 @@ class Eventhandler {
         return;
       case "Enter":
         if (BlockMenu.isOpen()) {
-          let row = $(".clickable.active").eq(0);
-          let elementType = row.data("type");
+          let row = document.querySelector(".clickable.active");
+          let elementType = row.dataset.type;
           Page.addElement(elementType);
           BlockMenu.close();
         } else {
-          let newTextline = Textline.create();
-          textline.after(newTextline);
-          General.focus($(newTextline));
+          let newTextline = new Textline();
+          textline.after(newTextline.container);
+          General.focus(newTextline);
         }
         event.preventDefault();
         return;
@@ -135,7 +135,7 @@ class Eventhandler {
         BlockMenu.open();
         return;
       default:
-        textline.data("previousValue", textline.text());
+        textline.dataset.previousValue = textline.textContent;
         break;
     }
 

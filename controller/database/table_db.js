@@ -5,7 +5,7 @@ class Table_DB {
     if (Table_DB.tablesBuffer.length == 0) {
       Table_DB.tablesBuffer = Database.all(`SELECT * FROM tables ORDER BY name COLLATE NOCASE ASC;`);
     }
-    let result = $(Table_DB.tablesBuffer).filter(function () {
+    let result = document.querySelector(Table_DB.tablesBuffer).filter(function () {
       return this.id == id;
     });
     return result.get(0);
@@ -15,7 +15,7 @@ class Table_DB {
     if (Table_DB.tablesBuffer.length == 0) {
       Table_DB.tablesBuffer = Database.all(`SELECT * FROM tables ORDER BY name COLLATE NOCASE ASC;`);
     }
-    let result = $(Table_DB.tablesBuffer).filter(function () {
+    let result = document.querySelector(Table_DB.tablesBuffer).filter(function () {
       return this.name.toLowerCase().includes(name.toLowerCase());
     });
     return result;
@@ -54,14 +54,14 @@ class Table_DB {
     let sqlColumns = "";
 
     htmlColumns.each(function (index, column) {
-      column = $(column);
+      column = document.querySelector(column);
 
-      let columnId = column.data("uuid");
-      let columnName = column.find(".columnTitle > input").val();
-      let columnType = column.data("type");
+      let columnId = column.dataset.uuid;
+      let columnName = column.querySelector(".columnTitle > input").value;
+      let columnType = column.dataset.type;
       let columnWidth = column.css("width");
-      let relation = column.data("relation") ? `'${column.data("relation")}'` : null;
-      let format = column.data("format") ? column.data("format") : null;
+      let relation = column.dataset.relation ? `'${column.dataset.relation}'` : null;
+      let format = column.dataset.format ? column.dataset.format : null;
 
       let sqlColumnName, sqlColumnType;
 
@@ -96,16 +96,16 @@ class Table_DB {
   static updateValues(run = false, sqlStatements = [], tableId, htmlColumns, htmlRows) {
     let sqlValues = "";
     htmlRows.each(function (rowIndex, htmlRow) {
-      htmlRow = $(htmlRow);
-      sqlValues += `('${htmlRow.data("uuid")}', `;
+      htmlRow = document.querySelector(htmlRow);
+      sqlValues += `('${htmlRow.dataset.uuid}', `;
       htmlColumns.each(function (columnIndex, htmlColumn) {
-        htmlColumn = $(htmlColumn);
+        htmlColumn = document.querySelector(htmlColumn);
 
-        let input = htmlRow.find("td").eq(columnIndex).children();
+        let input = htmlRow.querySelector("td")[columnIndex].children;
 
-        switch (htmlColumn.data("type")) {
+        switch (htmlColumn.dataset.type) {
           case Enums.ColumnTypes.CHK.id:
-            sqlValues += `'${input.find("input").is(":checked")}'`;
+            sqlValues += `'${input.querySelector("input").checked}'`;
             break;
           default:
             sqlValues += `'${input.html()}'`;
@@ -132,7 +132,7 @@ class Table_DB {
     if (!ids || ids.length == 0) return;
 
     let sqlIds = "";
-    $(ids).each(function (index, id) {
+    document.querySelector(ids).each(function (index, id) {
       sqlIds += `'${id}'`;
       if (index < ids.length - 1) {
         sqlIds += ", ";

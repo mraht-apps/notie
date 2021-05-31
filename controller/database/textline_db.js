@@ -1,6 +1,6 @@
 class Textline_DB {
   static update(run = false, sqlStatements = [], textline) {
-    sqlStatements.push(`REPLACE INTO textlines VALUES(` + `'${textline.id}', '${textline.text}');`);
+    sqlStatements.push(`REPLACE INTO textlines VALUES(` + `'${textline.id}', '${textline.textContent}');`);
 
     if (run) {
       Database.run(sqlStatements);
@@ -12,7 +12,7 @@ class Textline_DB {
     if (!ids || ids.length == 0) return;
 
     let sqlIds = "";
-    $(ids).each(function (index, id) {
+    document.querySelector(ids).each(function (index, id) {
       sqlIds += `'${id}'`;
       if (index < ids.length - 1) {
         sqlIds += ", ";

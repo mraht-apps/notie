@@ -25,8 +25,8 @@ class Page {
     }
     Navigation.next(startpage);
 
-    $("#pageName").on("keydown", (event) => Eventhandler.onKeydownPageName(event));
-    $("#pageName").on("keyup", (event) => Eventhandler.onKeyupPageName(event));
+    document.querySelector("#pageName").addEventListener("keydown", (event) => Eventhandler.onKeydownPageName(event));
+    document.querySelector("#pageName").addEventListener("keyup", (event) => Eventhandler.onKeyupPageName(event));
     Placeholder.init();
   }
 
@@ -70,9 +70,9 @@ class Page {
   }
 
   static clear() {
-    $("#content").html("");
-    $("#pageName").val("");
-    $("#content").data("uuid", null);
+    document.querySelector("#content").html("");
+    document.querySelector("#pageName").value = "";
+    document.querySelector("#content").dataset.uuid = null;
   }
 
   static openNewPage() {
@@ -84,9 +84,9 @@ class Page {
 
   static openSettingsPage() {
     let page = File.readFile(Filepath.join(__dirname, "../view/settings.html"));
-    $("#placeholder").toggle(false);
-    $("#content").html(page);
-    $("#pageName").val("Settings");
+    document.querySelector("#placeholder").toggle(false);
+    document.querySelector("#content").html(page);
+    document.querySelector("#pageName").value = "Settings";
     Settings.registerEvents();
   }
 
@@ -102,27 +102,27 @@ class Page {
 
     if (!pageElements || pageElements.length == 0) {
       htmlElement = Textline.create();
-      $("#content").append(htmlElement);
+      document.querySelector("#content").append(htmlElement);
     } else {
       let blockElements = Table.createByPageId(pageId);
       blockElements.push(...Textline.createByPageId(pageId));
 
       pageElements.forEach((pageElement) => {
-        let htmlElement = blockElements.filter((blockElement) => {
+        let blockElement = blockElements.filter((blockElement) => {
           if (blockElement.container) return blockElement.container.dataset.uuid == pageElement.id;
         });
-        if (!htmlElement) return;
-        document.querySelector("#content").append(htmlElement);
+        if (!blockElement || blockElement.length == 0) return;
+        document.querySelector("#content").append(blockElement[0].container);
       });
     }
 
-    $("#placeholder").toggle(true);
+    document.querySelector("#placeholder").toggle(true);
     document.querySelector("#content").dataset.uuid = page.id;
-    $("#pageName").val(page.name);
+    document.querySelector("#pageName").value = page.name;
   }
 
   static saveCurrentContent() {
-    let pageId = $("#content").data("uuid");
+    let pageId = document.querySelector("#content").dataset.uuid;
     if (!pageId || pageId.length == 0) return;
 
     Page.savePageName(pageId);
@@ -130,17 +130,17 @@ class Page {
   }
 
   static savePageName(pageId) {
-    let pageName = $("#pageName").val();
+    let pageName = document.querySelector("#pageName").value;
     Page.addToDatabase({ id: pageId, name: pageName });
   }
 
   static savePageContent(pageId) {
-    let htmlChildren = $("#content").children();
+    let htmlChildren = document.querySelector("#content").children;
     if (htmlChildren.length == 0) return;
 
     let sql = "";
     htmlChildren.each(function (index, htmlChild) {
-      htmlChild = $(htmlChild);
+      htmlChild = document.querySelector(htmlChild);
       let elementType;
       if (htmlChild.is(".table")) {
         elementType = Enums.ElementTypes.TABLE;
@@ -149,7 +149,7 @@ class Page {
         elementType = Enums.ElementTypes.TEXTLINE;
         Textline.save(htmlChild);
       }
-      let element = { id: htmlChild.data("uuid"), typeId: elementType.id };
+      let element = { id: htmlChild.dataset.uuid, typeId: elementType.id };
       sql = Page_DB.buildUpdateElement(sql, htmlChildren.length, index, pageId, element);
     });
     Page_DB.updateElement([sql]);
@@ -157,8 +157,8 @@ class Page {
 
   static delete(id) {
     Page_DB.delete(id);
-    $("#content").data("uuid", null);
-    $("#settingsPage").trigger("click");
+    document.querySelector("#content").dataset.uuid = null;
+    document.querySelector("#settingsPage").fireEvent("onclick");
   }
 
   static addElement(elementType) {
@@ -171,11 +171,11 @@ class Page {
   }
 
   static setDisable(disable) {
-    $("#disabledPageContainer").toggle(disable);
+    document.querySelector("#disabledPageContainer").toggle(disable);
   }
 
   static isDisabled() {
-    if ($("#disabledPageContainer").css("display") == "none") {
+    if (document.querySelector("#disabledPageContainer").css("display") == "none") {
       return false;
     } else {
       return true;
@@ -188,19 +188,19 @@ class Eventhandler {
     switch (event.key) {
       case "Enter":
         let textline = Textline.create();
-        $("#content").prepend(textline);
+        document.querySelector("#content").prepend(textline);
         General.focus(textline);
         break;
     }
   }
 
   static onKeyupPageName(event) {
-    let pageId = $("#content").data("uuid");
-    let navbarItem = $(".navbarItem").filter(function () {
-      return $(this).data("uuid") == pageId;
+    let pageId = document.querySelector("#content").dataset.uuid;
+    let navbarItem = document.querySelector(".navbarItem").filter(function () {
+      return document.querySelector(this).dataset.uuid == pageId;
     });
 
-    let pagename = $("#pageName").val();
+    let pagename = document.querySelector("#pageName").value;
     let textNode = navbarItem.contents().filter(function () {
       return this.nodeType == Node.TEXT_NODE;
     });

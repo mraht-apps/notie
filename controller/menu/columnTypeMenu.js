@@ -1,15 +1,15 @@
 class ColumnTypeMenu {
   static create(columnTypeId) {
-    let table = $("#columnTypeMenu table");
-    $(table).find("tbody tr").remove();
+    let table = document.querySelector("#columnTypeMenu table");
+    document.querySelector(table).querySelector("tbody tr").remove();
 
     Object.keys(Enums.ColumnTypes).forEach(function (key) {
       let element = Enums.ColumnTypes[key];
       if (element == Enums.ColumnTypes.ADD || element.id == columnTypeId) return;
 
       let tr = document.createElement("tr");
-      $(tr).data("type", element.id);
-      $(tr).on("click", (event) => Eventhandler.onClickColumnType(event));
+      document.querySelector(tr).dataset.type = element.id;
+      document.querySelector(tr).addEventListener("click", (event) => Eventhandler.onClickColumnType(event));
       let td = document.createElement("td");
       td.className = "columnTypeOption";
       let div = document.createElement("div");
@@ -21,30 +21,30 @@ class ColumnTypeMenu {
       div.append(text);
       td.append(div);
       tr.append(td);
-      $(table).find("tbody").append(tr);
+      document.querySelector(table).querySelector("tbody").append(tr);
     });
   }
 
   static isOpen() {
-    return $("#columnTypeMenu").is(":visible");
+    return document.querySelector("#columnTypeMenu").style.display != "none";
   }
 
   static close(element) {
     if (!ColumnTypeMenu.isOpen() || ColumnTypeMenu.clickedOnMenu(element)) return;
-    $("#columnTypeMenu").toggle(false);
+    document.querySelector("#columnTypeMenu").toggle(false);
   }
 
   static open(columnType) {
     ColumnTypeMenu.create(columnType);
-    $("#columnTypeMenu").toggle(true);
+    document.querySelector("#columnTypeMenu").toggle(true);
   }
 
   static clickedOnMenu(element) {
     if (
       element &&
-      (element.attr("id") == "columnTypeValue" ||
-        element.attr("id") == "columnTypeMenu" ||
-        element.parents("#columnTypeMenu").length > 0)
+      (element.id == "columnTypeValue" ||
+        element.id == "columnTypeMenu" ||
+        General.getParents(element, "#columnTypeMenu").length > 0)
     ) {
       return true;
     } else {
@@ -55,7 +55,7 @@ class ColumnTypeMenu {
 
 class Eventhandler {
   static onClickColumnType(event) {
-    let columnType = $(event.target).parents("tr").eq(0).data("type");
+    let columnType = General.getParents(event.target, "tr")[0].dataset.type;
     ColumnMenu.setColumnType(columnType);
     ColumnTypeMenu.close();
   }

@@ -1,15 +1,15 @@
 class Placeholder {
   static init() {
-    $("#placeholder").on("click", (event) => Eventhandler.onClick(event));
+    document.querySelector("#placeholder").addEventListener("click", (event) => Eventhandler.onClick(event));
   }
 }
 
 class Eventhandler {
   static onClick(event) {
-    let lastElement = $("#content").children().last(".pageElement");
-    if (!lastElement.hasClass("textline")) {
+    let lastElement = document.querySelector("#content").children.last(".pageElement");
+    if (!lastElement.classList.contains("textline")) {
       let textline = Textline.create();
-      $("#content").append(textline);
+      document.querySelector("#content").append(textline);
     }
     Textline.focusLast();
   }

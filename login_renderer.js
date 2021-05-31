@@ -15,110 +15,120 @@ class Renderer {
     Settings.DATA = settings.DATA;
 
     if (Settings.CACHE.REMEMBER_DB) {
-      $("#rememberDatabase").prop("checked", true);
+      document.querySelector("#rememberDatabase").checked = true;
     }
     if (Settings.CACHE.REMEMBER_PW) {
-      $("#rememberPassword").prop("checked", true);
+      document.querySelectordocument.querySelector("#rememberPassword").checked = true;
     }
 
     if (Settings.DATA.PASSWORD) {
-      $("#password").val(Settings.DATA.PASSWORD);
+      document.querySelector("#password").value = Settings.DATA.PASSWORD;
     }
 
     if (Settings.DATA.DATABASE && Settings.DATA.DATABASE.length > 0) {
-      $("#openDatabase").trigger("click");
+      document.querySelector("#openDatabase").fireEvent("onclick");
     } else {
-      $("#createDatabase").trigger("click");
+      document.querySelector("#createDatabase").fireEvent("onclick");
     }
   }
 
   static registerEvents() {
-    $("#createDatabase").on("click", (event) => Eventhandler.onClickCreateDatabase(event));
-    $("#openDatabase").on("click", (event) => Eventhandler.onClickOpenDatabase(event));
-    $("#database").on("change", (event) => Eventhandler.onChangeDatabase(event));
-    $("#btnDatabasePicker").on("click", (event) => Eventhandler.onClickBtnDatabasePicker(event));
-    $("#password").on("keyup", (event) => Eventhandler.onKeyupPassword(event));
-    $("#btnPasswordVisibility").on("click", (event) => Eventhandler.onClickBtnPasswordVisibility(event));
-    $("#btnExit").on("click", (event) => Eventhandler.onClickBtnExit(event));
-    $("#btnLogin").on("click", (event) => Eventhandler.onClickBtnLogin(event));
+    document.querySelector("#createDatabase").onclick = (event) => Eventhandler.onClickCreateDatabase(event);
+    document.querySelector("#openDatabase").onclick = (event) => Eventhandler.onClickOpenDatabase(event);
+    document.querySelector("#database").onchange = (event) => Eventhandler.onChangeDatabase(event);
+    document.querySelector("#btnDatabasePicker").onclick = (event) => Eventhandler.onClickBtnDatabasePicker(event);
+    document.querySelector("#password").onkeyup = (event) => Eventhandler.onKeyupPassword(event);
+    document.querySelector("#btnPasswordVisibility").onclick = (event) =>
+      Eventhandler.onClickBtnPasswordVisibility(event);
+    document.querySelector("#btnExit").onclick = (event) => Eventhandler.onClickBtnExit(event);
+    document.querySelector("#btnLogin").onclick = (event) => Eventhandler.onClickBtnLogin(event);
   }
 }
 
 class Eventhandler {
   // OPT Move source code to a single method
   static onClickCreateDatabase(event) {
-    $("#createDatabase").addClass("active");
-    $("#openDatabase").removeClass("active");
+    document.querySelector("#createDatabase").classList.add("active");
+    document.querySelector("#openDatabase").classList.remove("active");
 
-    $(".firstLabel").text("Database folder:");
-    $("#btnDatabasePicker").attr("title", "Choose a database folder");
+    document.querySelector(".firstLabel").textContent = "Database folder:";
+    document.querySelector("#btnDatabasePicker").title = "Choose a database folder";
 
-    $("#database").attr("title", "Choose a database folder");
-    $("#database").val(Settings.CACHE.DEFAULT_FOLDER);
-    $("#database").trigger("change");
+    document.querySelector("#database").title = "Choose a database folder";
+    document.querySelector("#database").value = Settings.CACHE.DEFAULT_FOLDER;
+    document.querySelector("#database").fireEvent("onchange");
 
-    if ($("#database").val() == "" || $("#database").hasClass("error")) {
-      General.focus($("#database"));
+    if (
+      document.querySelector("#database").value == "" ||
+      document.querySelector("#database").classList.contains("error")
+    ) {
+      General.focus(document.querySelector("#database"));
     } else {
-      General.focus($("#password"));
+      General.focus(document.querySelector("#password"));
     }
   }
 
   static onClickOpenDatabase(event) {
-    $("#openDatabase").addClass("active");
-    $("#createDatabase").removeClass("active");
+    document.querySelector("#openDatabase").classList.add("active");
+    document.querySelector("#createDatabase").classList.remove("active");
 
-    $(".firstLabel").text("Database file:");
-    $("#btnDatabasePicker").attr("title", "Choose a database file");
+    document.querySelector(".firstLabel").textContent = "Database file:";
+    document.querySelector("#btnDatabasePicker").title = "Choose a database file";
 
-    $("#database").attr("title", "Choose a database file");
-    $("#database").val(Settings.CACHE.DEFAULT_FILE);
-    $("#database").trigger("change");
+    document.querySelector("#database").title = "Choose a database file";
+    document.querySelector("#database").value = Settings.CACHE.DEFAULT_FILE;
+    document.querySelector("#database").fireEvent("onchange");
 
-    if ($("#database").val() == "" || $("#database").hasClass("error")) {
-      General.focus($("#database"));
+    if (
+      document.querySelector("#database").value == "" ||
+      document.querySelector("#database").classList.contains("error")
+    ) {
+      General.focus(document.querySelector("#database"));
     } else {
-      General.focus($("#password"));
+      General.focus(document.querySelector("#password"));
     }
   }
 
   static onChangeDatabase(event) {
-    let database = $(event.target);
-    if (File.exists(database.val())) {
-      database.removeClass("error");
-    } else if (!database.hasClass("error")) {
-      database.addClass("error");
+    let database = document.querySelector(event.target);
+    if (File.exists(database.value)) {
+      database.classList.remove("error");
+    } else if (!database.classList.contains("error")) {
+      database.classList.add("error");
     }
   }
 
   static onClickBtnDatabasePicker(event) {
     let result = null;
-    if ($("#openDatabase").hasClass("active")) {
+    if (document.querySelector("#openDatabase").classList.contains("active")) {
       result = IPCRenderer.sendSync("databaseFilePicker");
     } else {
       result = IPCRenderer.sendSync("databaseFolderPicker");
     }
     if (!result || result.length == 0 || result[0].trim().length == 0) return;
-    $("#database").val(result[0]);
-    $("#database").trigger("change");
-    General.focus($("#password"));
+    document.querySelector("#database").value = result[0];
+    document.querySelector("#database").fireEvent("onchange");
+    General.focus(document.querySelector("#password"));
   }
 
   static onKeyupPassword(event) {
-    if ($("#password").hasClass("error") && Settings.isSuitablePassword($("#password").val())) {
-      $("#password").removeClass("error");
+    if (
+      document.querySelector("#password").classList.contains("error") &&
+      Settings.isSuitablePassword(document.querySelector("#password").value)
+    ) {
+      document.querySelector("#password").classList.remove("error");
     }
   }
 
   static onClickBtnPasswordVisibility(event) {
-    let passwordInput = $("#password");
-    let passwordImg = $("#imgHideShowPassword");
-    if (passwordInput.attr("type") == "password") {
-      passwordInput.attr("type", "text");
-      passwordImg.attr("src", "../res/img/hide.svg");
+    let passwordInput = document.querySelector("#password");
+    let passwordImg = document.querySelector("#imgHideShowPassword");
+    if (passwordInput.type == "password") {
+      passwordInput.type = "text";
+      passwordImg.src = "../res/img/hide.svg";
     } else {
-      passwordInput.attr("type", "password");
-      passwordImg.attr("src", "../res/img/show.svg");
+      passwordInput.type = "password";
+      passwordImg.src = "../res/img/show.svg";
     }
     General.focus(passwordInput);
   }
@@ -128,30 +138,30 @@ class Eventhandler {
   }
 
   static onClickBtnLogin() {
-    let database = $("#database").val();
-    let password = $("#password").val();
+    let database = document.querySelector("#database").value;
+    let password = document.querySelector("#password").value;
 
-    if ($("#openDatabase").hasClass("active") && !File.exists(database)) {
-      $("#database").addClass("error");
-      General.focus($("#database"));
+    if (document.querySelector("#openDatabase").classList.contains("active") && !File.exists(database)) {
+      document.querySelector("#database").classList.add("error");
+      General.focus(document.querySelector("#database"));
       return;
     } else if (!File.exists(database)) {
-      $("#database").addClass("error");
-      General.focus($("#database"));
+      document.querySelector("#database").classList.add("error");
+      General.focus(document.querySelector("#database"));
       return;
     }
 
     if (password.length < 8) {
-      $("#password").addClass("error");
-      General.focus($("#password"));
+      document.querySelector("#password").classList.add("error");
+      General.focus(document.querySelector("#password"));
       return;
     }
 
     IPCRenderer.send("openDatabase", {
-      REMEMBER_DB: $("#rememberDatabase").is(":checked"),
-      DATABASE: $("#database").val(),
-      REMEMBER_PW: $("#rememberPassword").is(":checked"),
-      PASSWORD: $("#password").val(),
+      REMEMBER_DB: document.querySelector("#rememberDatabase").checked,
+      DATABASE: document.querySelector("#database").value,
+      REMEMBER_PW: document.querySelector("#rememberPassword").checked,
+      PASSWORD: document.querySelector("#password").value,
     });
   }
 }

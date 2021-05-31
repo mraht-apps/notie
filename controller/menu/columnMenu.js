@@ -4,30 +4,40 @@ class ColumnMenu {
   }
 
   static registerEvents() {
-    $("#columnTypeValue").on("click", (event) => Eventhandler.onClickColumnTypeValue(event));
-    $("#numberFormatValue").on("click", (event) => Eventhandler.onClickNumberFormatValue(event));
-    $("#tableRelationValue").on("click", (event) => Eventhandler.onClickTableRelationValue(event));
+    document
+      .querySelector("#columnTypeValue")
+      .addEventListener("click", (event) => Eventhandler.onClickColumnTypeValue(event));
+    document
+      .querySelector("#numberFormatValue")
+      .addEventListener("click", (event) => Eventhandler.onClickNumberFormatValue(event));
+    document
+      .querySelector("#tableRelationValue")
+      .addEventListener("click", (event) => Eventhandler.onClickTableRelationValue(event));
 
-    $("#deleteColumn").on("click", (event) => Eventhandler.onClickDeleteColumn(event));
-    $("#duplicateColumn").on("click", (event) => Eventhandler.onClickDuplicateColumn(event));
+    document
+      .querySelector("#deleteColumn")
+      .addEventListener("click", (event) => Eventhandler.onClickDeleteColumn(event));
+    document
+      .querySelector("#duplicateColumn")
+      .addEventListener("click", (event) => Eventhandler.onClickDuplicateColumn(event));
   }
 
   static initColumnType() {
-    let id = Eventhandler.selectedColumn.data("type");
-    let formatId = Eventhandler.selectedColumn.data("format");
-    let format = Object.values(Enums.NumberFormats).find((t) => t.id == formatId);
-    let relationId = Eventhandler.selectedColumn.data("relation");
+    let id = Eventhandler.selectedColumn.dataset.type;
+    let formatId = Eventhandler.selectedColumn.dataset.format;
+    let format = Object.values(Enums.NumberFormats).querySelector((t) => t.id == formatId);
+    let relationId = Eventhandler.selectedColumn.dataset.relation;
     let relation = Table_DB.get(relationId);
 
     ColumnMenu.setColumnType(id, format, relation);
   }
 
   static setColumnType(id, format, relation) {
-    let columnType = Object.values(Enums.ColumnTypes).find((t) => t.id == id);
+    let columnType = Object.values(Enums.ColumnTypes).querySelector((t) => t.id == id);
 
-    let columnTypeValue = $("#columnTypeValue");
+    let columnTypeValue = document.querySelector("#columnTypeValue");
     columnTypeValue.html(null);
-    $(columnTypeValue).data("type", columnType.id);
+    document.querySelector(columnTypeValue).dataset.type = columnType.id;
 
     let img = document.createElement("img");
     img.src = columnType.img;
@@ -41,8 +51,8 @@ class ColumnMenu {
     columnTypeValue.append(img);
 
     if (columnType) {
-      Eventhandler.selectedColumn.data("type", columnType.id);
-      Eventhandler.selectedColumn.find("#btnColumnMenu").attr("src", columnType.img_light);
+      Eventhandler.selectedColumn.dataset.type = columnType.id;
+      Eventhandler.selectedColumn.querySelector("#btnColumnMenu").src = columnType.img_light;
     }
 
     ColumnMenu.setFormat(columnType, format);
@@ -52,48 +62,49 @@ class ColumnMenu {
   }
 
   static setFormat(columnType, format = Enums.NumberFormats.NUMBER) {
-    $("#numberFormat").toggle(false);
-    Eventhandler.selectedColumn.data("format", null);
+    document.querySelector("#numberFormat").toggle(false);
+    Eventhandler.selectedColumn.dataset.format = null;
 
     if (columnType.id != Enums.ColumnTypes.NUM.id) return;
     ColumnMenu.setNumberFormat(format);
-    $("#numberFormat").toggle(true);
+    document.querySelector("#numberFormat").toggle(true);
   }
 
   static setRelation(columnType, relation = null) {
-    $("#tableRelation").toggle(false);
-    Eventhandler.selectedColumn.data("relation", null);
+    document.querySelector("#tableRelation").toggle(false);
+    Eventhandler.selectedColumn.dataset.relation = null;
 
     if (columnType.id != Enums.ColumnTypes.REL.id) return;
     ColumnMenu.setTableRelation(relation);
-    $("#tableRelation").toggle(true);
+    document.querySelector("#tableRelation").toggle(true);
   }
 
   static setNumberFormat(format) {
-    if(!format) return;
-    $("#numberFormatValue span").text(format.descr);
-    $("#numberFormatValue").data("format", format.id);
-    Eventhandler.selectedColumn.data("format", format.id);
+    if (!format) return;
+    document.querySelector("#numberFormatValue span").textContent = format.descr;
+    document.querySelector("#numberFormatValue").dataset.format = format.id;
+    Eventhandler.selectedColumn.dataset.format = format.id;
   }
 
   static setTableRelation(relation = { id: null, name: null }) {
-    if(!relation) return;
-    $("#tableRelationValue").removeClass("error");
-    $("#tableRelationValue span").text(relation.name);
-    Eventhandler.selectedColumn.data("relation", relation.id);
+    if (!relation) return;
+    document.querySelector("#tableRelationValue").classList.remove("error");
+    document.querySelector("#tableRelationValue span").textContent = relation.name;
+    Eventhandler.selectedColumn.dataset.relation = relation.id;
   }
 
   static setCellData(columnType) {
     let columnIndex = Eventhandler.selectedColumn.index();
     let cells = [];
-    $(Eventhandler.selectedTable)
-      .find("tbody tr")
+    document
+      .querySelector(Eventhandler.selectedTable)
+      .querySelector("tbody tr")
       .each(function (index, row) {
-        cells.push($(row).find("td").eq(columnIndex));
+        cells.push(document.querySelector(row).querySelector("td")[columnIndex]);
       });
-    $(cells).each((index, cell) => {
+    document.querySelector(cells).each((index, cell) => {
       // OPT Encapsulate source code
-      let input = $(cell).find("div");
+      let input = document.querySelector(cell).querySelector("div");
       switch (columnType) {
         case Enums.ColumnTypes.CHK:
           if (input.children("input").length == 0) {
@@ -112,40 +123,35 @@ class ColumnMenu {
   }
 
   static isOpen() {
-    return $("#columnMenu").is(":visible");
+    return document.querySelector("#columnMenu").style.display != "none";
   }
 
   static close(element) {
     if (!ColumnMenu.isOpen() || ColumnMenu.clickedOnMenu(element)) return;
-    $("#columnMenu").toggle(false);
-    $("#disabledPageContainer").toggle(false);
+    document.querySelector("#columnMenu").toggle(false);
+    document.querySelector("#disabledPageContainer").toggle(false);
   }
 
   static open(element) {
     let btnColumnMenu = element;
 
-    Eventhandler.selectedTable = btnColumnMenu.parents("div.pageElement");
-    Eventhandler.selectedColumn = btnColumnMenu.parents("th");
+    Eventhandler.selectedTable = General.getParents(btnColumnMenu, "div.pageElement");
+    Eventhandler.selectedColumn = General.getParents(btnColumnMenu, "th");
 
     ColumnMenu.close(btnColumnMenu);
     ColumnMenu.initColumnType();
 
-    let position = $(element).get(0).getBoundingClientRect();
-    $("#columnMenu").css({
+    let position = document.querySelector(element).get(0).getBoundingClientRect();
+    document.querySelector("#columnMenu").style({
       top: `${position.top + 25}px`,
       left: `${position.left - 9}px`,
     });
-    $("#columnMenu").toggle(true);
-    $("#disabledPageContainer").toggle(true);
+    document.querySelector("#columnMenu").toggle(true);
+    document.querySelector("#disabledPageContainer").toggle(true);
   }
 
   static clickedOnMenu(element) {
-    if (
-      element &&
-      (element.attr("id") == "btnColumnMenu" ||
-        element.attr("id") == "columnMenu" ||
-        element.parents("#columnMenu").length > 0)
-    ) {
+    if (element && (element.id == "btnColumnMenu" || element.id == "columnMenu" || element.parentNode("#columnMenu"))) {
       return true;
     } else {
       return false;
@@ -159,7 +165,7 @@ class Eventhandler {
 
   static onClickColumnTypeValue(event) {
     if (!ColumnTypeMenu.isOpen()) {
-      ColumnTypeMenu.open($("#columnTypeValue").data("type"));
+      ColumnTypeMenu.open(document.querySelector("#columnTypeValue").dataset.type);
     } else {
       ColumnTypeMenu.close();
     }
@@ -167,7 +173,7 @@ class Eventhandler {
 
   static onClickNumberFormatValue(event) {
     if (!NumberFormatMenu.isOpen()) {
-      NumberFormatMenu.open($("#numberFormatValue").data("format"));
+      NumberFormatMenu.open(document.querySelector("#numberFormatValue").dataset.format);
     } else {
       NumberFormatMenu.close();
     }
@@ -182,7 +188,7 @@ class Eventhandler {
   }
 
   static onClickDeleteColumn(event) {
-    Table.deleteColumn(this.selectedTable, this.selectedColumn.data("uuid"));
+    Table.deleteColumn(this.selectedTable, this.selectedColumn.dataset.uuid);
     ColumnMenu.close();
   }
 

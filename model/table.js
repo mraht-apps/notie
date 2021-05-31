@@ -7,17 +7,17 @@ class Table {
     let tables = Table_DB.getByPageId(pageId);
     let tableColumns = Table_DB.getColumns(tables);
 
-    $(tables).each(function (index, table) {
-      let columns = $(tableColumns).filter(function () {
+    document.querySelector(tables).each(function (index, table) {
+      let columns = document.querySelector(tableColumns).filter(function () {
         return this.table_id == table.id;
       });
 
       let values = Table_DB.getValues(table.id);
 
       let rows = [];
-      $(values).each(function (index, value) {
+      document.querySelector(values).each(function (index, value) {
         let row = {};
-        $(columns).each(function (index, column) {
+        document.querySelector(columns).each(function (index, column) {
           let cellValue = value[column.id];
           if (column.type == Enums.ColumnTypes.CHK.id) {
             cellValue = cellValue == "true";
@@ -53,9 +53,9 @@ class Table {
     let htmlElement = document.createElement("div");
     htmlElement.className = "pageElement table";
     if (!jsonData.id || jsonData.id.length == 0) {
-      $(htmlElement).data("uuid", Crypto.generateUUID(6));
+      document.querySelector(htmlElement).dataset.uuid", Crypto.generateUUID(6));
     } else {
-      $(htmlElement).data("uuid", jsonData.id);
+      document.querySelector(htmlElement).dataset.uuid", jsonData.id);
     }
     htmlElement.append(htmlTable);
 
@@ -128,7 +128,7 @@ class Table {
     TableMenu.registerEvent(tableMenuContainer);
     captionContainer.appendChild(tableMenuContainer);
     caption.appendChild(captionContainer);
-    table.insertBefore(caption, table.childNodes[0]);
+    table.insertBefore(caption, table.children[0]);
   }
 
   static prepare(data) {
@@ -136,25 +136,25 @@ class Table {
   }
 
   static generateTableBody(table, data) {
-    $(data.rows).each(function () {
-      Table.generateTableRow(table, data, $(this));
+    document.querySelector(data.rows).each(function () {
+      Table.generateTableRow(table, data, document.querySelector(this));
     });
     Table.generateTableRowNew(table, data);
-    $(table).children("tbody").addClass("tableBody");
+    document.querySelector(table).children("tbody").classList.add("tableBody");
   }
 
   static generateTableRow(table, data, row) {
     let tr = table.insertRow();
-    $(tr).data("uuid", Crypto.generateUUID(6));
+    document.querySelector(tr).dataset.uuid", Crypto.generateUUID(6));
 
-    $(data.columns).each(function (columnIndex, column) {
+    document.querySelector(data.columns).each(function (columnIndex, column) {
       let exit = Table.generateTableCell(tr, columnIndex, column, row);
       if (exit) return false;
     });
   }
 
   static resetTableBody(table) {
-    table.find("tbody").clear();
+    table.querySelector("tbody").clear();
     // TODO fill data from table
     Table.generateTableBody(table, data);
   }
@@ -162,7 +162,7 @@ class Table {
   static generateTableRowNew(table, data) {
     let numberOfColumns = data.columns.length + 1;
     let tr = table.insertRow();
-    $(tr).on("click", (event) => Eventhandler.onClickRowAdd(event));
+    document.querySelector(tr).addEventListener("click", (event) => Eventhandler.onClickRowAdd(event));
     let td = document.createElement("td");
     td.colSpan = numberOfColumns;
     let div = document.createElement("div");
@@ -195,17 +195,17 @@ class Table {
           break;
         default:
           input.contentEditable = "true";
-          $(input).html(columnValue);
+          document.querySelector(input).html(columnValue);
           break;
       }
       td.appendChild(input);
-      $(input).on("keydown", (event) => Eventhandler.onKeydownTableCell(event));
-      $(input).on("keypress", (event) => Eventhandler.onKeypressTextInput(event));
-      $(input).on("focus", (event) => Eventhandler.onFocusTextInput(event));
-      $(input).on("focusout", (event) => Eventhandler.onFocusoutTextInput(event));
+      document.querySelector(input).addEventListener("keydown", (event) => Eventhandler.onKeydownTableCell(event));
+      document.querySelector(input).addEventListener("keypress", (event) => Eventhandler.onKeypressTextInput(event));
+      document.querySelector(input).addEventListener("focus", (event) => Eventhandler.onFocusTextInput(event));
+      document.querySelector(input).addEventListener("focusout", (event) => Eventhandler.onFocusoutTextInput(event));
     }
 
-    let nextTd = $(tr).find("td").eq(columnIndex);
+    let nextTd = document.querySelector(tr).querySelector("td")[columnIndex);
     if (nextTd.length > 0) {
       nextTd.before(td);
     } else {
@@ -220,27 +220,27 @@ class Table {
     thead.className = "tableHead";
     let tr = thead.insertRow();
 
-    $(table.columns).each(function (index, column) {
+    document.querySelector(table.columns).each(function (index, column) {
       Table.generateTableColumn(tr, index, column);
     });
   }
 
   static generateTableColumn(tr, index, column) {
     let th = document.createElement("th");
-    let columnType = Object.values(Enums.ColumnTypes).find((t) => t.id == column.type);
-    $(th).data("type", column.type);
+    let columnType = Object.values(Enums.ColumnTypes).querySelector((t) => t.id == column.type);
+    document.querySelector(th).dataset.type", column.type);
 
     if (column.type != Enums.ColumnTypes.ADD.id) {
       let columnWidth = column.width;
       th.style.width = !columnWidth ? "120px" : columnWidth;
 
       if (!column.id || column.id.length == 0) {
-        $(th).data("uuid", Crypto.generateUUID(6));
+        document.querySelector(th).dataset.uuid", Crypto.generateUUID(6));
       } else {
-        $(th).data("uuid", column.id);
+        document.querySelector(th).dataset.uuid", column.id);
       }
-      if (column.format) $(th).data("format", column.format);
-      if (column.relation) $(th).data("relation", column.relation);
+      if (column.format) document.querySelector(th).dataset.format", column.format);
+      if (column.relation) document.querySelector(th).dataset.relation", column.relation);
     }
 
     let div = document.createElement("div");
@@ -254,13 +254,13 @@ class Table {
       let textNode = document.createTextNode(column.name);
       div.appendChild(textNode);
 
-      $(th).on("click", (event) => Eventhandler.onClickColumnAdd(event));
+      document.querySelector(th).addEventListener("click", (event) => Eventhandler.onClickColumnAdd(event));
     } else {
       let img = document.createElement("img");
       img.id = "btnColumnMenu";
       img.draggable = false;
       img.src = columnType.img_light;
-      $(img).on("click", (event) => Eventhandler.onClickBtnColumnMenu(event));
+      document.querySelector(img).addEventListener("click", (event) => Eventhandler.onClickBtnColumnMenu(event));
       div.append(img);
 
       let input = document.createElement("input");
@@ -276,7 +276,7 @@ class Table {
 
     th.appendChild(div);
 
-    let nextTh = $(tr).children("th").eq(index);
+    let nextTh = document.querySelector(tr).children("th")[index);
     if (nextTh.length > 0) {
       nextTh.before(th);
     } else {
@@ -289,31 +289,31 @@ class Table {
   }
 
   static addRowByNewRow(table) {
-    let tableRows = $(table).find("tbody > tr");
-    let addNewTableRow = tableRows.eq(tableRows.length - 1);
+    let tableRows = document.querySelector(table).querySelector("tbody > tr");
+    let addNewTableRow = tableRows[tableRows.length - 1);
 
     let tr = document.createElement("tr");
     addNewTableRow.before(tr);
 
     let columns = [];
-    $(table)
-      .find("thead > tr > th")
+    document.querySelector(table)
+      .querySelector("thead > tr > th")
       .each(function () {
-        let column = $(this);
+        let column = document.querySelector(this);
         let columnTitleDiv = column.children(".columnTitle");
         let input = column.children("div > input");
-        let columnName = input.length > 0 ? input.val() : columnTitleDiv.text();
-        let columnType = column.data("type");
+        let columnName = input.length > 0 ? input.value = ) : columnTitleDiv.textContent = );
+        let columnType = column.dataset.type");
         columns.push({ name: columnName, type: columnType });
       });
 
-    $(columns).each(function (columnIndex, column) {
+    document.querySelector(columns).each(function (columnIndex, column) {
       Table.generateTableCell(tr, columnIndex, column, null);
     });
   }
 
   static addColumn(table, column, index = -1) {
-    let thead = $(table).children("thead");
+    let thead = document.querySelector(table).children("thead");
     let headerRow = thead.children("tr");
     let columnIndex = index;
     if (index == -1) columnIndex = thead.children("th").length - 1;
@@ -322,52 +322,52 @@ class Table {
   }
 
   static addRowCellByNewColumn(table, column) {
-    let tbody = $(table).children("tbody");
+    let tbody = document.querySelector(table).children("tbody");
     let tableRows = tbody.children("tr");
-    let tableColumns = tableRows.eq(0).children("td");
+    let tableColumns = tableRows[0).children("td");
 
     for (let i = 0; i < tableRows.length - 1; i++) {
-      let tr = $(tableRows[i]);
+      let tr = document.querySelector(tableRows[i]);
       let columnIndex = tableColumns.length - 1;
       Table.generateTableCell(tr, columnIndex, column, null);
     }
 
     let numberOfColumns = tableColumns.length + 1;
     tableRows
-      .eq(tableRows.length - 1)
+      [tableRows.length - 1)
       .children("td")
-      .eq(0)
-      .attr("colspan", numberOfColumns);
+      [0)
+      .colspan", numberOfColumns);
   }
 
   static registerEventsColumnSeparator(div) {
-    $(div).on("mousedown", (event) => Eventhandler.onMousedownColumnSeparator(event));
-    $(div).on("dblclick", (event) => Eventhandler.onDblclickColumnSeparator(event));
+    document.querySelector(div).addEventListener("mousedown", (event) => Eventhandler.onMousedownColumnSeparator(event));
+    document.querySelector(div).addEventListener("dblclick", (event) => Eventhandler.onDblclickColumnSeparator(event));
   }
 
   static setActiveRow(activeRow) {
-    let currentlyActiveRow = $("#activeRow");
+    let currentlyActiveRow = document.querySelector("#activeRow");
     if (activeRow.is(currentlyActiveRow)) return;
 
     if (currentlyActiveRow) {
-      currentlyActiveRow.attr("id", "");
+      currentlyActiveRow.id", "");
     }
-    activeRow.attr("id", "activeRow");
+    activeRow.id", "activeRow");
   }
 
-  static trigger(method, event) {
+  static fireEvent(method, event) {
     Eventhandler[method](event);
   }
 
   static delete(tableContainer) {
-    Table_DB.delete(true, [], [tableContainer.data("uuid")]);
+    Table_DB.delete(true, [], [tableContainer.dataset.uuid")]);
     tableContainer.remove();
   }
 
   static save(tableContainer) {
-    let table = $(tableContainer).children("table");
-    let tableId = $(tableContainer).data("uuid");
-    let tableName = table.find("caption .captionContainer .tableTitleContainer input").val();
+    let table = document.querySelector(tableContainer).children("table");
+    let tableId = document.querySelector(tableContainer).dataset.uuid");
+    let tableName = table.querySelector("caption .captionContainer .tableTitleContainer input").value = );
     if (tableName.trim() == "") {
       tableName = "Untitled";
     }
@@ -378,27 +378,27 @@ class Table {
       name: tableName,
     });
 
-    let htmlColumns = table.find("thead tr th").filter(function () {
-      return $(this).data("type") != Enums.ColumnTypes.ADD.id;
+    let htmlColumns = table.querySelector("thead tr th").filter(function () {
+      return document.querySelector(this).dataset.type") != Enums.ColumnTypes.ADD.id;
     });
     Table_DB.updateColumns(false, sqlStatements, tableId, htmlColumns);
 
-    let htmlRows = table.find(".tableBody tr");
+    let htmlRows = table.querySelector(".tableBody tr");
     htmlRows.splice(-1, 1);
     Table_DB.updateValues(true, sqlStatements, tableId, htmlColumns, htmlRows);
   }
 
   static deleteColumn(tableContainer, columnId) {
     try {
-      Table_DB.deleteColumn(true, [], tableContainer.data("uuid"), columnId);
+      Table_DB.deleteColumn(true, [], tableContainer.dataset.uuid"), columnId);
     } catch (e) {}
 
-    let table = $(tableContainer).find(".table").get(0);
+    let table = document.querySelector(tableContainer).querySelector(".table").get(0);
     let rows = table.rows;
-    let columnIndex = $(table)
-      .find("th")
+    let columnIndex = document.querySelector(table)
+      .querySelector("th")
       .filter(function () {
-        return $(this).data("uuid") == columnId;
+        return document.querySelector(this).dataset.uuid") == columnId;
       })
       .index();
 
@@ -406,10 +406,10 @@ class Table {
       rows[i].deleteCell(columnIndex);
     }
 
-    let lastRowCell = $(rows[rows.length - 1]).children("td");
-    let colspan = lastRowCell.attr("colspan");
+    let lastRowCell = document.querySelector(rows[rows.length - 1]).children("td");
+    let colspan = lastRowCell.colspan");
     colspan = `${colspan - 1}`;
-    lastRowCell.attr("colspan", colspan);
+    lastRowCell.colspan", colspan);
   }
 
   static duplicateColumn(tableContainer, htmlColumn) {
@@ -417,13 +417,13 @@ class Table {
     let table = tableContainer.children("table");
     let column = {
       id: Crypto.generateUUID(6),
-      table_id: tableContainer.data("uuid"),
-      name: htmlColumn.find(".columnTitle input").val(),
-      type: htmlColumn.data("type"),
+      table_id: tableContainer.dataset.uuid"),
+      name: htmlColumn.querySelector(".columnTitle input").value = ),
+      type: htmlColumn.dataset.type"),
       position: columnIndex + 1,
       width: htmlColumn.css("width"),
-      format: htmlColumn.data("format"),
-      relation: htmlColumn.data("relation"),
+      format: htmlColumn.dataset.format"),
+      relation: htmlColumn.dataset.relation"),
     };
     Table.addColumn(table, column, columnIndex);
   }
@@ -431,58 +431,58 @@ class Table {
 
 class Eventhandler {
   static onClickBtnColumnMenu(event) {
-    ColumnMenu.open($(event.target));
+    ColumnMenu.open(document.querySelector(event.target));
   }
 
   static onKeydownTableCell(event) {
-    let columnIndex = $(event.target).parent().index();
-    let tableRow = $(event.target).parents("tr");
+    let columnIndex = document.querySelector(event.target).parentElement.index();
+    let tableRow = document.querySelector(event.target).parents("tr");
 
     let input;
     switch (event.key) {
       case "ArrowUp":
-        input = tableRow.prev().children().eq(columnIndex).children();
+        input = tableRow.previousElementSibling.children[columnIndex).children;
         if (input.length == 0) {
-          let lastRow = tableRow.parent().find("tr:last").prev();
-          input = lastRow.children().eq(columnIndex).children();
+          let lastRow = tableRow.parentElement.querySelector("tr:last").previousElementSibling;
+          input = lastRow.children[columnIndex).children;
         }
         General.focus(input, Enums.FocusActions.ALL, false);
         event.preventDefault();
         break;
       case "ArrowDown":
-        input = tableRow.next().children().eq(columnIndex).children();
-        if (input.attr("id") == "newRow" || input.length == 0) {
-          let firstRow = tableRow.parent().find("tr:first");
-          input = firstRow.children().eq(columnIndex).children();
+        input = tableRow.nextElementSibling.children[columnIndex).children;
+        if (input.id") == "newRow" || input.length == 0) {
+          let firstRow = tableRow.parentElement.querySelector("tr:first");
+          input = firstRow.children[columnIndex).children;
         }
         General.focus(input, Enums.FocusActions.ALL, false);
         event.preventDefault();
         break;
       case "ArrowLeft":
         if (window.getSelection().baseOffset > 0) return;
-        input = $(event.target).parents("td").prev().children();
+        input = document.querySelector(event.target).parents("td").previousElementSibling.children;
         if (input.length == 0) {
-          let lastTableCellIndex = tableRow.children().length - 2;
-          input = tableRow.children().eq(lastTableCellIndex).children();
+          let lastTableCellIndex = tableRow.children.length - 2;
+          input = tableRow.children[lastTableCellIndex).children;
         }
         General.focus(input, Enums.FocusActions.ALL);
         event.preventDefault();
         break;
       case "ArrowRight":
-        if (window.getSelection().baseOffset < $(event.target).html().length) return;
-        input = $(event.target).parents("td").next().children();
+        if (window.getSelection().baseOffset < document.querySelector(event.target).html().length) return;
+        input = document.querySelector(event.target).parents("td").nextElementSibling.children;
         if (input.length == 0) {
-          input = tableRow.children().first("td").children();
+          input = tableRow.children.first("td").children;
         }
         General.focus(input, Enums.FocusActions.ALL);
         event.preventDefault();
         break;
       case "Enter":
-        let table = $(event.target).parents("table");
-        input = tableRow.next().children().eq(columnIndex).children();
-        if (input.attr("id") == "newRow" || input.length == 0) {
+        let table = document.querySelector(event.target).parents("table");
+        input = tableRow.nextElementSibling.children[columnIndex).children;
+        if (input.id") == "newRow" || input.length == 0) {
           Table.addRowByNewRow(table);
-          input = tableRow.next().children().eq(columnIndex).children();
+          input = tableRow.nextElementSibling.children[columnIndex).children;
         }
         General.focus(input, Enums.FocusActions.ALL, false);
         event.preventDefault();
@@ -491,10 +491,10 @@ class Eventhandler {
   }
 
   static onKeypressTextInput(event) {
-    let columnIndex = $(event.target).parents("td").index();
-    let column = $(event.target).parents("table").find("th").eq(columnIndex);
-    let numberFormatId = column.data("format");
-    let numberFormat = Object.values(Enums.NumberFormats).find((f) => f.id == numberFormatId);
+    let columnIndex = document.querySelector(event.target).parents("td").index();
+    let column = document.querySelector(event.target).parents("table").querySelector("th")[columnIndex);
+    let numberFormatId = column.dataset.format");
+    let numberFormat = Object.values(Enums.NumberFormats).querySelector((f) => f.id == numberFormatId);
 
     if (numberFormat && !numberFormat.keyPattern.test(event.key)) {
       event.preventDefault();
@@ -502,9 +502,9 @@ class Eventhandler {
   }
 
   static onFocusTextInput(event) {
-    let columnIndex = $(event.target).parents("td").index();
-    let column = $(event.target).parents("table").find("th").eq(columnIndex);
-    let relation = column.data("relation");
+    let columnIndex = document.querySelector(event.target).parents("td").index();
+    let column = document.querySelector(event.target).parents("table").querySelector("th")[columnIndex);
+    let relation = column.dataset.relation");
     if (!relation || relation == "") return;
     let values = Table_DB.getValues(relation);
     // NEW Relation: Open menu to select value to relate to #5
@@ -512,21 +512,21 @@ class Eventhandler {
   }
 
   static onFocusoutTextInput(event) {
-    let columnIndex = $(event.target).parents("td").index();
-    let column = $(event.target).parents("table").find("th").eq(columnIndex);
-    let numberFormatId = column.data("format");
-    let numberFormat = Object.values(Enums.NumberFormats).find((f) => f.id == numberFormatId);
+    let columnIndex = document.querySelector(event.target).parents("td").index();
+    let column = document.querySelector(event.target).parents("table").querySelector("th")[columnIndex);
+    let numberFormatId = column.dataset.format");
+    let numberFormat = Object.values(Enums.NumberFormats).querySelector((f) => f.id == numberFormatId);
 
-    let value = $(event.target).html();
+    let value = document.querySelector(event.target).html();
     if (numberFormat) {
       value = numberFormat.pattern.exec(value);
       if (!value || value == "") {
-        $(event.target).html(null);
+        document.querySelector(event.target).html(null);
       } else {
         value = value.filter(function (val) {
           return val != null && val.trim() != "";
         });
-        $(event.target).html(value[0]);
+        document.querySelector(event.target).html(value[0]);
       }
     }
   }
@@ -537,12 +537,12 @@ class Eventhandler {
       type: Enums.ColumnTypes.TXT.id,
       width: "120px",
     };
-    let table = $(event.target).parents("table");
+    let table = document.querySelector(event.target).parents("table");
     Table.addColumn(table, column);
   }
 
   static onClickRowAdd(event) {
-    let table = $(event.target).parents("table");
+    let table = document.querySelector(event.target).parents("table");
     Table.addRow(table);
   }
 
@@ -557,8 +557,8 @@ class Eventhandler {
   }
 
   static onDblclickColumnSeparator(event) {
-    let column = $(event.target).parent();
-    let text = column.find(".columnTitle > input:text").val().trim();
+    let column = document.querySelector(event.target).parentElement;
+    let text = column.querySelector(".columnTitle > input:text").value = ).trim();
 
     let tempDiv = document.createElement("div");
     document.body.appendChild(tempDiv);

@@ -1,45 +1,45 @@
 class NumberFormatMenu {
   static create(numberFormatId) {
-    let table = $("#numberFormatMenu table");
-    $(table).find("tbody tr").remove();
+    let table = document.querySelector("#numberFormatMenu table");
+    document.querySelector(table).querySelector("tbody tr").remove();
 
     Object.keys(Enums.NumberFormats).forEach(function (key) {
       let element = Enums.NumberFormats[key];
       if (element.id == numberFormatId) return;
 
       let tr = document.createElement("tr");
-      $(tr).data("format", element.id);
-      $(tr).on("click", (event) => Eventhandler.onClickNumberFormat(event));
+      document.querySelector(tr).dataset.format = element.id;
+      document.querySelector(tr).addEventListener("click", (event) => Eventhandler.onClickNumberFormat(event));
       let td = document.createElement("td");
       td.className = "numberFormatOption";
       let text = document.createTextNode(element.descr);
       td.append(text);
       tr.append(td);
-      $(table).find("tbody").append(tr);
+      document.querySelector(table).querySelector("tbody").append(tr);
     });
   }
 
   static isOpen() {
-    return $("#numberFormatMenu").is(":visible");
+    return document.querySelector("#numberFormatMenu").style.display != "none";
   }
 
   static close(element) {
     if (!NumberFormatMenu.isOpen() || NumberFormatMenu.clickedOnMenu(element)) return;
-    $("#numberFormatMenu").toggle(false);
+    document.querySelector("#numberFormatMenu").toggle(false);
   }
 
   static open(numberFormat) {
     NumberFormatMenu.create(numberFormat);
-    $("#numberFormatMenu").toggle(true);
+    document.querySelector("#numberFormatMenu").toggle(true);
   }
 
   static clickedOnMenu(element) {
     if (
       element &&
-      (element.attr("id") == "numberFormatValue" ||
-        element.parents("#numberFormatValue").length > 0 ||
-        element.attr("id") == "numberFormatMenu" ||
-        element.parents("#numberFormatMenu").length > 0)
+      (element.id == "numberFormatValue" ||
+        General.getParents(element, "#numberFormatValue").length > 0 ||
+        element.id == "numberFormatMenu" ||
+        General.getParents(element, "#numberFormatMenu").length > 0)
     ) {
       return true;
     } else {
@@ -51,7 +51,7 @@ class NumberFormatMenu {
 class Eventhandler {
   static onClickNumberFormat(event) {
     // FIX Number format with comma as decimal separator not chooseable #3
-    let numberFormatId = $(event.target).parents("tr").eq(0).data("format");
+    let numberFormatId = General.getParents(event.target, "tr")[0].dataset.format;
     ColumnMenu.setNumberFormat(numberFormatId);
     NumberFormatMenu.close();
   }

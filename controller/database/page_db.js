@@ -53,7 +53,7 @@ class Page_DB {
 
     let tableIds = [];
     let textlineIds = [];
-    $(pageElements).each(function () {
+    document.querySelector(pageElements).each(function () {
       switch (this.type_id) {
         case Enums.ElementTypes.TABLE.id:
           tableIds.push(this.id);

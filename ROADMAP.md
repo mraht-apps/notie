@@ -1,4 +1,8 @@
 # Version 1.0.0
+- Replace jQuery by DOM: css, children, parent(s), each, data, eq, find
+- Use parsefloat instead of custom regex check
+- Optimize autocomplete with datalist
+
 - Fix: Number format with comma as decimal separator not chooseable [#3](https://github.com/mariusraht1/notie/issues/3)
 - Fix: If blockmenu is open arrows aren't selecing entries anymore [#4](https://github.com/mariusraht1/notie/issues/4)
 - New page element: Image [#2](https://github.com/mariusraht1/notie/issues/2)
