@@ -45,7 +45,7 @@ class Eventhandler {
   static onKeyup(event) {
     if (!BlockMenu.isOpen() || Page.isDisabled()) return;
 
-    if (document.querySelectorAll(".clickable.active").length == 0) {
+    if (General.findAll(document, ".clickable.active").length == 0) {
       document.querySelector(".clickable").classList.add("active");
     } else {
       let currentActiveRow = document.querySelector(".clickable.active");

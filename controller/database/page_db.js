@@ -23,11 +23,15 @@ class Page_DB {
   }
 
   static getTextlines(id) {
-    return Database.all(
+    let textlines = Database.all(
       `SELECT txt.* FROM page_elements AS ps ` +
         `INNER JOIN textlines AS txt ON txt.id = ps.id ` +
         `WHERE ps.page_id = '${id}';`
     );
+    textlines.map((textline) => {
+      textline.type = Enums.ElementTypes.TEXTLINE.id;
+    });
+    return textlines;
   }
 
   static updateElement(sqlStatements) {

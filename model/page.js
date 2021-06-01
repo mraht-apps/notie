@@ -138,7 +138,7 @@ class Page {
   }
 
   static savePageContent(pageId) {
-    let pageElements = document.querySelectorAll(".pageElement");
+    let pageElements = General.findAll(document, ".pageElement");
     if (pageElements.length == 0) return;
 
     let sql = "";

@@ -7,7 +7,7 @@ class BlockMenu {
 
   static registerEvents() {
     document.querySelector("#blockMenu").onmouseout = (event) => Eventhandler.onMouseout(event);
-    document.querySelectorAll(".clickable").forEach((clickable) => {
+    General.findAll(document, ".clickable").forEach((clickable) => {
       clickable.onclick = (event) => Eventhandler.onClickMenuItem(event);
       clickable.onmouseover = (event) => Eventhandler.onMouseoverMenuItem(event);
     });
@@ -30,13 +30,11 @@ class BlockMenu {
       tr.append(td);
       td = document.createElement("td");
       div = document.createElement("div");
-      let textNode = document.createTextNode(element.label);
-      div.append(textNode);
+      div.textContent = element.label;
       td.append(div);
       div = document.createElement("div");
       div.class = "description";
-      textNode = document.createTextNode(element.descr);
-      div.append(textNode);
+      div.textContent = element.descr;
       td.append(div);
       tr.append(td);
       tbody.append(tr);

@@ -67,7 +67,7 @@ class Eventhandler {
 
   static onClickNavbarItem(event) {
     let navbarItem = event.target;
-    if (navbarItem == typeof "img") return;
+    if (navbarItem.tagName == "IMG") return;
     document.querySelector(".navbarItem.active").classList.remove("active");
     Navigation.next(navbarItem.dataset.uuid);
   }

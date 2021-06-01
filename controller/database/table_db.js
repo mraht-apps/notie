@@ -8,7 +8,7 @@ class Table_DB {
     let result = Table_DB.tablesBuffer.filter((table) => {
       return table.id == id;
     });
-    return result.get(0);
+    return result[0];
   }
 
   static getByName(name) {

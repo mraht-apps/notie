@@ -174,7 +174,7 @@ class Table extends Blockelement {
       input.addEventListener("focusout", (event) => Eventhandler.onFocusoutTextInput(event));
     }
 
-    let nextTd = tr.querySelectorAll("td")[columnIndex];
+    let nextTd = General.findAll(tr, "td")[columnIndex];
     if (nextTd) {
       nextTd.before(td);
     } else {
@@ -239,9 +239,7 @@ class Table extends Blockelement {
       img.src = "../res/img/new.svg";
       img.draggable = false;
       div.appendChild(img);
-      let textNode = document.createTextNode(column.name);
-      div.appendChild(textNode);
-
+      div.textContent = column.name;
       th.addEventListener("click", (event) => Eventhandler.onClickColumnAdd(event));
     } else {
       let img = document.createElement("img");
@@ -264,7 +262,7 @@ class Table extends Blockelement {
 
     th.appendChild(div);
 
-    let nextTh = tr.querySelectorAll("th")[index];
+    let nextTh = General.findAll(tr, "th")[index];
     if (nextTh) {
       nextTh.insertBefore(th);
     } else {
@@ -277,23 +275,20 @@ class Table extends Blockelement {
   }
 
   addRowByNewRow() {
-    let tableRows = this.htmlElement.querySelectorAll("tbody > tr");
+    let tableRows = General.findAll(this.htmlElement, "tbody tr");
     let addNewTableRow = tableRows[tableRows.length - 1];
 
     let tr = document.createElement("tr");
     addNewTableRow.before(tr);
 
     let columns = [];
-    document
-      .querySelector(this.htmlElement)
-      .querySelectorAll("thead > tr > th")
-      .forEach((th) => {
-        let columnTitleDiv = column.children(".columnTitle");
-        let input = th.children("div > input");
-        let columnName = input.length > 0 ? input.value : columnTitleDiv.textContent;
-        let columnType = th.dataset.type;
-        columns.push({ name: columnName, type: columnType });
-      });
+    General.findAll(this.htmlElement, "thead > tr > th").forEach((th) => {
+      let columnTitleDiv = column.children(".columnTitle");
+      let input = th.children("div > input");
+      let columnName = input.length > 0 ? input.value : columnTitleDiv.textContent;
+      let columnType = th.dataset.type;
+      columns.push({ name: columnName, type: columnType });
+    });
 
     columns.forEach((column) => {
       this.createTableCell(tr, columnIndex, column, null);
@@ -302,7 +297,7 @@ class Table extends Blockelement {
 
   addColumn(column, index = -1) {
     let thead = this.htmlElement.querySelector("thead");
-    let headerRow = thead.querySelectorAll("tr");
+    let headerRow = General.findAll(thead, "tr");
     let columnIndex = index;
     if (index == -1) columnIndex = thead.children("th").length - 1;
     this.createTableColumn(headerRow, columnIndex, column);
@@ -311,7 +306,7 @@ class Table extends Blockelement {
 
   addCellByNewColumn(column) {
     let tbody = this.htmlElement.children("tbody");
-    let tableRows = tbody.querySelectorAll("tr");
+    let tableRows = General.findAll(tbody, "tr");
     let tableColumns = tableRows[0].children("td");
 
     for (let i = 0; i < tableRows.length - 1; i++) {
@@ -362,12 +357,13 @@ class Table extends Blockelement {
       name: tableName,
     });
 
-    let htmlColumns = table.querySelectorAll("thead tr th").filter((th) => {
+    let htmlColumns = General.findAll(this.htmlElement, "thead tr th");
+    htmlColumns.filter((th) => {
       return th.dataset.type != Enums.ColumnTypes.ADD.id;
     });
     Table_DB.updateColumns(false, sqlStatements, tableId, htmlColumns);
 
-    let htmlRows = table.querySelectorAll(".tableBody tr");
+    let htmlRows = General.findAll(this.htmlElement, ".tableBody tr");
     htmlRows.splice(-1, 1);
     Table_DB.updateValues(true, sqlStatements, tableId, htmlColumns, htmlRows);
   }
@@ -378,11 +374,11 @@ class Table extends Blockelement {
     } catch (e) {}
 
     let rows = this.htmlElement.rows;
-    let columns = document.querySelector(this.htmlElement).querySelectorAll("th");
+    let columns = General.findAll(this.htmlElement, "th");
     let column = columns.filter((th) => {
       return th.dataset.uuid == columnId;
     });
-    let columnIndex = Array.prototype.indexOf(columns, column);
+    let columnIndex = Array.prototype.indexOf.call(columns, column);
 
     for (let i = 0; i < rows.length - 1; i++) {
       rows[i].deleteCell(columnIndex);
@@ -395,8 +391,8 @@ class Table extends Blockelement {
   }
 
   duplicateColumn(htmlColumn) {
-    let columns = table.querySelectorAll("th");
-    let columnIndex = Array.prototype.indexOf(columns, htmlColumn);
+    let columns = General.findAll(table, "th");
+    let columnIndex = Array.prototype.indexOf.call(columns, htmlColumn);
     let column = {
       id: Crypto.generateUUID(6),
       table_id: this.container.dataset.uuid,
@@ -476,11 +472,11 @@ class Eventhandler {
   static detColumn(td) {
     let columnIndex = Eventhandler.detColumnIndex(td);
     let table = General.getParents(td, "table")[0];
-    return table.querySelectorAll("th")[columnIndex];
+    return General.findAll(table, "th")[columnIndex];
   }
 
   static detColumnIndex(td) {
-    let tds = td.parentElement.querySelectorAll("td");
+    let tds = General.findAll(td.parentElement, "td");
     return Array.prototype.indexOf.call(tds, td);
   }
 

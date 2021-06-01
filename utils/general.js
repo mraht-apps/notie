@@ -7,7 +7,7 @@ class General {
   static moveCursorTo(element, offset) {
     document.execCommand("selectAll", false, null);
     // Set the caret to the nth character of the first line of text
-    document.getSelection().collapse(element.get(0).firstChild, offset);
+    document.getSelection().collapse(element.firstChild, offset);
   }
 
   static getCursorPosition() {
@@ -54,6 +54,10 @@ class General {
         General.deselectText();
       }
     }, 0);
+  }
+
+  static findAll(element = document, selector) {
+    return Array.from(element.querySelectorAll(selector));
   }
 
   static getParent(node, selector) {

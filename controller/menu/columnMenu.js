@@ -25,7 +25,7 @@ class ColumnMenu {
   static initColumnType() {
     let id = Eventhandler.selectedColumn.dataset.type;
     let formatId = Eventhandler.selectedColumn.dataset.format;
-    let format = Object.values(Enums.NumberFormats).querySelector((t) => t.id == formatId);
+    let format = Object.values(Enums.NumberFormats).filter((t) => t.id == formatId)[0];
     let relationId = Eventhandler.selectedColumn.dataset.relation;
     let relation = Table_DB.get(relationId);
 
@@ -33,18 +33,17 @@ class ColumnMenu {
   }
 
   static setColumnType(id, format, relation) {
-    let columnType = Object.values(Enums.ColumnTypes).querySelector((t) => t.id == id);
+    let columnType = Object.values(Enums.ColumnTypes).filter((t) => t.id == id)[0];
 
     let columnTypeValue = document.querySelector("#columnTypeValue");
-    columnTypeValue.html(null);
-    document.querySelector(columnTypeValue).dataset.type = columnType.id;
+    columnTypeValue.innerHTML = null;
+    columnTypeValue.dataset.type = columnType.id;
 
     let img = document.createElement("img");
     img.src = columnType.img;
     img.draggable = false;
     columnTypeValue.append(img);
-    let text = document.createTextNode(columnType.descr);
-    columnTypeValue.append(text);
+    columnTypeValue.textContent = columnType.descr;
     img = document.createElement("img");
     img.src = "../res/img/arrow_down.svg";
     img.draggable = false;
@@ -94,21 +93,18 @@ class ColumnMenu {
   }
 
   static setCellData(columnType) {
-    let columns = Eventhandler.selectedTable.htmlElement.querySelectorAll("th");
-    let columnIndex = Array.prototype.indexOf(columns, Eventhandler.selectedColumn);
+    let columns = General.findAll(Eventhandler.selectedTable.htmlElement, "th");
+    let columnIndex = Array.prototype.indexOf.call(columns, Eventhandler.selectedColumn);
     let cells = [];
-    document
-      .querySelector(Eventhandler.selectedTable)
-      .querySelector("tbody tr")
-      .forEach((row) => {
-        cells.push(row.querySelector("td")[columnIndex]);
-      });
+    General.findAll(Eventhandler.selectedTable.htmlElement, "tbody tr").forEach((row) => {
+      cells.push(General.findAll(row, "td")[columnIndex]);
+    });
     cells.forEach((cell) => {
       // OPT Encapsulate source code
       let input = cell.querySelector("div");
       switch (columnType) {
         case Enums.ColumnTypes.CHK:
-          if (input.children("input").length == 0) {
+          if (input.children.filter("input").length == 0) {
             let checkboxInput = document.createElement("input");
             checkboxInput.type = "checkbox";
             checkboxInput.className = "inputCheckbox";
@@ -136,13 +132,14 @@ class ColumnMenu {
   static open(element) {
     let btnColumnMenu = element;
 
-    Eventhandler.selectedTable = General.getParents(btnColumnMenu, "div.pageElement");
-    Eventhandler.selectedColumn = General.getParents(btnColumnMenu, "th");
+    let container = General.getParents(btnColumnMenu, "div.pageElement")[0];
+    Eventhandler.selectedTable = Page.getBlockElement(container.dataset.uuid);
+    Eventhandler.selectedColumn = General.getParents(btnColumnMenu, "th")[0];
 
     ColumnMenu.close(btnColumnMenu);
     ColumnMenu.initColumnType();
 
-    let position = document.querySelector(element).get(0).getBoundingClientRect();
+    let position = document.querySelector(element).getBoundingClientRect();
     document.querySelector("#columnMenu").style({
       top: `${position.top + 25}px`,
       left: `${position.left - 9}px`,

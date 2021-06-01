@@ -27,8 +27,8 @@ class NavbarMenu {
 
     if (!position) {
       position = {
-        top: btnNavbarMenu.position().top + 24,
-        left: btnNavbarMenu.position().left,
+        top: btnNavbarMenu.getBoundingClientRect().top + 24,
+        left: btnNavbarMenu.getBoundingClientRect().left,
       };
     }
 
@@ -53,7 +53,7 @@ class Eventhandler {
 
   static onClickMenuItem(event) {
     if (!Eventhandler.selectedPage) return;
-    let action = General.getParents(event.target, "tr").id;
+    let action = event.target.parentElement.id;
 
     switch (action) {
       case Enums.PageActions["delete"]:
