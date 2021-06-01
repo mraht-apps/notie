@@ -6,11 +6,11 @@ class BlockMenu {
   }
 
   static registerEvents() {
-    document.querySelector("#blockMenu").addEventListener("mouseout", (event) => Eventhandler.onMouseout(event));
-    document.querySelector(".clickable").addEventListener("click", (event) => Eventhandler.onClickMenuItem(event));
-    document
-      .querySelector(".clickable")
-      .addEventListener("mouseover", (event) => Eventhandler.onMouseoverMenuItem(event));
+    document.querySelector("#blockMenu").onmouseout = (event) => Eventhandler.onMouseout(event);
+    document.querySelectorAll(".clickable").forEach((clickable) => {
+      clickable.onclick = (event) => Eventhandler.onClickMenuItem(event);
+      clickable.onmouseover = (event) => Eventhandler.onMouseoverMenuItem(event);
+    });
   }
 
   static create() {
@@ -20,7 +20,7 @@ class BlockMenu {
       if (element == Enums.ElementTypes.NONE) continue;
       let tr = document.createElement("tr");
       tr.className = "clickable";
-      document.querySelector(tr).dataset.type = element.name;
+      tr.dataset.type = element.name;
       let td = document.createElement("td");
       let div = document.createElement("div");
       let img = document.createElement("img");
@@ -52,14 +52,14 @@ class BlockMenu {
     let { x, y } = General.getCursorPixelPosition();
     document.querySelector("#blockMenu").style.top = `${y - 100}px`;
     document.querySelector("#blockMenu").style.left = `${x + 10}px`;
-    document.querySelector("#blockMenu").toggle(true);
+    General.toggle(document.querySelector("#blockMenu"), true);
     document.querySelector(".clickable").classList.add("active");
   }
 
   static close(element) {
     if (!BlockMenu.isOpen() || BlockMenu.clickedOnMenu(element)) return;
     document.querySelector(".clickable").classList.remove("active");
-    document.querySelector("#blockMenu").toggle(false);
+    General.toggle(document.querySelector("#blockMenu"), false);
   }
 
   static clickedOnMenu(element) {
@@ -85,10 +85,8 @@ class Eventhandler {
 
   static onMouseoverMenuItem(event) {
     document.querySelector(".clickable.active").classList.remove("active");
-    let row = document.querySelector(event.target);
-    if (!document.querySelector(event.target).is("tr")) {
-      row = event.target.closest(".clickable");
-    }
+    let row = event.target;
+    if (event.target != typeof "tr") row = event.target.closest(".clickable");
     row.classList.add("active");
   }
 }

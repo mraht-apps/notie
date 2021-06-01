@@ -36,32 +36,32 @@
   background-color: rgb(228, 228, 228);
 }
 
-.tableHead th:last-child:hover {
+.tableHead th:last-of-type:hover {
   cursor: pointer;
 }
 
-.tableHead th:last-child,
-.tableBody td:last-child {
+.tableHead th:last-of-type,
+.tableBody td:last-of-type {
   border-right: none;
 }
 
-.tableHead th:first-child,
-.tableBody td:first-child {
+.tableHead th:first-of-type,
+.tableBody td:first-of-type {
   border-left: none;
 }
 
-.tableBody tr:last-child:hover > td {
+.tableBody tr:last-of-type:hover > td {
   background-color: rgb(228, 228, 228);
   cursor: pointer;
 }
 
-.tableHead th:last-child div {
+.tableHead th:last-of-type div {
   font-size: 14px;
   font-weight: normal;
   padding-top: 4px;
 }
 
-.tableHead th:last-child div img {
+.tableHead th:last-of-type div img {
   margin-top: 2px;
   margin-right: 4px;
 }
@@ -179,7 +179,7 @@
   overflow: hidden;
 }
 
-.columnTitle:last-child {
+.columnTitle:last-of-type {
   justify-content: left;
 }
 

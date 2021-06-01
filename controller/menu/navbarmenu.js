@@ -15,8 +15,8 @@ class NavbarMenu {
 
   static close(element) {
     if (!NavbarMenu.isOpen() || NavbarMenu.clickedOnMenu(element)) return;
-    document.querySelector("#navbarMenu").toggle(false);
-    document.querySelector("#disabledPageContainer").toggle(false);
+    General.toggle(document.querySelector("#navbarMenu"), false);
+    General.toggle(document.querySelector("#disabledPageContainer"), false);
   }
 
   static open(element, position) {
@@ -34,16 +34,13 @@ class NavbarMenu {
 
     NavbarMenu.close(btnNavbarMenu);
     Eventhandler.selectedPage = btnNavbarMenu.parentElement;
-    document.querySelector("#navbarMenu").css({
-      top: `${position.top}px`,
-      left: `${position.left}px`,
-    });
-    document.querySelector("#navbarMenu").toggle(true);
-    document.querySelector("#disabledPageContainer").toggle(true);
+    document.querySelector("#navbarMenu").style.cssText = `top: ${position.top}px; left: ${position.left}px;`;
+    General.toggle(document.querySelector("#navbarMenu"), true);
+    General.toggle(document.querySelector("#disabledPageContainer"), true);
   }
 
   static clickedOnMenu(element) {
-    if (element && (element.id == "btnNavbarMenu" || element.children("#btnNavbarMenu").length > 0)) {
+    if (element && (element.id == "btnNavbarMenu" || element.querySelector("#btnNavbarMenu"))) {
       return true;
     } else {
       return false;

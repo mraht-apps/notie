@@ -53,13 +53,13 @@ class Page_DB {
 
     let tableIds = [];
     let textlineIds = [];
-    document.querySelector(pageElements).each(function () {
-      switch (this.type_id) {
+    pageElements.forEach((pageElement) => {
+      switch (pageElement.type_id) {
         case Enums.ElementTypes.TABLE.id:
-          tableIds.push(this.id);
+          tableIds.push(pageElement.id);
           break;
         case Enums.ElementTypes.TEXTLINE.id:
-          textlineIds.push(this.id);
+          textlineIds.push(pageElement.id);
           break;
       }
     });

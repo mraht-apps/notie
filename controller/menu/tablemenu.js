@@ -8,7 +8,7 @@ class TableMenu {
   }
 
   static registerEvent(tableMenuContainer) {
-    document.querySelector(tableMenuContainer).addEventListener("click", (event) => Eventhandler.onClick(event));
+    tableMenuContainer.addEventListener("click", (event) => Eventhandler.onClick(event));
   }
 
   static isOpen() {
@@ -17,19 +17,16 @@ class TableMenu {
 
   static close(element) {
     if (!TableMenu.isOpen() || TableMenu.clickedOnMenu(element)) return;
-    document.querySelector("#tableMenu").toggle(false);
-    document.querySelector("#disabledPageContainer").toggle(false);
+    General.toggle(document.querySelector("#tableMenu"), false);
+    General.toggle(document.querySelector("#disabledPageContainer"), false);
   }
 
   static open(element) {
     TableMenu.close(element);
-    let position = document.querySelector(element).get(0).getBoundingClientRect();
-    document.querySelector("#tableMenu").css({
-      top: `${position.top + 28}px`,
-      left: `${position.left - 120}px`,
-    });
-    document.querySelector("#tableMenu").toggle(true);
-    document.querySelector("#disabledPageContainer").toggle(true);
+    let position = element.getBoundingClientRect();
+    document.querySelector("#tableMenu").style.cssText = `top: ${position.top + 28}px; left: ${position.left - 120}px;`;
+    General.toggle(document.querySelector("#tableMenu"), true);
+    General.toggle(document.querySelector("#disabledPageContainer"), true);
   }
 
   static clickedOnMenu(element) {
@@ -45,18 +42,16 @@ class Eventhandler {
   static selectedTable;
 
   static onClick(event) {
-    let element = document.querySelector(event.target);
-
     if (!TableMenu.isOpen()) {
-      TableMenu.open(element);
+      TableMenu.open(event.target);
       Eventhandler.selectedTable = General.getParents(event.target, ".pageElement.table");
     } else {
-      TableMenu.close(element);
+      TableMenu.close(event.target);
     }
   }
 
   static onClickMenuItem(event) {
-    let action = document.querySelector(event.target).parent("tr").id;
+    let action = event.target.parentNode.id;
 
     switch (action) {
       case Enums.TableActions["delete"]:

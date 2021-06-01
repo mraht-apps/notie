@@ -15,27 +15,28 @@ class Textline extends Blockelement {
     return htmlElements;
   }
 
-  constructor(jsonData) {
-    super(jsonData.id, "textline");
+  constructor(jsonData = null) {
+    super(jsonData?.id, "text");
 
     this.initData(jsonData);
     this.create();
+    this.registerEvents();
+
+    this.container.append(this.htmlElement);
   }
 
-  create(jsonData) {
+  create() {
     if (!this.elementData) return;
 
     this.htmlElement = document.createElement("div");
     this.htmlElement.contentEditable = "true";
     this.htmlElement.className = "textline";
     this.htmlElement.dataset.placeholder = placeholderText;
-
-    this.registerEvents();
   }
 
   initData(jsonData) {
     if (!jsonData) {
-      jsonData = { id: "", text: "" };
+      jsonData = { type: Enums.ElementTypes.TEXTLINE.id, id: "", text: "" };
     }
     this.elementData = jsonData;
   }
@@ -43,28 +44,29 @@ class Textline extends Blockelement {
   registerEvents() {
     this.htmlElement.onkeydown = (event) => Eventhandler.onKeydown(event);
     this.htmlElement.onfocus = (event) => Eventhandler.onFocus(event);
+    this.container.onfocus = (event) => Eventhandler.onFocus(event);
   }
 
   static appendBefore(element) {
     Eventhandler.activeTextline.insertBefore(element);
     Eventhandler.activeTextline.textContent = "";
-    General.focus(document.querySelector(Eventhandler.activeTextline));
+    General.focus(Eventhandler.activeTextline);
   }
 
   static focusFirst() {
-    let textline = document.querySelector(".textline:first");
+    let textline = document.querySelector(".textline:first-child");
     General.focus(textline);
   }
 
   static focusLast() {
-    let textline = document.querySelector(".textline:last");
+    let textline = document.querySelector(".textline:last-child");
     General.focus(textline);
   }
 
   delete() {
-    let isFirstTextline = typeof this.htmlElement == ".textline:first";
+    let isFirstTextline = typeof this.htmlElement == ".textline:first-of-type";
 
-    Textline_DB.delete(true, [], [this.htmlElement.dataset.uuid]);
+    Textline_DB.delete(true, [], [this.container.dataset.uuid]);
     this.htmlElement.remove();
 
     if (isFirstTextline) General.focus(document.querySelector("#pageName"));
@@ -72,7 +74,7 @@ class Textline extends Blockelement {
 
   save() {
     Textline_DB.update(true, [], {
-      id: this.htmlElement.dataset.uuid,
+      id: this.container.dataset.uuid,
       text: this.htmlElement.textContent,
     });
   }
@@ -81,7 +83,13 @@ class Eventhandler {
   activeTextline;
 
   static onFocus(event) {
-    Eventhandler.activeTextline = event.target;
+    if (event.target.classList.contains("pageElement")) {
+      Eventhandler.activeTextline = event.target.firstChild;
+      General.focus(Eventhandler.activeTextline);
+      event.preventDefault();
+    } else {
+      Eventhandler.activeTextline = event.target;
+    }
   }
 
   static onKeydown(event) {

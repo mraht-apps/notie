@@ -22,7 +22,7 @@
   user-select: none;
 }
 
-#blockMenu tr td:first-child div {
+#blockMenu tr td:first-of-type div {
   border: 1px solid rgba(55, 53, 47, 0.2);
   color: rgba(55, 53, 47, 0.6);
   font-size: 26px;

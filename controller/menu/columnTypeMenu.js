@@ -1,15 +1,15 @@
 class ColumnTypeMenu {
   static create(columnTypeId) {
     let table = document.querySelector("#columnTypeMenu table");
-    document.querySelector(table).querySelector("tbody tr").remove();
+    table.querySelector("tbody tr").remove();
 
     Object.keys(Enums.ColumnTypes).forEach(function (key) {
       let element = Enums.ColumnTypes[key];
       if (element == Enums.ColumnTypes.ADD || element.id == columnTypeId) return;
 
       let tr = document.createElement("tr");
-      document.querySelector(tr).dataset.type = element.id;
-      document.querySelector(tr).addEventListener("click", (event) => Eventhandler.onClickColumnType(event));
+      tr.dataset.type = element.id;
+      tr.addEventListener("click", (event) => Eventhandler.onClickColumnType(event));
       let td = document.createElement("td");
       td.className = "columnTypeOption";
       let div = document.createElement("div");
@@ -21,7 +21,7 @@ class ColumnTypeMenu {
       div.append(text);
       td.append(div);
       tr.append(td);
-      document.querySelector(table).querySelector("tbody").append(tr);
+      table.querySelector("tbody").append(tr);
     });
   }
 
@@ -31,12 +31,12 @@ class ColumnTypeMenu {
 
   static close(element) {
     if (!ColumnTypeMenu.isOpen() || ColumnTypeMenu.clickedOnMenu(element)) return;
-    document.querySelector("#columnTypeMenu").toggle(false);
+    General.toggle(document.querySelector("#columnTypeMenu"), false);
   }
 
   static open(columnType) {
     ColumnTypeMenu.create(columnType);
-    document.querySelector("#columnTypeMenu").toggle(true);
+    General.toggle(document.querySelector("#columnTypeMenu"), true);
   }
 
   static clickedOnMenu(element) {

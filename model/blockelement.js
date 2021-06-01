@@ -1,5 +1,5 @@
 class Blockelement {
-  constructor(id, type) {
+  constructor(id = null, type) {
     this.container = document.createElement("div");
     this.container.className = `pageElement ${type}`;
     if (!id || id.length == 0) {

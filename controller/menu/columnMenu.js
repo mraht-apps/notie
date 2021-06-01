@@ -62,21 +62,21 @@ class ColumnMenu {
   }
 
   static setFormat(columnType, format = Enums.NumberFormats.NUMBER) {
-    document.querySelector("#numberFormat").toggle(false);
+    General.toggle(document.querySelector("#numberFormat"), false);
     Eventhandler.selectedColumn.dataset.format = null;
 
     if (columnType.id != Enums.ColumnTypes.NUM.id) return;
     ColumnMenu.setNumberFormat(format);
-    document.querySelector("#numberFormat").toggle(true);
+    General.toggle(document.querySelector("#numberFormat"), true);
   }
 
   static setRelation(columnType, relation = null) {
-    document.querySelector("#tableRelation").toggle(false);
+    General.toggle(document.querySelector("#tableRelation"), false);
     Eventhandler.selectedColumn.dataset.relation = null;
 
     if (columnType.id != Enums.ColumnTypes.REL.id) return;
     ColumnMenu.setTableRelation(relation);
-    document.querySelector("#tableRelation").toggle(true);
+    General.toggle(document.querySelector("#tableRelation"), true);
   }
 
   static setNumberFormat(format) {
@@ -99,12 +99,12 @@ class ColumnMenu {
     document
       .querySelector(Eventhandler.selectedTable)
       .querySelector("tbody tr")
-      .each(function (index, row) {
-        cells.push(document.querySelector(row).querySelector("td")[columnIndex]);
+      .forEach((row) => {
+        cells.push(row.querySelector("td")[columnIndex]);
       });
-    document.querySelector(cells).each((index, cell) => {
+    cells.forEach((cell) => {
       // OPT Encapsulate source code
-      let input = document.querySelector(cell).querySelector("div");
+      let input = cell.querySelector("div");
       switch (columnType) {
         case Enums.ColumnTypes.CHK:
           if (input.children("input").length == 0) {
@@ -112,12 +112,12 @@ class ColumnMenu {
             checkboxInput.type = "checkbox";
             checkboxInput.className = "inputCheckbox";
             input.append(checkboxInput);
-            input.prop("contentEditable", "false");
+            input.contentEditable = "false";
           }
           break;
         default:
           input.children("input").remove();
-          input.prop("contentEditable", "true");
+          input.contentEditable = "true";
       }
     });
   }
@@ -128,8 +128,8 @@ class ColumnMenu {
 
   static close(element) {
     if (!ColumnMenu.isOpen() || ColumnMenu.clickedOnMenu(element)) return;
-    document.querySelector("#columnMenu").toggle(false);
-    document.querySelector("#disabledPageContainer").toggle(false);
+    General.toggle(document.querySelector("#columnMenu"), false);
+    General.toggle(document.querySelector("#disabledPageContainer"), false);
   }
 
   static open(element) {
@@ -146,12 +146,17 @@ class ColumnMenu {
       top: `${position.top + 25}px`,
       left: `${position.left - 9}px`,
     });
-    document.querySelector("#columnMenu").toggle(true);
-    document.querySelector("#disabledPageContainer").toggle(true);
+    General.toggle(document.querySelector("#columnMenu"), true);
+    General.toggle(document.querySelector("#disabledPageContainer"), true);
   }
 
   static clickedOnMenu(element) {
-    if (element && (element.id == "btnColumnMenu" || element.id == "columnMenu" || element.parentNode("#columnMenu"))) {
+    if (
+      element &&
+      (element.id == "btnColumnMenu" ||
+        element.id == "columnMenu" ||
+        General.getParent(element, "#columnMenu").length > 0)
+    ) {
       return true;
     } else {
       return false;

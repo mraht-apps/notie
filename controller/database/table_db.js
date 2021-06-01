@@ -5,8 +5,8 @@ class Table_DB {
     if (Table_DB.tablesBuffer.length == 0) {
       Table_DB.tablesBuffer = Database.all(`SELECT * FROM tables ORDER BY name COLLATE NOCASE ASC;`);
     }
-    let result = document.querySelector(Table_DB.tablesBuffer).filter(function () {
-      return this.id == id;
+    let result = Table_DB.tablesBuffer.filter((table) => {
+      return table.id == id;
     });
     return result.get(0);
   }
@@ -15,8 +15,8 @@ class Table_DB {
     if (Table_DB.tablesBuffer.length == 0) {
       Table_DB.tablesBuffer = Database.all(`SELECT * FROM tables ORDER BY name COLLATE NOCASE ASC;`);
     }
-    let result = document.querySelector(Table_DB.tablesBuffer).filter(function () {
-      return this.name.toLowerCase().includes(name.toLowerCase());
+    let result = Table_DB.tablesBuffer.filter((table) => {
+      return table.name.toLowerCase().includes(name.toLowerCase());
     });
     return result;
   }
@@ -53,13 +53,11 @@ class Table_DB {
     let sqlTableStructure = "";
     let sqlColumns = "";
 
-    htmlColumns.each(function (index, column) {
-      column = document.querySelector(column);
-
+    htmlColumns.forEach((column, index) => {
       let columnId = column.dataset.uuid;
       let columnName = column.querySelector(".columnTitle > input").value;
       let columnType = column.dataset.type;
-      let columnWidth = column.css("width");
+      let columnWidth = column.style.width;
       let relation = column.dataset.relation ? `'${column.dataset.relation}'` : null;
       let format = column.dataset.format ? column.dataset.format : null;
 
@@ -95,12 +93,9 @@ class Table_DB {
 
   static updateValues(run = false, sqlStatements = [], tableId, htmlColumns, htmlRows) {
     let sqlValues = "";
-    htmlRows.each(function (rowIndex, htmlRow) {
-      htmlRow = document.querySelector(htmlRow);
+    htmlRows.forEach((htmlRow, rowIndex) => {
       sqlValues += `('${htmlRow.dataset.uuid}', `;
-      htmlColumns.each(function (columnIndex, htmlColumn) {
-        htmlColumn = document.querySelector(htmlColumn);
-
+      htmlColumns.forEach((htmlColumn, columnIndex) => {
         let input = htmlRow.querySelector("td")[columnIndex].children;
 
         switch (htmlColumn.dataset.type) {
@@ -132,7 +127,7 @@ class Table_DB {
     if (!ids || ids.length == 0) return;
 
     let sqlIds = "";
-    document.querySelector(ids).each(function (index, id) {
+    ids.forEach((id, index) => {
       sqlIds += `'${id}'`;
       if (index < ids.length - 1) {
         sqlIds += ", ";

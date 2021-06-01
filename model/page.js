@@ -1,6 +1,8 @@
 const Navigation = require("../controller/navigation");
 
 class Page {
+  static blockElements = [];
+
   static init() {
     let startpage;
     let pageId = Settings.DATA.STARTPAGE;
@@ -70,9 +72,9 @@ class Page {
   }
 
   static clear() {
-    document.querySelector("#content").html("");
+    document.querySelector("#content").innerHTML = "";
     document.querySelector("#pageName").value = "";
-    document.querySelector("#content").dataset.uuid = null;
+    document.querySelector("#content").dataset.uuid = "";
   }
 
   static openNewPage() {
@@ -84,8 +86,8 @@ class Page {
 
   static openSettingsPage() {
     let page = File.readFile(Filepath.join(__dirname, "../view/settings.html"));
-    document.querySelector("#placeholder").toggle(false);
-    document.querySelector("#content").html(page);
+    General.toggle(document.querySelector("#placeholder"), false);
+    document.querySelector("#content").innerHTML = page;
     document.querySelector("#pageName").value = "Settings";
     Settings.registerEvents();
   }
@@ -98,27 +100,32 @@ class Page {
 
     let page = Page_DB.getById(pageId);
     let pageElements = Page_DB.getElements(pageId);
-    let htmlElement = null;
+    let blockElement = null;
 
     if (!pageElements || pageElements.length == 0) {
-      htmlElement = Textline.create();
-      document.querySelector("#content").append(htmlElement);
+      blockElement = new Textline();
+      this.addToContent(blockElement);
     } else {
       let blockElements = Table.createByPageId(pageId);
       blockElements.push(...Textline.createByPageId(pageId));
 
-      pageElements.forEach((pageElement) => {
-        let blockElement = blockElements.filter((blockElement) => {
-          if (blockElement.container) return blockElement.container.dataset.uuid == pageElement.id;
-        });
-        if (!blockElement || blockElement.length == 0) return;
-        document.querySelector("#content").append(blockElement[0].container);
+      this.blockElements.forEach((blockElement) => {
+        // blockElement = blockElements.filter((blockElement) => {
+        //   if (blockElement.container) return blockElement.container.dataset.uuid == pageElement.id;
+        // });
+        // if (!blockElement || blockElement.length == 0) return;
+        this.addToContent(blockElement);
       });
     }
 
-    document.querySelector("#placeholder").toggle(true);
+    General.toggle(document.querySelector("#placeholder"), true);
     document.querySelector("#content").dataset.uuid = page.id;
     document.querySelector("#pageName").value = page.name;
+  }
+
+  static addToContent(element) {
+    document.querySelector("#content").append(element.container);
+    this.blockElements.push(element);
   }
 
   static saveCurrentContent() {
@@ -135,30 +142,27 @@ class Page {
   }
 
   static savePageContent(pageId) {
-    let htmlChildren = document.querySelector("#content").children;
-    if (htmlChildren.length == 0) return;
+    let pageElements = document.querySelectorAll(".pageElement");
+    if (pageElements.length == 0) return;
 
     let sql = "";
-    htmlChildren.each(function (index, htmlChild) {
-      htmlChild = document.querySelector(htmlChild);
+    pageElements.forEach((pageElement, index) => {
       let elementType;
-      if (htmlChild.is(".table")) {
-        elementType = Enums.ElementTypes.TABLE;
-        Table.save(htmlChild);
-      } else if (htmlChild.is(".textline")) {
-        elementType = Enums.ElementTypes.TEXTLINE;
-        Textline.save(htmlChild);
-      }
-      let element = { id: htmlChild.dataset.uuid, typeId: elementType.id };
-      sql = Page_DB.buildUpdateElement(sql, htmlChildren.length, index, pageId, element);
+      let blockElement = Page.blockElements.filter((blockElement) => {
+        return blockElement.container.dataset.uuid == pageElement.dataset.uuid;
+      })?.[0];
+      blockElement.save();
+
+      let element = { id: blockElement.container.dataset.uuid, typeId: blockElement.elementData.type };
+      sql = Page_DB.buildUpdateElement(sql, pageElements.length, index, pageId, element);
     });
     Page_DB.updateElement([sql]);
   }
 
   static delete(id) {
     Page_DB.delete(id);
-    document.querySelector("#content").dataset.uuid = null;
-    document.querySelector("#settingsPage").fireEvent("onclick");
+    document.querySelector("#content").dataset.uuid = "";
+    document.querySelector("#settingsPage").dispatchEvent(new Event("click"));
   }
 
   static addElement(elementType) {
@@ -171,11 +175,11 @@ class Page {
   }
 
   static setDisable(disable) {
-    document.querySelector("#disabledPageContainer").toggle(disable);
+    General.toggle(document.querySelector("#disabledPageContainer"), disable);
   }
 
   static isDisabled() {
-    if (document.querySelector("#disabledPageContainer").css("display") == "none") {
+    if (document.querySelector("#disabledPageContainer").style.display == "none") {
       return false;
     } else {
       return true;
@@ -196,13 +200,13 @@ class Eventhandler {
 
   static onKeyupPageName(event) {
     let pageId = document.querySelector("#content").dataset.uuid;
-    let navbarItem = document.querySelector(".navbarItem").filter(function () {
-      return document.querySelector(this).dataset.uuid == pageId;
+    let navbarItem = document.querySelectorAll(".navbarItem").filter((navbarItem) => {
+      return navbarItem.dataset.uuid == pageId;
     });
 
     let pagename = document.querySelector("#pageName").value;
-    let textNode = navbarItem.contents().filter(function () {
-      return this.nodeType == Node.TEXT_NODE;
+    let textNode = navbarItem.contents().filter((content) => {
+      return content.nodeType == Node.TEXT_NODE;
     });
     if (textNode && textNode.length > 0) {
       textNode.replaceWith(pagename);

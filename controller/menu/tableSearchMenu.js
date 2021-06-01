@@ -17,47 +17,47 @@ class TableSearchMenu {
 
   static close(element) {
     if (!TableSearchMenu.isOpen() || TableSearchMenu.clickedOnMenu(element)) return;
-    document.querySelector("#tableSearchMenu").toggle(false);
+    General.toggle(document.querySelector("#tableSearchMenu"), false);
   }
 
   static open(table) {
     TableSearchMenu.table = table;
 
-    document.querySelector("#tableSearchMenu").toggle(true);
+    General.toggle(document.querySelector("#tableSearchMenu"), true);
     document.querySelector("#tableSearchValue").textContent = "";
-    document.querySelector("#tableSearchValue").fireEvent("onfocus");
+    document.querySelector("#tableSearchValue").dispatchEvent(new Event("focus"));
     let result = TableSearchMenu.getResult();
     TableSearchMenu.showResult(result);
   }
 
   static getResult(name = "") {
-    let result = Table_DB.getByName(name);
-    result = document.querySelector(result).filter(function () {
-      return this.id != document.querySelector(TableSearchMenu.table).dataset.uuid;
+    let resultset = Table_DB.getByName(name);
+    resultset = resultset.filter((result) => {
+      return result.id != TableSearchMenu.table.dataset.uuid;
     });
-    return result;
+    return resultset;
   }
 
-  static showResult(result) {
+  static showResult(resultset) {
     let tbody = document.querySelector("#tableSearchMenu table tbody");
     tbody.children
-      .filter(function () {
-        return this.id != "noTableFound";
+      .filter((child) => {
+        return child.id != "noTableFound";
       })
       .remove();
 
-    if (result.length == 0) {
-      document.querySelector("#noTableFound").toggle(true);
+    if (resultset.length == 0) {
+      General.toggle(document.querySelector("#noTableFound"), true);
       return;
     } else {
-      document.querySelector("#noTableFound").toggle(false);
-      document.querySelector(result).each(function () {
+      General.toggle(document.querySelector("#noTableFound"), false);
+      resultset.forEach((result) => {
         let tr = document.createElement("tr");
         let td = document.createElement("td");
-        td.textContent = this.name;
-        document.querySelector(td).dataset.uuid = this.id;
+        td.textContent = result.name;
+        td.dataset.uuid = result.id;
         tr.append(td);
-        document.querySelector(tr).addEventListener("click", (event) => Eventhandler.onClickTableResult(event));
+        tr.onclick = (event) => Eventhandler.onClickTableResult(event);
         tbody.append(tr);
       });
     }
@@ -80,20 +80,17 @@ class TableSearchMenu {
 
 class Eventhandler {
   static onFocus(event) {
-    let input = document.querySelector(event.target);
-    let result = TableSearchMenu.getResult(input.value);
+    let result = TableSearchMenu.getResult(event.target.value);
     TableSearchMenu.showResult(result);
   }
 
   static onInput(event) {
-    let input = document.querySelector(event.target);
-    let result = TableSearchMenu.getResult(input.value);
+    let result = TableSearchMenu.getResult(event.target.value);
     TableSearchMenu.showResult(result);
   }
 
   static onClickTableResult(event) {
-    let row = document.querySelector(event.target);
-    ColumnMenu.setTableRelation({ id: row.dataset.uuid, name: row.textContent });
+    ColumnMenu.setTableRelation({ id: event.target.dataset.uuid, name: event.target.textContent });
     TableSearchMenu.close();
   }
 }

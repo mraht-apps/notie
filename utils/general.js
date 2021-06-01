@@ -38,12 +38,10 @@ class General {
   }
 
   static focus(inputField, moveCursor = Enums.FocusActions.END, deselect = true) {
+    if (!inputField) return;
     setTimeout(function () {
-      document.querySelector(inputField).fireEvent("onfocus");
-      if (
-        document.querySelector(inputField).is("div[contenteditable='true']") ||
-        document.querySelector(inputField).is("input:text")
-      ) {
+      inputField.focus();
+      if (inputField.contentEditable == "true" || inputField == typeof "input:text") {
         switch (moveCursor) {
           case Enums.FocusActions.ALL:
             General.selectText();
@@ -58,8 +56,20 @@ class General {
     }, 0);
   }
 
+  static getParent(node, selector) {
+    return $(node).parent(selector).get();
+  }
+
   static getParents(node, selector) {
     return $(node).parents(selector).get();
+  }
+
+  static toggle(element, show) {
+    if (show || element.style.display === "none") {
+      element.style.display = "block";
+    } else {
+      element.style.display = "none";
+    }
   }
 }
 

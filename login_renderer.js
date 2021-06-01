@@ -18,7 +18,7 @@ class Renderer {
       document.querySelector("#rememberDatabase").checked = true;
     }
     if (Settings.CACHE.REMEMBER_PW) {
-      document.querySelectordocument.querySelector("#rememberPassword").checked = true;
+      document.querySelector("#rememberPassword").checked = true;
     }
 
     if (Settings.DATA.PASSWORD) {
@@ -26,9 +26,9 @@ class Renderer {
     }
 
     if (Settings.DATA.DATABASE && Settings.DATA.DATABASE.length > 0) {
-      document.querySelector("#openDatabase").fireEvent("onclick");
+      document.querySelector("#openDatabase").dispatchEvent(new Event("click"));
     } else {
-      document.querySelector("#createDatabase").fireEvent("onclick");
+      document.querySelector("#createDatabase").dispatchEvent(new Event("click"));
     }
   }
 
@@ -56,7 +56,7 @@ class Eventhandler {
 
     document.querySelector("#database").title = "Choose a database folder";
     document.querySelector("#database").value = Settings.CACHE.DEFAULT_FOLDER;
-    document.querySelector("#database").fireEvent("onchange");
+    document.querySelector("#database").dispatchEvent(new Event("change"));
 
     if (
       document.querySelector("#database").value == "" ||
@@ -77,7 +77,7 @@ class Eventhandler {
 
     document.querySelector("#database").title = "Choose a database file";
     document.querySelector("#database").value = Settings.CACHE.DEFAULT_FILE;
-    document.querySelector("#database").fireEvent("onchange");
+    document.querySelector("#database").dispatchEvent(new Event("change"));
 
     if (
       document.querySelector("#database").value == "" ||
@@ -90,7 +90,7 @@ class Eventhandler {
   }
 
   static onChangeDatabase(event) {
-    let database = document.querySelector(event.target);
+    let database = event.target;
     if (File.exists(database.value)) {
       database.classList.remove("error");
     } else if (!database.classList.contains("error")) {
@@ -107,7 +107,7 @@ class Eventhandler {
     }
     if (!result || result.length == 0 || result[0].trim().length == 0) return;
     document.querySelector("#database").value = result[0];
-    document.querySelector("#database").fireEvent("onchange");
+    document.querySelector("#database").dispatchEvent(new Event("change"));
     General.focus(document.querySelector("#password"));
   }
 

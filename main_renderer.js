@@ -90,7 +90,7 @@ class Renderer {
     ipcRenderer.onUpdateDownloaded = (event) => Eventhandler.onUpdateDownloaded(event);
     ipcRenderer.onProgMade = (event, text) => Eventhandler.onProgMade(event, text);
 
-    document.querySelector(window).onbeforeunload = (event) => Eventhandler.onBeforeUnloadWindow(event);
+    window.onbeforeunload = (event) => Eventhandler.onBeforeUnloadWindow(event);
 
     document.querySelector("#btnUpdateApp").onclick = (event) => Eventhandler.onClickBtnUpdateApp(event);
     document.querySelector("#btnTest").addEventListener("click", (event) => Eventhandler.onClickBtnTest(event));
@@ -145,12 +145,12 @@ class Eventhandler {
   static onClickBtnTest(event) {}
 
   static onClickBtnLogout(event) {
-    document.querySelector(window).fireEvent("onbeforeunload");
+    window.dispatchEvent(new Event("beforeunload"));
     ipcRenderer.send("logout");
   }
 
   static onClickBtnRestart(event) {
-    document.querySelector(window).fireEvent("onbeforeunload");
+    window.dispatchEvent(new Event("beforeunload"));
     ipcRenderer.send("exit", true);
   }
 }

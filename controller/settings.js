@@ -27,7 +27,7 @@ class Settings {
   }
 
   static registerEvents() {
-    document.querySelector("#btnSavePassword").addEventListener("click", (event) => Eventhandler.onClickBtnSavePassword(event));
+    document.querySelector("#btnSavePassword").onclick = (event) => Eventhandler.onClickBtnSavePassword(event);
   }
 
   static setDefault() {
@@ -47,7 +47,8 @@ class Settings {
   }
 
   static save() {
-    Settings.DATA.STARTPAGE = document.querySelector("#content").dataset.uuid");
+    let startpageId = document.querySelector("#content").dataset.uuid;
+    if (startpage && startpageId != "null") Settings.DATA.STARTPAGE = startpageId;
 
     Settings.DATA.WINDOW = ipcRenderer.sendSync("determineWindowData");
 
@@ -84,7 +85,7 @@ class Settings {
 
 class Eventhandler {
   static onClickBtnSavePassword(event) {
-    let password = document.querySelector("#password").value = );
+    let password = document.querySelector("#password").value;
     if (Settings.isSuitablePassword(password)) {
       Settings.CACHE.PASSWORD = password;
       console.log("User set password to " + Settings.CACHE.PASSWORD + "\n");

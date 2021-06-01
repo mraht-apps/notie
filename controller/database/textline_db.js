@@ -12,7 +12,7 @@ class Textline_DB {
     if (!ids || ids.length == 0) return;
 
     let sqlIds = "";
-    document.querySelector(ids).each(function (index, id) {
+    ids.forEach((id, index) => {
       sqlIds += `'${id}'`;
       if (index < ids.length - 1) {
         sqlIds += ", ";

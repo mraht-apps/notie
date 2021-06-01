@@ -1,21 +1,21 @@
 class NumberFormatMenu {
   static create(numberFormatId) {
     let table = document.querySelector("#numberFormatMenu table");
-    document.querySelector(table).querySelector("tbody tr").remove();
+    table.querySelector("tbody tr").remove();
 
     Object.keys(Enums.NumberFormats).forEach(function (key) {
       let element = Enums.NumberFormats[key];
       if (element.id == numberFormatId) return;
 
       let tr = document.createElement("tr");
-      document.querySelector(tr).dataset.format = element.id;
-      document.querySelector(tr).addEventListener("click", (event) => Eventhandler.onClickNumberFormat(event));
+      tr.dataset.format = element.id;
+      tr.addEventListener("click", (event) => Eventhandler.onClickNumberFormat(event));
       let td = document.createElement("td");
       td.className = "numberFormatOption";
       let text = document.createTextNode(element.descr);
       td.append(text);
       tr.append(td);
-      document.querySelector(table).querySelector("tbody").append(tr);
+      table.querySelector("tbody").append(tr);
     });
   }
 
@@ -25,12 +25,12 @@ class NumberFormatMenu {
 
   static close(element) {
     if (!NumberFormatMenu.isOpen() || NumberFormatMenu.clickedOnMenu(element)) return;
-    document.querySelector("#numberFormatMenu").toggle(false);
+    General.toggle(document.querySelector("#numberFormatMenu"), false);
   }
 
   static open(numberFormat) {
     NumberFormatMenu.create(numberFormat);
-    document.querySelector("#numberFormatMenu").toggle(true);
+    General.toggle(document.querySelector("#numberFormatMenu"), true);
   }
 
   static clickedOnMenu(element) {

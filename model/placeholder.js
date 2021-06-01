@@ -6,7 +6,8 @@ class Placeholder {
 
 class Eventhandler {
   static onClick(event) {
-    let lastElement = document.querySelector("#content").children.last(".pageElement");
+    let pageElements = document.querySelector("#content .pageElement").children;
+    let lastElement = pageElements[pageElements.length - 1];
     if (!lastElement.classList.contains("textline")) {
       let textline = Textline.create();
       document.querySelector("#content").append(textline);

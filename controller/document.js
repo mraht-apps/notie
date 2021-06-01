@@ -24,7 +24,7 @@ class Eventhandler {
     image.src = `../cache/img/${uuid}.png`;
     let textline = event.target || event.target.closest(".textline");
     textline.append(image);
-    textline.css.contentEditable = false;
+    textline.contentEditable = "false";
     textline.classList.remove("textline");
     textline.classList.add("image");
     event.preventDefault();
@@ -67,11 +67,11 @@ class Eventhandler {
   }
 
   static onMousemove(event) {
-    Table.fireEvent("onmousemove", event);
+    Table.dispatchEvent("onMousemove", event);
   }
 
   static onMouseup(event) {
-    Table.fireEvent("onmouseup", event);
+    Table.dispatchEvent("onMouseup", event);
   }
 }
 
