@@ -378,13 +378,11 @@ class Table extends Blockelement {
     } catch (e) {}
 
     let rows = this.htmlElement.rows;
-    let columnIndex = document
-      .querySelector(this.htmlElement)
-      .querySelectorAll("th")
-      .filter((th) => {
-        return th.dataset.uuid == columnId;
-      })
-      .index();
+    let columns = document.querySelector(this.htmlElement).querySelectorAll("th");
+    let column = columns.filter((th) => {
+      return th.dataset.uuid == columnId;
+    });
+    let columnIndex = Array.prototype.indexOf(columns, column);
 
     for (let i = 0; i < rows.length - 1; i++) {
       rows[i].deleteCell(columnIndex);
@@ -397,7 +395,8 @@ class Table extends Blockelement {
   }
 
   duplicateColumn(htmlColumn) {
-    let columnIndex = htmlColumn.index();
+    let columns = table.querySelectorAll("th");
+    let columnIndex = Array.prototype.indexOf(columns, htmlColumn);
     let column = {
       id: Crypto.generateUUID(6),
       table_id: this.container.dataset.uuid,
@@ -418,54 +417,55 @@ class Eventhandler {
   }
 
   static onKeydownTableCell(event) {
-    let columnIndex = General.getParents(event.target.parents).indexOf(event.target.parentNode);
-    let tableRow = General.getParents(event.target, "tr");
+    let td = event.target.parentElement;
+    let columnIndex = Eventhandler.detColumnIndex(td);
+    let tr = General.getParents(event.target, "tr")[0];
 
     let input;
     switch (event.key) {
       case "ArrowUp":
-        input = tableRow.previousElementSibling.children[columnIndex].children;
-        if (input.length == 0) {
-          let lastRow = tableRow.parentElement.querySelector("tr:last-of-type").previousElementSibling;
-          input = lastRow.children[columnIndex].children;
+        input = tr.previousElementSibling?.children[columnIndex].children[0];
+        if (!input) {
+          let lastRow = tr.parentElement.querySelector("tr:last-of-type").previousElementSibling;
+          input = lastRow.children[columnIndex].children[0];
         }
         General.focus(input, Enums.FocusActions.ALL, false);
         event.preventDefault();
         break;
       case "ArrowDown":
-        input = tableRow.nextElementSibling.children[columnIndex].children;
-        if (input.id == "newRow" || input.length == 0) {
-          let firstRow = tableRow.parentNode.querySelector("tr:first-of-type");
-          input = firstRow.children[columnIndex].children;
+        input = tr.nextElementSibling?.children[columnIndex].children[0];
+        if (!input || input.id == "newRow") {
+          let firstRow = tr.parentElement.querySelector("tr:first-of-type");
+          input = firstRow.children[columnIndex].children[0];
         }
         General.focus(input, Enums.FocusActions.ALL, false);
         event.preventDefault();
         break;
       case "ArrowLeft":
         if (window.getSelection().baseOffset > 0) return;
-        input = event.target.parents("td").previousElementSibling.children;
-        if (input.length == 0) {
-          let lastTableCellIndex = tableRow.children.length - 2;
-          input = tableRow.children[lastTableCellIndex].children;
+        input = td.previousElementSibling?.children[0];
+        if (!input) {
+          let lastTableCellIndex = tr.children.length - 2;
+          input = tr.children[lastTableCellIndex].children[0];
         }
         General.focus(input, Enums.FocusActions.ALL);
         event.preventDefault();
         break;
       case "ArrowRight":
         if (window.getSelection().baseOffset < event.target.innerHTML.length) return;
-        input = General.getParents(event.target, "td").nextElementSibling.children;
-        if (input.length == 0) {
-          input = tableRow.children.first("td").children;
+        input = td.nextElementSibling?.children[0];
+        if (!input) {
+          input = tr.children[0].children[0];
         }
         General.focus(input, Enums.FocusActions.ALL);
         event.preventDefault();
         break;
       case "Enter":
         let table = General.getParents(event.target, "table");
-        input = tableRow.nextElementSibling.children[columnIndex].children;
-        if (input.id == "newRow" || input.length == 0) {
+        input = tr.nextElementSibling.children[columnIndex]?.children[0];
+        if (!input || input.id == "newRow") {
           table.addRowByNewRow();
-          input = tableRow.nextSibling.children[columnIndex].children;
+          input = tr.nextSibling.children[columnIndex].children[0];
         }
         General.focus(input, Enums.FocusActions.ALL, false);
         event.preventDefault();
@@ -473,38 +473,50 @@ class Eventhandler {
     }
   }
 
-  static onKeypressTextInput(event) {
-    let columnIndex = General.getParents(event.target, "td").index();
-    let column = General.getParents(event.target, "table").querySelector("th")[columnIndex];
-    let numberFormatId = column.dataset.format;
-    let numberFormat = Object.values(Enums.NumberFormats).querySelector((f) => f.id == numberFormatId);
+  static detColumn(td) {
+    let columnIndex = Eventhandler.detColumnIndex(td);
+    let table = General.getParents(td, "table")[0];
+    return table.querySelectorAll("th")[columnIndex];
+  }
 
+  static detColumnIndex(td) {
+    let tds = td.parentElement.querySelectorAll("td");
+    return Array.prototype.indexOf.call(tds, td);
+  }
+
+  static onKeypressTextInput(event) {
+    let td = event.target.parentElement;
+    let column = Eventhandler.detColumn(td);
+
+    let numberFormatId = column.dataset.format;
+    if (!numberFormatId || numberFormatId == "") return;
+
+    let numberFormat = Object.values(Enums.NumberFormats).querySelector((f) => f.id == numberFormatId);
     if (numberFormat && !numberFormat.keyPattern.test(event.key)) {
       event.preventDefault();
     }
   }
 
   static onFocusTextInput(event) {
-    let table = General.getParents(event.target, "table")[0];
-    let tableCell = event.target.parentElement;
-    let tableRow = General.getParent(tableCell, "tr");
-    let tableCells = tableRow.querySelectorAll("td");
+    let td = event.target.parentElement;
+    let column = Eventhandler.detColumn(td);
 
-    let columnIndex = Array.prototype.indexOf.call(tableCells, tableCell);
-    let column = table.querySelectorAll("th")[columnIndex];
     let relation = column.dataset.relation;
     if (!relation || relation == "") return;
+
     let values = Table_DB.getValues(relation);
     // NEW Relation: Open menu to select value to relate to #5
     console.log(values);
   }
 
   static onFocusoutTextInput(event) {
-    let columnIndex = General.getParents(event.target, "td").index();
-    let column = General.getParents(event.target, "table").querySelector("th")[columnIndex];
-    let numberFormatId = column.dataset.format;
-    let numberFormat = Object.values(Enums.NumberFormats).querySelector((f) => f.id == numberFormatId);
+    let td = event.target.parentElement;
+    let column = Eventhandler.detColumn(td);
 
+    let numberFormatId = column.dataset.format;
+    if (!numberFormatId || numberFormatId == "") return;
+
+    let numberFormat = Object.values(Enums.NumberFormats).filter((f) => f.id == numberFormatId);
     let value = event.target.innerHTML;
     if (numberFormat) {
       value = numberFormat.pattern.exec(value);

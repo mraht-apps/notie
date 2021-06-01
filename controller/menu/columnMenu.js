@@ -94,7 +94,8 @@ class ColumnMenu {
   }
 
   static setCellData(columnType) {
-    let columnIndex = Eventhandler.selectedColumn.index();
+    let columns = Eventhandler.selectedTable.htmlElement.querySelectorAll("th");
+    let columnIndex = Array.prototype.indexOf(columns, Eventhandler.selectedColumn);
     let cells = [];
     document
       .querySelector(Eventhandler.selectedTable)
