@@ -141,7 +141,7 @@ class Database {
 
   static run(sqlArray) {
     if (!Database.db) return;
-    sqlArray.forEach(function (sql) {
+    sqlArray.forEach((sql) => {
       if (sql.includes("REPLACE INTO tables") || sql.includes("DELETE FROM tables")) {
         Table_DB.tablesBuffer = [];
       }

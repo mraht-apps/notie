@@ -3,7 +3,7 @@ class NumberFormatMenu {
     let table = document.querySelector("#numberFormatMenu table");
     table.querySelector("tbody tr").remove();
 
-    Object.keys(Enums.NumberFormats).forEach(function (key) {
+    Object.keys(Enums.NumberFormats).forEach((key) => {
       let element = Enums.NumberFormats[key];
       if (element.id == numberFormatId) return;
 

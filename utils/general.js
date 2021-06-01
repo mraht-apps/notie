@@ -57,7 +57,7 @@ class General {
   }
 
   static getParent(node, selector) {
-    return $(node).parent(selector).get();
+    return $(node).parent(selector).get(0);
   }
 
   static getParents(node, selector) {

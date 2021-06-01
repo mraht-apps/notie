@@ -44,7 +44,9 @@ class Eventhandler {
   static onClick(event) {
     if (!TableMenu.isOpen()) {
       TableMenu.open(event.target);
-      Eventhandler.selectedTable = General.getParents(event.target, ".pageElement.table");
+      let pageElement = General.getParents(event.target, ".pageElement.table")[0];
+      Eventhandler.selectedTable = Page.getBlockElement(pageElement.dataset.uuid);
+      
     } else {
       TableMenu.close(event.target);
     }
@@ -55,7 +57,7 @@ class Eventhandler {
 
     switch (action) {
       case Enums.TableActions["delete"]:
-        Table.delete(Eventhandler.selectedTable);
+        Eventhandler.selectedTable.delete();
         Textline.focusLast();
         break;
     }

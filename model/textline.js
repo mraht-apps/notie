@@ -48,7 +48,7 @@ class Textline extends Blockelement {
   }
 
   static appendBefore(element) {
-    Eventhandler.activeTextline.insertBefore(element);
+    document.querySelector("#content").insertBefore(element, Eventhandler.activeTextline.parentElement);
     Eventhandler.activeTextline.textContent = "";
     General.focus(Eventhandler.activeTextline);
   }
@@ -67,7 +67,8 @@ class Textline extends Blockelement {
     let isFirstTextline = typeof this.htmlElement == ".textline:first-of-type";
 
     Textline_DB.delete(true, [], [this.container.dataset.uuid]);
-    this.htmlElement.remove();
+    this.container.remove();
+    Page.removeElement(this);
 
     if (isFirstTextline) General.focus(document.querySelector("#pageName"));
   }

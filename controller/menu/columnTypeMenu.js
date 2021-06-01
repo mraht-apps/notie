@@ -3,7 +3,7 @@ class ColumnTypeMenu {
     let table = document.querySelector("#columnTypeMenu table");
     table.querySelector("tbody tr").remove();
 
-    Object.keys(Enums.ColumnTypes).forEach(function (key) {
+    Object.keys(Enums.ColumnTypes).forEach((key) => {
       let element = Enums.ColumnTypes[key];
       if (element == Enums.ColumnTypes.ADD || element.id == columnTypeId) return;
 

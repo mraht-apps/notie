@@ -1,5 +1,5 @@
 # Version 1.0.0
-- Replace jQuery by DOM: css, children, parent(s), each, data, eq, find
+- Replace jQuery by DOM: index
 - Use parsefloat instead of custom regex check
 - Optimize autocomplete with datalist
 

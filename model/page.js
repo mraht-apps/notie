@@ -143,9 +143,7 @@ class Page {
 
     let sql = "";
     pageElements.forEach((pageElement, index) => {
-      let blockElement = Page.blockElements.filter((blockElement) => {
-        return blockElement.container.dataset.uuid == pageElement.dataset.uuid;
-      })?.[0];
+      let blockElement = Page.getBlockElement(pageElement.dataset.uuid);
       if (!blockElement) return;
       blockElement.save();
 
@@ -166,7 +164,16 @@ class Page {
       case "table":
         let tableElement = new Table();
         Textline.appendBefore(tableElement.container);
+        Page.blockElements.push(tableElement);
         break;
+    }
+  }
+
+  static removeElement(element) {
+    let blockElement = Page.getBlockElement(element.container.dataset.uuid);
+    let index = Page.blockElements.indexOf(blockElement);
+    if (index > -1) {
+      Page.blockElements.splice(index, 1);
     }
   }
 
@@ -180,6 +187,12 @@ class Page {
     } else {
       return true;
     }
+  }
+
+  static getBlockElement(id) {
+    return Page.blockElements.filter((blockElement) => {
+      return blockElement.container.dataset.uuid == id;
+    })?.[0];
   }
 }
 

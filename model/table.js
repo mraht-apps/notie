@@ -1,4 +1,4 @@
-const Enums = require("../model/enums.js");
+const Enums = require("./enums.js");
 const General = require("../utils/general.js");
 
 class Table extends Blockelement {
@@ -52,7 +52,7 @@ class Table extends Blockelement {
   initData(jsonData) {
     if (!jsonData) {
       jsonData = {
-        type: Enums.ElementTypes.TABLE.id, 
+        type: Enums.ElementTypes.TABLE.id,
         id: "",
         caption: "",
         columns: [
@@ -141,7 +141,7 @@ class Table extends Blockelement {
     let tr = this.htmlElement.insertRow();
     tr.dataset.uuid = Crypto.generateUUID(6);
 
-    this.elementData.columns.forEach((columnIndex, column) => {
+    this.elementData.columns.forEach((column, columnIndex) => {
       let exit = this.createTableCell(tr, columnIndex, column, row);
       if (exit) return false;
     });
@@ -174,8 +174,8 @@ class Table extends Blockelement {
       input.addEventListener("focusout", (event) => Eventhandler.onFocusoutTextInput(event));
     }
 
-    let nextTd = tr.querySelector("td")[columnIndex];
-    if (nextTd.length > 0) {
+    let nextTd = tr.querySelectorAll("td")[columnIndex];
+    if (nextTd) {
       nextTd.before(td);
     } else {
       tr.append(td);
@@ -215,7 +215,7 @@ class Table extends Blockelement {
 
   createTableColumn(tr, index, column) {
     let th = document.createElement("th");
-    let columnType = Object.values(Enums.ColumnTypes).querySelector((t) => t.id == column.type);
+    let columnType = Object.values(Enums.ColumnTypes).filter((t) => t.id == column.type)[0];
     th.dataset.type = column.type;
 
     if (column.type != Enums.ColumnTypes.ADD.id) {
@@ -264,11 +264,11 @@ class Table extends Blockelement {
 
     th.appendChild(div);
 
-    let nextTh = tr.children("th")[index];
-    if (nextTh.length > 0) {
-      nextTh.before(th);
+    let nextTh = tr.querySelectorAll("th")[index];
+    if (nextTh) {
+      nextTh.insertBefore(th);
     } else {
-      tr.appendChild(th);
+      tr.append(th);
     }
   }
 
@@ -346,6 +346,7 @@ class Table extends Blockelement {
   delete() {
     Table_DB.delete(true, [], [this.container.dataset.uuid]);
     this.container.remove();
+    Page.removeElement(this);
   }
 
   save() {
@@ -484,8 +485,13 @@ class Eventhandler {
   }
 
   static onFocusTextInput(event) {
-    let columnIndex = General.getParents(event.target, "td").index();
-    let column = General.getParents(event.target, "table").querySelector("th")[columnIndex];
+    let table = General.getParents(event.target, "table")[0];
+    let tableCell = event.target.parentElement;
+    let tableRow = General.getParent(tableCell, "tr");
+    let tableCells = tableRow.querySelectorAll("td");
+
+    let columnIndex = Array.prototype.indexOf.call(tableCells, tableCell);
+    let column = table.querySelectorAll("th")[columnIndex];
     let relation = column.dataset.relation;
     if (!relation || relation == "") return;
     let values = Table_DB.getValues(relation);

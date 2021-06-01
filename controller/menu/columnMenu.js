@@ -153,9 +153,7 @@ class ColumnMenu {
   static clickedOnMenu(element) {
     if (
       element &&
-      (element.id == "btnColumnMenu" ||
-        element.id == "columnMenu" ||
-        General.getParent(element, "#columnMenu").length > 0)
+      (element.id == "btnColumnMenu" || element.id == "columnMenu" || General.getParent(element, "#columnMenu"))
     ) {
       return true;
     } else {
