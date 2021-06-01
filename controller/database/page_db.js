@@ -34,7 +34,7 @@ class Page_DB {
     Database.run(sqlStatements);
   }
 
-  static buildUpdateElement(sql, elementLength, index, pageId, element) {
+  static prepareUpdateElement(sql, elementLength, index, pageId, element) {
     if (sql == null || sql == "") {
       sql = "REPLACE INTO page_elements VALUES";
     }

@@ -72,6 +72,7 @@ class Page {
   }
 
   static clear() {
+    this.blockElements = [];
     document.querySelector("#content").innerHTML = "";
     document.querySelector("#pageName").value = "";
     document.querySelector("#content").dataset.uuid = "";
@@ -100,20 +101,15 @@ class Page {
 
     let page = Page_DB.getById(pageId);
     let pageElements = Page_DB.getElements(pageId);
-    let blockElement = null;
 
     if (!pageElements || pageElements.length == 0) {
-      blockElement = new Textline();
+      let blockElement = new Textline();
       this.addToContent(blockElement);
     } else {
       let blockElements = Table.createByPageId(pageId);
       blockElements.push(...Textline.createByPageId(pageId));
 
-      this.blockElements.forEach((blockElement) => {
-        // blockElement = blockElements.filter((blockElement) => {
-        //   if (blockElement.container) return blockElement.container.dataset.uuid == pageElement.id;
-        // });
-        // if (!blockElement || blockElement.length == 0) return;
+      blockElements.forEach((blockElement) => {
         this.addToContent(blockElement);
       });
     }
@@ -147,14 +143,14 @@ class Page {
 
     let sql = "";
     pageElements.forEach((pageElement, index) => {
-      let elementType;
       let blockElement = Page.blockElements.filter((blockElement) => {
         return blockElement.container.dataset.uuid == pageElement.dataset.uuid;
       })?.[0];
+      if (!blockElement) return;
       blockElement.save();
 
       let element = { id: blockElement.container.dataset.uuid, typeId: blockElement.elementData.type };
-      sql = Page_DB.buildUpdateElement(sql, pageElements.length, index, pageId, element);
+      sql = Page_DB.prepareUpdateElement(sql, pageElements.length, index, pageId, element);
     });
     Page_DB.updateElement([sql]);
   }
@@ -168,8 +164,8 @@ class Page {
   static addElement(elementType) {
     switch (elementType) {
       case "table":
-        let tableElement = Table.create(null);
-        Textline.appendBefore(tableElement);
+        let tableElement = new Table();
+        Textline.appendBefore(tableElement.container);
         break;
     }
   }
@@ -200,20 +196,9 @@ class Eventhandler {
 
   static onKeyupPageName(event) {
     let pageId = document.querySelector("#content").dataset.uuid;
-    let navbarItem = document.querySelectorAll(".navbarItem").filter((navbarItem) => {
-      return navbarItem.dataset.uuid == pageId;
-    });
-
+    let navbarItem = document.querySelector(`.navbarItem[data-uuid='${pageId}']`);
     let pagename = document.querySelector("#pageName").value;
-    let textNode = navbarItem.contents().filter((content) => {
-      return content.nodeType == Node.TEXT_NODE;
-    });
-    if (textNode && textNode.length > 0) {
-      textNode.replaceWith(pagename);
-    } else {
-      let textNode = document.createTextNode(pagename);
-      navbarItem.append(textNode);
-    }
+    navbarItem.textContent = pagename;
   }
 }
 

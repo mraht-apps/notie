@@ -40,7 +40,7 @@ class Table extends Blockelement {
   }
 
   constructor(jsonData) {
-    super(jsonData.id, "table");
+    super(jsonData?.id, "table");
 
     this.initData(jsonData);
     this.prepare();

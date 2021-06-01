@@ -73,18 +73,18 @@ class BlockMenu {
 
 class Eventhandler {
   static onClickMenuItem(event) {
-    let row = document.querySelector(".clickable.active")[0];
+    let row = document.querySelector(".clickable.active");
     let elementType = row.dataset.type;
     Page.addElement(elementType);
     BlockMenu.close();
   }
 
   static onMouseout(event) {
-    document.querySelector(".clickable.active").classList.remove("active");
+    document.querySelector(".clickable.active")?.classList.remove("active");
   }
 
   static onMouseoverMenuItem(event) {
-    document.querySelector(".clickable.active").classList.remove("active");
+    document.querySelector(".clickable.active")?.classList.remove("active");
     let row = event.target;
     if (event.target != typeof "tr") row = event.target.closest(".clickable");
     row.classList.add("active");
