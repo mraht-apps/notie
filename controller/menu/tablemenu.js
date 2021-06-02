@@ -46,7 +46,6 @@ class Eventhandler {
       TableMenu.open(event.target);
       let pageElement = General.getParents(event.target, ".pageElement.table")[0];
       Eventhandler.selectedTable = Page.getBlockElement(pageElement.dataset.uuid);
-      
     } else {
       TableMenu.close(event.target);
     }

@@ -35,9 +35,9 @@ class Textline extends Blockelement {
   }
 
   initData(jsonData) {
-    if (!jsonData) {
-      jsonData = { type: Enums.ElementTypes.TEXTLINE.id, id: "", text: "" };
-    }
+    if (!jsonData) jsonData = { id: "", text: "" };
+    if (!jsonData.type) jsonData.type = Enums.ElementTypes.TEXTLINE.id;
+  
     this.elementData = jsonData;
   }
 

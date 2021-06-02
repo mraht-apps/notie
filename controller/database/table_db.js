@@ -96,14 +96,13 @@ class Table_DB {
     htmlRows.forEach((htmlRow, rowIndex) => {
       sqlValues += `('${htmlRow.dataset.uuid}', `;
       htmlColumns.forEach((htmlColumn, columnIndex) => {
-        let input = htmlRow.querySelector("td")[columnIndex].children;
-
-        switch (htmlColumn.dataset.type) {
+        let input = htmlRow.querySelectorAll("td")[columnIndex].children[0];
+        switch (Number(htmlColumn.dataset.type)) {
           case Enums.ColumnTypes.CHK.id:
-            sqlValues += `'${input.querySelector("input").checked}'`;
+            sqlValues += `'${input.checked}'`;
             break;
           default:
-            sqlValues += `'${input.html()}'`;
+            sqlValues += `'${input.innerHTML}'`;
             break;
         }
         if (columnIndex < htmlColumns.length - 1) {

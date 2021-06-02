@@ -1,5 +1,6 @@
 const Enums = require("./enums.js");
 const General = require("../utils/general.js");
+const Page = require("./page.js");
 
 class Table extends Blockelement {
   static createByPageId(pageId) {
@@ -52,7 +53,6 @@ class Table extends Blockelement {
   initData(jsonData) {
     if (!jsonData) {
       jsonData = {
-        type: Enums.ElementTypes.TABLE.id,
         id: "",
         caption: "",
         columns: [
@@ -66,6 +66,8 @@ class Table extends Blockelement {
         ],
       };
     }
+    if (!jsonData.type) jsonData.type = Enums.ElementTypes.TABLE.id;
+
     this.elementData = jsonData;
   }
 
@@ -149,20 +151,20 @@ class Table extends Blockelement {
 
   createTableCell(tr, columnIndex, column, row) {
     let exit = false;
-    let columnValue = row && column.id ? row.attr(column.id) : "";
+    let columnValue = row && column.id ? row[column.id] : "";
 
     let td = document.createElement("td");
-    if (column.type != "add") {
-      let input = document.createElement("div");
+    if (column.type != Enums.ColumnTypes.ADD.id) {
+      let input = null;
       switch (column.type) {
         case Enums.ColumnTypes.CHK.id:
-          let checkboxInput = document.createElement("input");
-          checkboxInput.type = "checkbox";
-          checkboxInput.className = "inputCheckbox";
-          checkboxInput.checked = columnValue;
-          input.append(checkboxInput);
+          input = document.createElement("input");
+          input.type = "checkbox";
+          input.className = "inputCheckbox";
+          input.checked = columnValue;
           break;
         default:
+          input = document.createElement("div");
           input.contentEditable = "true";
           input.innerHTML = columnValue;
           break;
@@ -239,7 +241,8 @@ class Table extends Blockelement {
       img.src = "../res/img/new.svg";
       img.draggable = false;
       div.appendChild(img);
-      div.textContent = column.name;
+      let textNode = document.createTextNode(column.name);
+      div.append(textNode);
       th.addEventListener("click", (event) => Eventhandler.onClickColumnAdd(event));
     } else {
       let img = document.createElement("img");
@@ -264,7 +267,7 @@ class Table extends Blockelement {
 
     let nextTh = General.findAll(tr, "th")[index];
     if (nextTh) {
-      nextTh.insertBefore(th);
+      nextTh.parentElement.insertBefore(th, nextTh);
     } else {
       tr.append(th);
     }
@@ -283,40 +286,40 @@ class Table extends Blockelement {
 
     let columns = [];
     General.findAll(this.htmlElement, "thead > tr > th").forEach((th) => {
-      let columnTitleDiv = column.children(".columnTitle");
-      let input = th.children("div > input");
-      let columnName = input.length > 0 ? input.value : columnTitleDiv.textContent;
-      let columnType = th.dataset.type;
+      let columnTitleDiv = th.querySelector(".columnTitle");
+      let input = th.querySelector("div input");
+      let columnName = input ? input.value : columnTitleDiv.textContent;
+      let columnType = Number(th.dataset.type);
       columns.push({ name: columnName, type: columnType });
     });
 
-    columns.forEach((column) => {
-      this.createTableCell(tr, columnIndex, column, null);
+    columns.forEach((column, index) => {
+      this.createTableCell(tr, index, column, null);
     });
   }
 
   addColumn(column, index = -1) {
     let thead = this.htmlElement.querySelector("thead");
-    let headerRow = General.findAll(thead, "tr");
+    let headerRow = thead.querySelector("tr");
     let columnIndex = index;
-    if (index == -1) columnIndex = thead.children("th").length - 1;
+    if (index == -1) columnIndex = General.findAll(thead, "th").length - 1;
     this.createTableColumn(headerRow, columnIndex, column);
     this.addCellByNewColumn(column);
   }
 
   addCellByNewColumn(column) {
-    let tbody = this.htmlElement.children("tbody");
+    let tbody = this.htmlElement.querySelector("tbody");
     let tableRows = General.findAll(tbody, "tr");
-    let tableColumns = tableRows[0].children("td");
+    let tableColumns = tableRows[0].querySelectorAll("td");
 
     for (let i = 0; i < tableRows.length - 1; i++) {
       let tr = tableRows[i];
       let columnIndex = tableColumns.length - 1;
-      this.generateTableCell(tr, columnIndex, column, null);
+      this.createTableCell(tr, columnIndex, column, null);
     }
 
     let numberOfColumns = tableColumns.length + 1;
-    tableRows[tableRows.length - 1].querySelector("td").style.colspan = numberOfColumns;
+    tableRows[tableRows.length - 1].querySelector("td").colSpan = numberOfColumns;
   }
 
   registerEventsColumnSeparator(div) {
@@ -358,7 +361,7 @@ class Table extends Blockelement {
     });
 
     let htmlColumns = General.findAll(this.htmlElement, "thead tr th");
-    htmlColumns.filter((th) => {
+    htmlColumns = htmlColumns.filter((th) => {
       return th.dataset.type != Enums.ColumnTypes.ADD.id;
     });
     Table_DB.updateColumns(false, sqlStatements, tableId, htmlColumns);
@@ -375,23 +378,21 @@ class Table extends Blockelement {
 
     let rows = this.htmlElement.rows;
     let columns = General.findAll(this.htmlElement, "th");
-    let column = columns.filter((th) => {
-      return th.dataset.uuid == columnId;
-    });
+    let column = this.htmlElement.querySelector(`th[data-uuid='${columnId}']`);
     let columnIndex = Array.prototype.indexOf.call(columns, column);
 
     for (let i = 0; i < rows.length - 1; i++) {
       rows[i].deleteCell(columnIndex);
     }
 
-    let lastRowCell = rows[rows.length - 1].children("td");
-    let colspan = lastRowCell.colspan;
+    let lastRowCell = rows[rows.length - 1].querySelector("td");
+    let colspan = lastRowCell.colSpan;
     colspan = `${colspan - 1}`;
-    lastRowCell.colspan = colspan;
+    lastRowCell.colSpan = colspan;
   }
 
   duplicateColumn(htmlColumn) {
-    let columns = General.findAll(table, "th");
+    let columns = General.findAll(this.htmlElement, "th");
     let columnIndex = Array.prototype.indexOf.call(columns, htmlColumn);
     let column = {
       id: Crypto.generateUUID(6),
@@ -487,7 +488,7 @@ class Eventhandler {
     let numberFormatId = column.dataset.format;
     if (!numberFormatId || numberFormatId == "") return;
 
-    let numberFormat = Object.values(Enums.NumberFormats).querySelector((f) => f.id == numberFormatId);
+    let numberFormat = Object.values(Enums.NumberFormats).filter((f) => f.id == numberFormatId);
     if (numberFormat && !numberFormat.keyPattern.test(event.key)) {
       event.preventDefault();
     }
@@ -517,7 +518,7 @@ class Eventhandler {
     if (numberFormat) {
       value = numberFormat.pattern.exec(value);
       if (!value || value == "") {
-        event.target.innerHTML = null;
+        event.target.innerHTML = "";
       } else {
         value = value.filter((val) => {
           return val != null && val.trim() != "";
@@ -533,12 +534,14 @@ class Eventhandler {
       type: Enums.ColumnTypes.TXT.id,
       width: "120px",
     };
-    let table = General.getParents(event.target, "table");
+    let container = General.getParents(event.target, ".pageElement")[0];
+    let table = Page.getBlockElement(container.dataset.uuid);
     table.addColumn(column);
   }
 
   static onClickRowAdd(event) {
-    let table = General.getParents(event.target, "table");
+    let container = General.getParents(event.target, ".pageElement")[0];
+    let table = Page.getBlockElement(container.dataset.uuid);
     table.addRow();
   }
 

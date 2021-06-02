@@ -18,7 +18,8 @@ const ParentTypes = {
 
 const ColumnTypes = {
   ADD: {
-    id: "add",
+    id: 0,
+    name: "add",
   },
   TXT: {
     id: 1,
@@ -67,7 +68,12 @@ const FocusActions = {
 
 const NumberFormats = {
   NUMBER: { id: 1, descr: "Number", keyPattern: /^[0-9.]$/, pattern: /(?=([1-9]+\.[0-9]+)|(0\.[0-9]+)|([1-9]+))/g },
-  NUMBER_WITH_COMMA: { id: 2, descr: "Number with commas", keyPattern: /^[0-9,]$/, pattern: /(?=([1-9]+,[0-9]+)|(0,[0-9]+)|([1-9]+))/g },
+  NUMBER_WITH_COMMA: {
+    id: 2,
+    descr: "Number with commas",
+    keyPattern: /^[0-9,]$/,
+    pattern: /(?=([1-9]+,[0-9]+)|(0,[0-9]+)|([1-9]+))/g,
+  },
 };
 
 module.exports = {

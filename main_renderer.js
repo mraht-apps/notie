@@ -10,6 +10,7 @@ const ipcRenderer = require("electron").ipcRenderer;
 const Filepath = require("path");
 
 // Utilities
+const DOM = require("../utils/dom.js");
 const General = require("../utils/general.js");
 const Crypto = require("../utils/crypto.js");
 const File = require("../utils/file.js");
@@ -47,6 +48,8 @@ const Table = require("../model/table.js");
 
 class Renderer {
   static init() {
+    DOM.enhanceMethods();
+
     ipcRenderer.send("setAppVersion");
 
     Renderer.registerEvents();

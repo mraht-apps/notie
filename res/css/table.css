@@ -98,12 +98,11 @@
 .tableBody tr:last-of-type td {
   border-top: none;
   border-right: none;
-
   color: rgba(55, 53, 47, 0.7);
 }
 
 .tableBody td input[type="checkbox"] {
-  margin-left: 1px;
+  margin: 4px 0px 0px 1px;
 }
 
 .captionContainer {

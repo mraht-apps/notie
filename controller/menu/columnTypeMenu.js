@@ -1,8 +1,7 @@
 class ColumnTypeMenu {
   static create(columnTypeId) {
     let table = document.querySelector("#columnTypeMenu table");
-    table.querySelector("tbody tr").remove();
-
+    table.querySelector("tbody").replaceChildren();
     Object.keys(Enums.ColumnTypes).forEach((key) => {
       let element = Enums.ColumnTypes[key];
       if (element == Enums.ColumnTypes.ADD || element.id == columnTypeId) return;

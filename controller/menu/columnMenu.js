@@ -36,14 +36,15 @@ class ColumnMenu {
     let columnType = Object.values(Enums.ColumnTypes).filter((t) => t.id == id)[0];
 
     let columnTypeValue = document.querySelector("#columnTypeValue");
-    columnTypeValue.innerHTML = null;
+    columnTypeValue.innerHTML = "";
     columnTypeValue.dataset.type = columnType.id;
 
     let img = document.createElement("img");
     img.src = columnType.img;
     img.draggable = false;
     columnTypeValue.append(img);
-    columnTypeValue.textContent = columnType.descr;
+    let textNode = document.createTextNode(columnType.descr);
+    columnTypeValue.append(textNode);
     img = document.createElement("img");
     img.src = "../res/img/arrow_down.svg";
     img.draggable = false;
@@ -62,7 +63,7 @@ class ColumnMenu {
 
   static setFormat(columnType, format = Enums.NumberFormats.NUMBER) {
     General.toggle(document.querySelector("#numberFormat"), false);
-    Eventhandler.selectedColumn.dataset.format = null;
+    delete Eventhandler.selectedColumn.dataset.format;
 
     if (columnType.id != Enums.ColumnTypes.NUM.id) return;
     ColumnMenu.setNumberFormat(format);
@@ -71,7 +72,7 @@ class ColumnMenu {
 
   static setRelation(columnType, relation = null) {
     General.toggle(document.querySelector("#tableRelation"), false);
-    Eventhandler.selectedColumn.dataset.relation = null;
+    delete Eventhandler.selectedColumn.dataset.relation;
 
     if (columnType.id != Enums.ColumnTypes.REL.id) return;
     ColumnMenu.setTableRelation(relation);
@@ -97,14 +98,16 @@ class ColumnMenu {
     let columnIndex = Array.prototype.indexOf.call(columns, Eventhandler.selectedColumn);
     let cells = [];
     General.findAll(Eventhandler.selectedTable.htmlElement, "tbody tr").forEach((row) => {
-      cells.push(General.findAll(row, "td")[columnIndex]);
+      let cell = General.findAll(row, "td")[columnIndex];
+      if (cell) cells.push(cell);
     });
+
     cells.forEach((cell) => {
       // OPT Encapsulate source code
       let input = cell.querySelector("div");
       switch (columnType) {
         case Enums.ColumnTypes.CHK:
-          if (input.children.filter("input").length == 0) {
+          if (input.querySelectorAll("input").length == 0) {
             let checkboxInput = document.createElement("input");
             checkboxInput.type = "checkbox";
             checkboxInput.className = "inputCheckbox";
@@ -113,7 +116,7 @@ class ColumnMenu {
           }
           break;
         default:
-          input.children("input").remove();
+          DOM.removeAll(input.querySelectorAll("input"));
           input.contentEditable = "true";
       }
     });
@@ -139,11 +142,8 @@ class ColumnMenu {
     ColumnMenu.close(btnColumnMenu);
     ColumnMenu.initColumnType();
 
-    let position = document.querySelector(element).getBoundingClientRect();
-    document.querySelector("#columnMenu").style({
-      top: `${position.top + 25}px`,
-      left: `${position.left - 9}px`,
-    });
+    let position = element.getBoundingClientRect();
+    document.querySelector("#columnMenu").style.cssText = `top: ${position.top + 25}px; left: ${position.left - 9}px`;
     General.toggle(document.querySelector("#columnMenu"), true);
     General.toggle(document.querySelector("#disabledPageContainer"), true);
   }
@@ -151,7 +151,9 @@ class ColumnMenu {
   static clickedOnMenu(element) {
     if (
       element &&
-      (element.id == "btnColumnMenu" || element.id == "columnMenu" || General.getParent(element, "#columnMenu"))
+      (element.id == "btnColumnMenu" ||
+        element.id == "columnMenu" ||
+        General.getParents(element, "#columnMenu").length > 0)
     ) {
       return true;
     } else {
@@ -189,12 +191,12 @@ class Eventhandler {
   }
 
   static onClickDeleteColumn(event) {
-    Table.deleteColumn(this.selectedTable, this.selectedColumn.dataset.uuid);
+    this.selectedTable.deleteColumn(this.selectedColumn.dataset.uuid);
     ColumnMenu.close();
   }
 
   static onClickDuplicateColumn(event) {
-    Table.duplicateColumn(this.selectedTable, this.selectedColumn);
+    this.selectedTable.duplicateColumn(this.selectedColumn);
     ColumnMenu.close();
   }
 }

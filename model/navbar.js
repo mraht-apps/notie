@@ -49,7 +49,6 @@ class Navbar {
 
   static select(pageId) {
     if (pageId == "newPage") return;
-    console.log(pageId);
     document.querySelector(`.navbarItem[data-uuid='${pageId}']`)?.classList.add("active");
   }
 }
