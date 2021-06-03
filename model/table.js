@@ -406,6 +406,12 @@ class Table extends Blockelement {
     };
     this.addColumn(column, columnIndex);
   }
+
+  getRows() {
+    let rows = Array.from(this.htmlElement.querySelector("tbody").querySelectorAll("tr"));
+    rows.splice(rows.length - 1, 1);
+    return rows;
+  }
 }
 
 class Eventhandler {

@@ -94,11 +94,9 @@ class ColumnMenu {
   }
 
   static setCellData(columnType) {
-    if (Eventhandler.selectedColumn.dataset.type != columnType) return;
-
     let columns = General.findAll(Eventhandler.selectedTable.htmlElement, "th");
     let columnIndex = Array.prototype.indexOf.call(columns, Eventhandler.selectedColumn);
-    General.findAll(Eventhandler.selectedTable.htmlElement, "tbody tr").forEach((row) => {
+    Eventhandler.selectedTable.getRows().forEach((row) => {
       let cell = General.findAll(row, "td")[columnIndex];
       DOM.removeAll(cell.children);
 
@@ -110,7 +108,7 @@ class ColumnMenu {
           input.className = "inputCheckbox";
           break;
         default:
-          input = cell.querySelector("div");
+          input = document.createElement("div");
           input.contentEditable = "true";
       }
       if (input) cell.append(input);
