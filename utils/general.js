@@ -69,8 +69,12 @@ class General {
   }
 
   static toggle(element, show) {
-    if (show || element.style.display === "none") {
-      element.style.display = "block";
+    if (show) {
+      if (element.tagName == "DIV") {
+        element.style.display = "block";
+      } else {
+        element.style.display = "";
+      }
     } else {
       element.style.display = "none";
     }

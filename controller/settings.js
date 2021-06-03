@@ -48,7 +48,7 @@ class Settings {
 
   static save() {
     let startpageId = document.querySelector("#content").dataset.uuid;
-    if (startpage && startpageId != "null") Settings.DATA.STARTPAGE = startpageId;
+    if (startpageId && startpageId != "null") Settings.DATA.STARTPAGE = startpageId;
 
     Settings.DATA.WINDOW = ipcRenderer.sendSync("determineWindowData");
 

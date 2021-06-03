@@ -94,31 +94,26 @@ class ColumnMenu {
   }
 
   static setCellData(columnType) {
+    if (Eventhandler.selectedColumn.dataset.type != columnType) return;
+
     let columns = General.findAll(Eventhandler.selectedTable.htmlElement, "th");
     let columnIndex = Array.prototype.indexOf.call(columns, Eventhandler.selectedColumn);
-    let cells = [];
     General.findAll(Eventhandler.selectedTable.htmlElement, "tbody tr").forEach((row) => {
       let cell = General.findAll(row, "td")[columnIndex];
-      if (cell) cells.push(cell);
-    });
+      DOM.removeAll(cell.children);
 
-    cells.forEach((cell) => {
-      // OPT Encapsulate source code
-      let input = cell.querySelector("div");
+      let input = null;
       switch (columnType) {
         case Enums.ColumnTypes.CHK:
-          if (input.querySelectorAll("input").length == 0) {
-            let checkboxInput = document.createElement("input");
-            checkboxInput.type = "checkbox";
-            checkboxInput.className = "inputCheckbox";
-            input.append(checkboxInput);
-            input.contentEditable = "false";
-          }
+          input = document.createElement("input");
+          input.type = "checkbox";
+          input.className = "inputCheckbox";
           break;
         default:
-          DOM.removeAll(input.querySelectorAll("input"));
+          input = cell.querySelector("div");
           input.contentEditable = "true";
       }
+      if (input) cell.append(input);
     });
   }
 
