@@ -25,7 +25,7 @@ class ColumnMenu {
   static initColumnType() {
     let id = Eventhandler.selectedColumn.dataset.type;
     let formatId = Eventhandler.selectedColumn.dataset.format;
-    let format = Object.values(Enums.NumberFormats).filter((t) => t.id == formatId)[0];
+    let format = Object.values(Enums.NumberFormats).find((t) => t.id == formatId);
     let relationId = Eventhandler.selectedColumn.dataset.relation;
     let relation = Table_DB.get(relationId);
 
@@ -33,7 +33,7 @@ class ColumnMenu {
   }
 
   static setColumnType(id, format, relation) {
-    let columnType = Object.values(Enums.ColumnTypes).filter((t) => t.id == id)[0];
+    let columnType = Object.values(Enums.ColumnTypes).find((t) => t.id == id);
 
     let columnTypeValue = document.querySelector("#columnTypeValue");
     columnTypeValue.innerHTML = "";

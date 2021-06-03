@@ -217,7 +217,7 @@ class Table extends Blockelement {
 
   createTableColumn(tr, index, column) {
     let th = document.createElement("th");
-    let columnType = Object.values(Enums.ColumnTypes).filter((t) => t.id == column.type)[0];
+    let columnType = Object.values(Enums.ColumnTypes).find((t) => t.id == column.type);
     th.dataset.type = column.type;
 
     if (column.type != Enums.ColumnTypes.ADD.id) {
@@ -427,7 +427,7 @@ class Eventhandler {
     let input;
     switch (event.key) {
       case "ArrowUp":
-        input = tr.previousElementSibling?.children[columnIndex].children[0];
+        input = tr.previousElementSibling?.children[columnIndex]?.children[0];
         if (!input) {
           let lastRow = tr.parentElement.querySelector("tr:last-of-type").previousElementSibling;
           input = lastRow.children[columnIndex].children[0];
@@ -436,7 +436,7 @@ class Eventhandler {
         event.preventDefault();
         break;
       case "ArrowDown":
-        input = tr.nextElementSibling?.children[columnIndex].children[0];
+        input = tr.nextElementSibling?.children[columnIndex]?.children[0];
         if (!input || input.id == "newRow") {
           let firstRow = tr.parentElement.querySelector("tr:first-of-type");
           input = firstRow.children[columnIndex].children[0];
@@ -494,7 +494,7 @@ class Eventhandler {
     let numberFormatId = column.dataset.format;
     if (!numberFormatId || numberFormatId == "") return;
 
-    let numberFormat = Object.values(Enums.NumberFormats).filter((f) => f.id == numberFormatId);
+    let numberFormat = Object.values(Enums.NumberFormats).find((f) => f.id == numberFormatId);
     if (numberFormat && !numberFormat.keyPattern.test(event.key)) {
       event.preventDefault();
     }
@@ -519,18 +519,10 @@ class Eventhandler {
     let numberFormatId = column.dataset.format;
     if (!numberFormatId || numberFormatId == "") return;
 
-    let numberFormat = Object.values(Enums.NumberFormats).filter((f) => f.id == numberFormatId);
+    let numberFormat = Object.values(Enums.NumberFormats).find((f) => f.id == numberFormatId);
     let value = event.target.innerHTML;
-    if (numberFormat) {
-      value = numberFormat.pattern.exec(value);
-      if (!value || value == "") {
-        event.target.innerHTML = "";
-      } else {
-        value = value.filter((val) => {
-          return val != null && val.trim() != "";
-        });
-        event.target.innerHTML = value[0];
-      }
+    if (numberFormat && value != "") {
+      event.target.innerHTML = parseFloat(value);
     }
   }
 

@@ -67,13 +67,8 @@ const FocusActions = {
 };
 
 const NumberFormats = {
-  NUMBER: { id: 1, descr: "Number", keyPattern: /^[0-9.]$/, pattern: /(?=([1-9]+\.[0-9]+)|(0\.[0-9]+)|([1-9]+))/g },
-  NUMBER_WITH_COMMA: {
-    id: 2,
-    descr: "Number with commas",
-    keyPattern: /^[0-9,]$/,
-    pattern: /(?=([1-9]+,[0-9]+)|(0,[0-9]+)|([1-9]+))/g,
-  },
+  NUMBER: { id: 1, descr: "Number with dot as decimal separator", keyPattern: /^[0-9.]$/ },
+  NUMBER_COMMA: { id: 2, descr: "Number with comma as decimal separator", keyPattern: /^[0-9,]$/ },
 };
 
 module.exports = {
