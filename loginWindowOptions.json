@@ -1,0 +1,16 @@
+{
+  "browserWindow": {
+    "webPreferences": {
+      "nodeIntegration": true,
+      "contextIsolation": false,
+      "spellcheck": false
+    },
+    "width": 550,
+    "height": 286,
+    "show": false,
+    "minimizable": false,
+    "resizable": false,
+    "maximizable": false,
+    "autoHideMenuBar": true
+  }
+}

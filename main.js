@@ -96,20 +96,8 @@ class Login {
   }
 
   static createWindow() {
-    const loginWindow = new BrowserWindow({
-      webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false,
-        spellcheck: false,
-      },
-      width: 550,
-      height: 286,
-      show: false,
-      minimizable: false,
-      resizable: false,
-      maximizable: false,
-      autoHideMenuBar: true,
-    });
+    const loginWindowOptions = require("./loginWindowOptions.json");
+    const loginWindow = new BrowserWindow(loginWindowOptions.browserWindow);
 
     loginWindow.loadFile("view/login.html");
     loginWindow.once("ready-to-show", () => loginWindow.show());
