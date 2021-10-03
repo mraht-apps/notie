@@ -6,15 +6,13 @@ class Settings {
   static DEFAULT_ENC_DB_FILENAME = "notie.edb";
 
   static CACHE_FOLDER = "./cache/";
-  static FILE = "settings.json";
+  static FILE = "./res/json/settings.json";
 
   static CACHE = {};
-  static DATA = {};
+  static DATA = require("." + Settings.FILE); // Workaround as they have both different base paths
 
   static init() {
     try {
-      let configData = File.readFile(Settings.FILE);
-      Settings.DATA = JSON.parse(configData);
       Settings.CACHE = {
         DATABASE: Settings.DATA.DATABASE,
         PASSWORD: Settings.DATA.PASSWORD,

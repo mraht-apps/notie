@@ -42,35 +42,20 @@ class Main {
   }
 
   static createWindow() {
-    let height = 600;
-    let width = 800;
-    let x = 0;
-    let y = 0;
-    let maximize = false;
+    let mainWindowOptions = require("./res/json/mainWindowOptions.json");
 
     if (!Settings.DATA.WINDOW) {
-      maximize = true;
+      mainWindowOptions.browserWindow.maximize = true;
     } else {
-      if (Settings.DATA.WINDOW.HEIGHT) height = Settings.DATA.WINDOW.HEIGHT;
-      if (Settings.DATA.WINDOW.WIDTH) width = Settings.DATA.WINDOW.WIDTH;
-      if (Settings.DATA.WINDOW.X) x = Settings.DATA.WINDOW.X;
-      if (Settings.DATA.WINDOW.Y) y = Settings.DATA.WINDOW.Y;
+      if (Settings.DATA.WINDOW.HEIGHT) mainWindowOptions.browserWindow.height = Settings.DATA.WINDOW.HEIGHT;
+      if (Settings.DATA.WINDOW.WIDTH) mainWindowOptions.browserWindow.width = Settings.DATA.WINDOW.WIDTH;
+      if (Settings.DATA.WINDOW.X) mainWindowOptions.browserWindow.x = Settings.DATA.WINDOW.X;
+      if (Settings.DATA.WINDOW.Y) mainWindowOptions.browserWindow.y = Settings.DATA.WINDOW.Y;
     }
 
-    const mainWindow = new BrowserWindow({
-      height: height,
-      width: width,
-      x: x,
-      y: y,
-      webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false,
-        spellcheck: false,
-        preload: path.join(__dirname, "preload.js"),
-      },
-    });
+    const mainWindow = new BrowserWindow(mainWindowOptions.browserWindow);
 
-    if (maximize) mainWindow.maximize();
+    if (mainWindowOptions.browserWindow.maximize) mainWindow.maximize();
     mainWindow.loadFile("view/main.html");
     mainWindow.once("ready-to-show", () => mainWindow.show());
     mainWindow.webContents.openDevTools();
@@ -96,7 +81,7 @@ class Login {
   }
 
   static createWindow() {
-    const loginWindowOptions = require("./loginWindowOptions.json");
+    const loginWindowOptions = require("./res/json/loginWindowOptions.json");
     const loginWindow = new BrowserWindow(loginWindowOptions.browserWindow);
 
     loginWindow.loadFile("view/login.html");

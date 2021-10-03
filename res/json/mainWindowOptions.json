@@ -1,0 +1,15 @@
+{
+  "browserWindow": {
+    "webPreferences": {
+      "nodeIntegration": true,
+      "contextIsolation": false,
+      "spellcheck": false,
+      "preload": "path.join(__dirname, 'preload.js')"
+    },
+    "width": 800,
+    "height": 600,
+    "x": 0,
+    "y": 0,
+    "maximize": false
+  }
+}
