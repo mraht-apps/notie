@@ -5,14 +5,17 @@ class Settings {
   static DEFAULT_DEC_DB_FILENAME = "notie.db";
   static DEFAULT_ENC_DB_FILENAME = "notie.edb";
 
-  static CACHE_FOLDER = "./cache/";
-  static FILE = "./res/json/settings.json";
-
   static CACHE = {};
-  static DATA = require("." + Settings.FILE); // Workaround as they have both different base paths
+  static CACHE_FOLDER = "./cache/";
+
+  static FILE = "./res/json/settings.json";
+  static DATA = {};
 
   static init() {
     try {
+      // Workaround as they have both different base paths
+      Settings.DATA = require("." + Settings.FILE);
+
       Settings.CACHE = {
         DATABASE: Settings.DATA.DATABASE,
         PASSWORD: Settings.DATA.PASSWORD,
