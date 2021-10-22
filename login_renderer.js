@@ -46,7 +46,6 @@ class Renderer {
 }
 
 class Eventhandler {
-  // OPT Move source code to a single method
   static onClickCreateDatabase(event) {
     document.querySelector("#createDatabase").classList.add("active");
     document.querySelector("#openDatabase").classList.remove("active");
@@ -76,8 +75,14 @@ class Eventhandler {
     document.querySelector("#btnDatabasePicker").title = "Choose a database file";
 
     document.querySelector("#database").title = "Choose a database file";
-    document.querySelector("#database").value = Settings.CACHE.DEFAULT_FILE;
-    document.querySelector("#database").dispatchEvent(new Event("change"));
+
+    if (Settings.CACHE.DEFAULT_FILE && Settings.CACHE.DEFAULT_FILE.length > 0) {
+      document.querySelector("#database").value = Settings.CACHE.DEFAULT_FILE;
+      document.querySelector("#database").dispatchEvent(new Event("change"));
+    } else {
+      document.querySelector("#database").value = "";
+      document.querySelector("#database").dispatchEvent(new Event("change"));
+    }
 
     if (
       document.querySelector("#database").value == "" ||

@@ -30,11 +30,14 @@ class General {
   }
 
   static selectText() {
+    // OPT Replace deprecated command
     document.execCommand("selectAll", false, null);
   }
 
-  static deselectText() {
-    if (window.getSelection()) window.getSelection().empty();
+  static deselectText(inputField) {
+    // TST Replaced window.getSelection by select
+    // if (window.getSelection()) window.getSelection().empty();
+    inputField.select();
   }
 
   static focus(inputField, moveCursor = Enums.FocusActions.END, deselect = true) {
@@ -51,7 +54,7 @@ class General {
             break;
         }
       } else if (deselect) {
-        General.deselectText();
+        General.deselectText(inputField);
       }
     }, 0);
   }

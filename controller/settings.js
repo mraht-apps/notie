@@ -15,11 +15,6 @@ class Settings {
     try {
       // Workaround as they have both different base paths
       Settings.DATA = require("." + Settings.FILE);
-
-      Settings.CACHE = {
-        DATABASE: Settings.DATA.DATABASE,
-        PASSWORD: Settings.DATA.PASSWORD,
-      };
     } catch (e) {
       File.writeFile(Settings.FILE, JSON.stringify(Settings.DATA));
     }
@@ -32,18 +27,19 @@ class Settings {
   }
 
   static setDefault() {
-    let result = app.getPath("userData");
-    Settings.CACHE.DEFAULT_FOLDER = result;
-    Settings.CACHE.DEFAULT_FILE = Settings.DATA.DATABASE;
+    Settings.CACHE.DEFAULT_FOLDER = app.getPath("userData");
 
     Settings.CACHE.REMEMBER_DB = false;
     if (Settings.DATA.DATABASE && Settings.DATA.DATABASE.length > 0) {
       Settings.CACHE.REMEMBER_DB = true;
+      Settings.CACHE.DATABASE = Settings.DATA.DATABASE;
+      Settings.CACHE.DEFAULT_FILE = Settings.DATA.DATABASE;
     }
 
     Settings.CACHE.REMEMBER_PW = false;
     if (Settings.DATA.PASSWORD && Settings.DATA.PASSWORD.length > 0) {
       Settings.CACHE.REMEMBER_PW = true;
+      Settings.CACHE.PASSWORD = Settings.DATA.PASSWORD;
     }
   }
 

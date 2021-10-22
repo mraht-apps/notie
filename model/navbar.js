@@ -9,6 +9,7 @@ class Navbar {
 
   static build() {
     let pages = Database.all("SELECT * FROM pages;");
+    if (!pages) return;
     pages.forEach((page) => {
       Navbar.add(page);
     });
