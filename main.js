@@ -1,6 +1,5 @@
 const { app, dialog, BrowserWindow, ipcMain } = require("electron");
 const { autoUpdater } = require("electron-updater");
-const path = require("path");
 
 const File = require("./utils/file.js");
 const Settings = require("./controller/settings.js");
