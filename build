@@ -34,3 +34,9 @@ Reset npm:
 1. Delete node_modules folder
 2. npm cache verify
 3. npm install
+
+Update npm and modules:
+==============================================================================================================
+npm i -g npm-check-updates
+ncu -u
+npm install

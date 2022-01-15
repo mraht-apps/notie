@@ -459,7 +459,7 @@ class Eventhandler {
         input = td.nextElementSibling?.children[0];
         if (!input) {
           input = tr.children[0].children[0];
-        }
+        } 
         General.focus(input, Enums.FocusActions.ALL);
         event.preventDefault();
         break;
