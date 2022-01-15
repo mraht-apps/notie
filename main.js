@@ -164,6 +164,7 @@ class Eventhandler {
   }
 
   static onLogout(event) {
+    Settings.init();
     Login.init();
     App.mainWindow.close();
   }

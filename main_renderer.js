@@ -100,6 +100,12 @@ class Renderer {
     document.querySelector("#btnLogout").addEventListener("click", (event) => Eventhandler.onClickBtnLogout(event));
     document.querySelector("#btnRestart").addEventListener("click", (event) => Eventhandler.onClickBtnRestart(event));
   }
+
+  static callLogin() {
+    Settings.CACHE.PASSWORD = "";
+    window.dispatchEvent(new Event("beforeunload"));
+    ipcRenderer.send("logout");
+  }
 }
 
 class Eventhandler {
@@ -148,8 +154,7 @@ class Eventhandler {
   static onClickBtnTest(event) {}
 
   static onClickBtnLogout(event) {
-    window.dispatchEvent(new Event("beforeunload"));
-    ipcRenderer.send("logout");
+    Renderer.callLogin();
   }
 
   static onClickBtnRestart(event) {

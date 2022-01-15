@@ -39,7 +39,7 @@ class Database {
       result = Database.all("SELECT * FROM page_elements;");
       console.log(result);
     } catch (e) {
-      console.log(e);
+      Renderer.callLogin();
     }
   }
 
