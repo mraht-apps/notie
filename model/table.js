@@ -274,10 +274,6 @@ class Table extends Blockelement {
   }
 
   addRow() {
-    this.addRowByNewRow();
-  }
-
-  addRowByNewRow() {
     let tableRows = General.findAll(this.htmlElement, "tbody tr");
     let addNewTableRow = tableRows[tableRows.length - 1];
 
@@ -296,6 +292,10 @@ class Table extends Blockelement {
     columns.forEach((column, index) => {
       this.createTableCell(tr, index, column, null);
     });
+  }
+
+  delRow(rowId) {
+    this.htmlElement.deleteRow(rowId);
   }
 
   addColumn(column, index = -1) {
@@ -463,11 +463,27 @@ class Eventhandler {
         General.focus(input, Enums.FocusActions.ALL);
         event.preventDefault();
         break;
+      case "Backspace":
+        // NEW Delete row
+        let container = General.getParents(event.target, ".pageElement")[0];
+        let table = Page.getBlockElement(container.dataset.uuid);
+        // table.delRow(tr);
+        
+        input = tr.previousElementSibling?.children[columnIndex]?.children[0];
+        if (!input) {
+          let lastRow = tr.parentElement.querySelector("tr:last-of-type").previousElementSibling;
+          input = lastRow.children[columnIndex].children[0];
+        }
+        General.focus(input, Enums.FocusActions.ALL, false);
+        event.preventDefault();
+        break;
       case "Enter":
-        let table = General.getParents(event.target, "table");
+        let container = General.getParents(event.target, ".pageElement")[0];
+        let table = Page.getBlockElement(container.dataset.uuid);
+
         input = tr.nextElementSibling.children[columnIndex]?.children[0];
         if (!input || input.id == "newRow") {
-          table.addRowByNewRow();
+          table.addRow();
           input = tr.nextSibling.children[columnIndex].children[0];
         }
         General.focus(input, Enums.FocusActions.ALL, false);

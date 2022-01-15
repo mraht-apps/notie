@@ -1,6 +1,6 @@
 Build & deploy
 ==============================================================================================================
-1) --dev=false
+1) package.json: scripts > start: --dev=false
 2) npm run deploy
 3) Release release on GitHub
 4) --dev=true for development

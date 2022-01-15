@@ -6,7 +6,8 @@
   "scripts": {
     "start": "electron . --dev=true",
     "build": "electron-builder build --win --publish never",
-    "deploy": "electron-builder build --win --publish always"
+    "deploy": "electron-builder build --win --publish always",
+    "postinstall": "electron-builder install-app-deps"
   },
   "repository": {
     "type": "git",
