@@ -1,6 +1,5 @@
 const { app, dialog, BrowserWindow, ipcMain } = require("electron");
 const { autoUpdater } = require("electron-updater");
-const path = require("path");
 
 const File = require("./utils/file.js");
 const Settings = require("./controller/settings.js");
@@ -44,7 +43,7 @@ class Main {
   static createWindow() {
     let mainWindowOptions = require("./res/json/mainWindowOptions.json");
 
-    if (!Settings.DATA.WINDOW) {
+    if (!Settings.DATA.WINDOW || Settings.DATA.WINDOW.MAXIMIZED) {
       mainWindowOptions.browserWindow.maximize = true;
     } else {
       if (Settings.DATA.WINDOW.HEIGHT) mainWindowOptions.browserWindow.height = Settings.DATA.WINDOW.HEIGHT;
@@ -119,11 +118,14 @@ class Eventhandler {
   static onDetermineWindowData(event) {
     let position = App.mainWindow.getPosition();
     let size = App.mainWindow.getSize();
+    let maximized = App.mainWindow.isMaximized();
+
     event.returnValue = {
       WIDTH: size[0],
       HEIGHT: size[1],
       X: position[0],
       Y: position[1],
+      MAXIMIZED: maximized,
     };
   }
 

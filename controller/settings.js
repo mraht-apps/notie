@@ -5,18 +5,16 @@ class Settings {
   static DEFAULT_DEC_DB_FILENAME = "notie.db";
   static DEFAULT_ENC_DB_FILENAME = "notie.edb";
 
-  static CACHE_FOLDER = "./cache/";
-  static FILE = "./res/json/settings.json";
-
   static CACHE = {};
-  static DATA = require("." + Settings.FILE); // Workaround as they have both different base paths
+  static CACHE_FOLDER = "./cache/";
+
+  static FILE = "./res/json/settings.json";
+  static DATA = {};
 
   static init() {
     try {
-      Settings.CACHE = {
-        DATABASE: Settings.DATA.DATABASE,
-        PASSWORD: Settings.DATA.PASSWORD,
-      };
+      // Workaround as they have both different base paths
+      Settings.DATA = require("." + Settings.FILE);
     } catch (e) {
       File.writeFile(Settings.FILE, JSON.stringify(Settings.DATA));
     }
@@ -29,18 +27,19 @@ class Settings {
   }
 
   static setDefault() {
-    let result = app.getPath("userData");
-    Settings.CACHE.DEFAULT_FOLDER = result;
-    Settings.CACHE.DEFAULT_FILE = Settings.DATA.DATABASE;
+    Settings.CACHE.DEFAULT_FOLDER = app.getPath("userData");
 
     Settings.CACHE.REMEMBER_DB = false;
     if (Settings.DATA.DATABASE && Settings.DATA.DATABASE.length > 0) {
       Settings.CACHE.REMEMBER_DB = true;
+      Settings.CACHE.DATABASE = Settings.DATA.DATABASE;
+      Settings.CACHE.DEFAULT_FILE = Settings.DATA.DATABASE;
     }
 
     Settings.CACHE.REMEMBER_PW = false;
     if (Settings.DATA.PASSWORD && Settings.DATA.PASSWORD.length > 0) {
       Settings.CACHE.REMEMBER_PW = true;
+      Settings.CACHE.PASSWORD = Settings.DATA.PASSWORD;
     }
   }
 
