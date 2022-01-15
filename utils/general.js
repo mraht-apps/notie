@@ -1,10 +1,14 @@
+$ = require("jquery");
+
 class General {
   static moveCursorToEnd(element) {
+    // OPT Replace deprecated command
     document.execCommand("selectAll", false, null);
     document.getSelection().collapseToEnd();
   }
 
   static moveCursorTo(element, offset) {
+    // OPT Replace deprecated command
     document.execCommand("selectAll", false, null);
     // Set the caret to the nth character of the first line of text
     document.getSelection().collapse(element.firstChild, offset);
