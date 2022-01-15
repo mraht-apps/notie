@@ -463,20 +463,6 @@ class Eventhandler {
         General.focus(input, Enums.FocusActions.ALL);
         event.preventDefault();
         break;
-      case "Backspace":
-        // NEW Delete row
-        let container = General.getParents(event.target, ".pageElement")[0];
-        let table = Page.getBlockElement(container.dataset.uuid);
-        // table.delRow(tr);
-        
-        input = tr.previousElementSibling?.children[columnIndex]?.children[0];
-        if (!input) {
-          let lastRow = tr.parentElement.querySelector("tr:last-of-type").previousElementSibling;
-          input = lastRow.children[columnIndex].children[0];
-        }
-        General.focus(input, Enums.FocusActions.ALL, false);
-        event.preventDefault();
-        break;
       case "Enter":
         let container = General.getParents(event.target, ".pageElement")[0];
         let table = Page.getBlockElement(container.dataset.uuid);
